@@ -1,0 +1,89 @@
+﻿{% extends 'ordenes/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Órdenes de Compra</h1>
+    <a href="{% url 'crear_orden' %}" class="btn btn-success"><i class="bi bi-plus-lg"></i> Nueva Orden</a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-2">
+                <input type="text" name="q" class="form-control" placeholder="N° Orden" value="{{ request.GET.q }}">
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text">Desde</span>
+                    <input type="date" name="fecha_desde" class="form-control" value="{{ request.GET.fecha_desde }}">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group">
+                    <span class="input-group-text">Hasta</span>
+                    <input type="date" name="fecha_hasta" class="form-control" value="{{ request.GET.fecha_hasta }}">
+                </div>
+            </div>
+            {% if clientes %}
+            <div class="col-md-3">
+                <select name="cliente_id" class="form-select">
+                    <option value="">Todos los Clientes</option>
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}" {% if request.GET.cliente_id == cliente.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cliente.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Número</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Items</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for orden in ordenes %}
+                <tr>
+                    <td><strong>N°{{ orden.numero }}</strong></td>
+                    <td>{{ orden.cliente }}</td>
+                    <td>{{ orden.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <ul class="list-unstyled mb-0">
+                            {% for item in orden.items.all %}
+                            <li><small>{{ item }}</small></li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_orden' orden.pk %}" class="btn btn-sm btn-outline-primary"><i
+                                class="bi bi-pencil"></i></a>
+                        <a href="{% url 'borrar_orden' orden.pk %}" class="btn btn-sm btn-outline-danger"><i
+                                class="bi bi-trash"></i></a>
+                        <a href="{% url 'generar_pdf' orden.pk %}" class="btn btn-sm btn-outline-secondary"
+                            title="Descargar PDF"><i class="bi bi-file-earmark-pdf"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">No hay órdenes registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
