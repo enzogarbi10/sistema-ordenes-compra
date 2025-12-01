@@ -41,7 +41,8 @@ class ItemOrdenForm(forms.ModelForm):
         model = ItemOrden
         fields = ['marca', 'elemento', 'cantidad', 'ancho', 'alto', 'forma', 'papel', 'variedad', 
                   'archivo_muestra', 'grado_alcoholico', 'codigo_cliente', 'anio', 'contenido_neto',
-                  'serigrafia', 'stamping', 'relieve', 'bajo_relieve', 'gofrado']
+                  'serigrafia', 'stamping', 'relieve', 'bajo_relieve', 'gofrado', 'barniz_sectorizado',
+                  'barniz', 'observaciones']
         widgets = {
             'marca': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Marca'}),
             'elemento': forms.Select(attrs={'class': 'form-select'}),
@@ -51,7 +52,7 @@ class ItemOrdenForm(forms.ModelForm):
             'forma': forms.Select(attrs={'class': 'form-select'}),
             'papel': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Papel'}),
             'variedad': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Variedad'}),
-            'archivo_muestra': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'archivo_muestra': forms.FileInput(attrs={'class': 'form-control'}),
             'grado_alcoholico': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Grado Alc.'}),
             'codigo_cliente': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cód. Cliente'}),
             'anio': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Año'}),
@@ -61,7 +62,11 @@ class ItemOrdenForm(forms.ModelForm):
             'relieve': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'bajo_relieve': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'gofrado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'barniz_sectorizado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'barniz': forms.Select(attrs={'class': 'form-select'}),
+            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Observaciones'}),
         }
+
 
 ItemOrdenFormSet = inlineformset_factory(
     OrdenCompra, ItemOrden, form=ItemOrdenForm,

@@ -73,6 +73,10 @@
                                         <label class="form-label small">Cont. Neto</label>
                                         {{ form.contenido_neto }}
                                     </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Barniz</label>
+                                        {{ form.barniz }}
+                                    </div>
                                     <div class="col-md-3">
                                         <label class="form-label small">Muestra</label>
                                         {{ form.archivo_muestra }}
@@ -101,16 +105,16 @@
                                             {{ form.gofrado }}
                                             <label class="form-check-label small">Gofrado</label>
                                         </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.barniz_sectorizado }}
+                                            <label class="form-check-label small">Barniz Sectorizado</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <label class="form-label small">Observaciones</label>
+                                        {{ form.observaciones }}
                                     </div>
                                 </div>
-                                {% if formset.can_delete %}
-                                <div class="mt-2 text-end">
-                                    <div class="form-check d-inline-block">
-                                        {{ form.DELETE }}
-                                        <label class="form-check-label small text-danger">Borrar Item</label>
-                                    </div>
-                                </div>
-                                {% endif %}
                             </div>
                         </div>
                         {% endfor %}
@@ -211,6 +215,17 @@
                     <input type="text" name="items-__prefix__-contenido_neto" class="form-control"
                         placeholder="Cont. Neto">
                 </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Barniz</label>
+                    <select name="items-__prefix__-barniz" class="form-select">
+                        <option value="" selected>---------</option>
+                        <option value="mate_agua">Mate Agua</option>
+                        <option value="brillante_agua">Brillante Agua</option>
+                        <option value="semimate_agua">Semimate Agua</option>
+                        <option value="mate_uv">Mate UV</option>
+                        <option value="brillante_uv">Brillante UV</option>
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <label class="form-label small">Muestra</label>
                     <input type="file" name="items-__prefix__-archivo_muestra" class="form-control">
@@ -239,17 +254,21 @@
                         <input type="checkbox" name="items-__prefix__-gofrado" class="form-check-input">
                         <label class="form-check-label small">Gofrado</label>
                     </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-barniz_sectorizado" class="form-check-input">
+                        <label class="form-check-label small">Barniz Sectorizado</label>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-2 text-end">
-                <div class="form-check d-inline-block">
-                    <input type="checkbox" name="items-__prefix__-DELETE" id="id_items-__prefix__-DELETE">
-                    <label class="form-check-label small text-danger">Borrar Item</label>
+                <div class="col-md-12 mt-2">
+                    <label class="form-label small">Observaciones</label>
+                    <textarea name="items-__prefix__-observaciones" class="form-control" rows="3"
+                        placeholder="Observaciones"></textarea>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}

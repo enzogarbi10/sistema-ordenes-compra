@@ -78,6 +78,18 @@ class ItemOrden(models.Model):
     relieve = models.BooleanField(default=False, verbose_name="Relieve")
     bajo_relieve = models.BooleanField(default=False, verbose_name="Bajo Relieve")
     gofrado = models.BooleanField(default=False, verbose_name="Gofrado")
+    barniz_sectorizado = models.BooleanField(default=False, verbose_name="Barniz Sectorizado")
+
+    BARNIZ_CHOICES = [
+        ('mate_agua', 'Mate Agua'),
+        ('brillante_agua', 'Brillante Agua'),
+        ('semimate_agua', 'Semimate Agua'),
+        ('mate_uv', 'Mate UV'),
+        ('brillante_uv', 'Brillante UV'),
+    ]
+    barniz = models.CharField(max_length=50, choices=BARNIZ_CHOICES, blank=True, null=True, verbose_name="Barniz")
+    
+    observaciones = models.TextField(blank=True, null=True, verbose_name="Observaciones")
 
     def __str__(self):
         return f"{self.cantidad} x {self.variedad} ({self.marca})"

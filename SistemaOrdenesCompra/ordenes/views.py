@@ -239,6 +239,7 @@ def _generate_pdf_bytes(orden):
         if item.relieve: terminaciones.append("Relieve")
         if item.bajo_relieve: terminaciones.append("Bajo Relieve")
         if item.gofrado: terminaciones.append("Gofrado")
+        if item.barniz_sectorizado: terminaciones.append("Barniz Sectorizado")
         str_terminaciones = ", ".join(terminaciones) if terminaciones else "Ninguna"
 
         # Columna de Detalles
@@ -255,7 +256,9 @@ def _generate_pdf_bytes(orden):
             [Paragraph("<b>Cód. Cliente:</b>", style_label), Paragraph(str(item.codigo_cliente or '-'), style_value)],
             [Paragraph("<b>Año:</b>", style_label), Paragraph(str(item.anio or '-'), style_value)],
             [Paragraph("<b>Cont. Neto:</b>", style_label), Paragraph(str(item.contenido_neto or '-'), style_value)],
+            [Paragraph("<b>Barniz:</b>", style_label), Paragraph(item.get_barniz_display() or '-', style_value)],
             [Paragraph("<b>Terminaciones:</b>", style_label), Paragraph(str_terminaciones, style_value)],
+            [Paragraph("<b>Observaciones:</b>", style_label), Paragraph(item.observaciones or '-', style_value)],
         ]
         
         # Crear tabla interna para detalles para alinear etiquetas y valores
