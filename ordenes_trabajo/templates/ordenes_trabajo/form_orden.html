@@ -1,0 +1,288 @@
+{% extends 'ordenes_trabajo/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-white">
+                <h3 class="mb-0">{{ titulo }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Cliente</label>
+                        {{ form.cliente }}
+                    </div>
+
+                    <h5 class="mb-3 border-bottom pb-2">Items de la Orden</h5>
+
+                    {{ formset.management_form }}
+                    <div id="items-container">
+                        {% for form in formset %}
+                        <div class="card mb-3 bg-light item-row">
+                            <div class="card-body">
+                                {{ form.id }}
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Marca</label>
+                                        {{ form.marca }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Elemento</label>
+                                        {{ form.elemento }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Cantidad</label>
+                                        {{ form.cantidad }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Ancho (cm)</label>
+                                        {{ form.ancho }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Alto (cm)</label>
+                                        {{ form.alto }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Variedad</label>
+                                        {{ form.variedad }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">Forma</label>
+                                        {{ form.forma }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">Papel</label>
+                                        {{ form.papel }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Grado Alc.</label>
+                                        {{ form.grado_alcoholico }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Cód. Cliente</label>
+                                        {{ form.codigo_cliente }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Año</label>
+                                        {{ form.anio }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Cont. Neto</label>
+                                        {{ form.contenido_neto }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label small">Barniz</label>
+                                        {{ form.barniz }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">Muestra</label>
+                                        {{ form.archivo_muestra }}
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label small d-block mb-2">Terminaciones</label>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.serigrafia }}
+                                            <label class="form-check-label small">Serigrafía</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.stamping }}
+                                            <label class="form-check-label small">Stamping</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.relieve }}
+                                            <label class="form-check-label small">Relieve</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.bajo_relieve }}
+                                            <label class="form-check-label small">Bajo Relieve</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.gofrado }}
+                                            <label class="form-check-label small">Gofrado</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            {{ form.barniz_sectorizado }}
+                                            <label class="form-check-label small">Barniz Sectorizado</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <label class="form-label small">Observaciones</label>
+                                        {{ form.observaciones }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <button type="button" id="add-item" class="btn btn-outline-secondary btn-sm"><i
+                                class="bi bi-plus-circle"></i> Agregar Item</button>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'lista_ordenes' %}" class="btn btn-light me-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar Orden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Empty form template for JS -->
+<div id="empty-form" style="display:none;">
+    <div class="card mb-3 bg-light item-row">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label small">Marca</label>
+                    <input type="text" name="items-__prefix__-marca" class="form-control" placeholder="Marca">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Elemento</label>
+                    <select name="items-__prefix__-elemento" class="form-select">
+                        <option value="etiqueta">Etiqueta</option>
+                        <option value="contraetiqueta">Contraetiqueta</option>
+                        <option value="cuello">Cuello</option>
+                        <option value="bajo_etiqueta">Bajo etiqueta</option>
+                        <option value="corbata">Corbata</option>
+                        <option value="eticontra">Eticontra</option>
+                        <option value="fajas">Fajas</option>
+                        <option value="medalla">Medalla</option>
+                        <option value="oblea">Oblea</option>
+                        <option value="sticker">Sticker</option>
+                        <option value="collarin">Collarín</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Cantidad</label>
+                    <input type="number" name="items-__prefix__-cantidad" class="form-control" placeholder="Cant.">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Ancho (cm)</label>
+                    <input type="number" name="items-__prefix__-ancho" class="form-control" placeholder="Ancho"
+                        step="0.01">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Alto (cm)</label>
+                    <input type="number" name="items-__prefix__-alto" class="form-control" placeholder="Alto"
+                        step="0.01">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Variedad</label>
+                    <input type="text" name="items-__prefix__-variedad" class="form-control" placeholder="Variedad">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small">Forma</label>
+                    <select name="items-__prefix__-forma" class="form-select">
+                        <option value="rectangulo">Rectángulo</option>
+                        <option value="cuadrado">Cuadrado</option>
+                        <option value="trapecio_inv">Trapecio Inv.</option>
+                        <option value="circulo">Círculo</option>
+                        <option value="especial">Especial</option>
+                        <option value="ovalo">Óvalo</option>
+                        <option value="rombo">Rombo</option>
+                        <option value="cuadrado_r_2_5">Cuadrado R 2,5</option>
+                        <option value="rectangulo_r_2_5">Rectángulo R 2.5</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small">Papel</label>
+                    <input type="text" name="items-__prefix__-papel" class="form-control" placeholder="Papel">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Grado Alc.</label>
+                    <input type="text" name="items-__prefix__-grado_alcoholico" class="form-control"
+                        placeholder="Grado Alc.">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Cód. Cliente</label>
+                    <input type="text" name="items-__prefix__-codigo_cliente" class="form-control"
+                        placeholder="Cód. Cliente">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Año</label>
+                    <input type="number" name="items-__prefix__-anio" class="form-control" placeholder="Año">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Cont. Neto</label>
+                    <input type="text" name="items-__prefix__-contenido_neto" class="form-control"
+                        placeholder="Cont. Neto">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small">Barniz</label>
+                    <select name="items-__prefix__-barniz" class="form-select">
+                        <option value="" selected>---------</option>
+                        <option value="mate_agua">Mate Agua</option>
+                        <option value="brillante_agua">Brillante Agua</option>
+                        <option value="semimate_agua">Semimate Agua</option>
+                        <option value="mate_uv">Mate UV</option>
+                        <option value="brillante_uv">Brillante UV</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small">Muestra</label>
+                    <input type="file" name="items-__prefix__-archivo_muestra" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <label class="form-label small d-block mb-2">Terminaciones</label>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-serigrafia" class="form-check-input">
+                        <label class="form-check-label small">Serigrafía</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-stamping" class="form-check-input">
+                        <label class="form-check-label small">Stamping</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-relieve" class="form-check-input">
+                        <label class="form-check-label small">Relieve</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-bajo_relieve" class="form-check-input">
+                        <label class="form-check-label small">Bajo Relieve</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-gofrado" class="form-check-input">
+                        <label class="form-check-label small">Gofrado</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" name="items-__prefix__-barniz_sectorizado" class="form-check-input">
+                        <label class="form-check-label small">Barniz Sectorizado</label>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <label class="form-label small">Observaciones</label>
+                    <textarea name="items-__prefix__-observaciones" class="form-control" rows="3"
+                        placeholder="Observaciones"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addBtn = document.querySelector('#add-item');
+        if (addBtn) {
+            addBtn.addEventListener('click', function () {
+                const formIdx = document.querySelector('#id_items-TOTAL_FORMS').value;
+                const emptyForm = document.querySelector('#empty-form').innerHTML.replace(/__prefix__/g, formIdx);
+                document.querySelector('#items-container').insertAdjacentHTML('beforeend', emptyForm);
+                document.querySelector('#id_items-TOTAL_FORMS').value = parseInt(formIdx) + 1;
+            });
+        }
+    });
+</script>
+{% endblock %}

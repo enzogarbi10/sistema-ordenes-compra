@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card-custom {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        h1 { font-weight: 700; margin-bottom: 1rem; }
+        p { margin-bottom: 2rem; opacity: 0.9; }
+        .btn-custom {
+            background-color: #fff;
+            color: #1e3c72;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            background-color: #f8f9fa;
+            color: #1e3c72;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-custom">
+        <h1>Mi Nuevo Proyecto</h1>
+        <p>Has reestructurado tu proyecto exitosamente. Aquí construiremos tu nueva web pública.</p>
+        
+        <a href="/sistema/" class="btn-custom">Ir al Sistema de Órdenes</a>
+    </div>
+</body>
+</html>
