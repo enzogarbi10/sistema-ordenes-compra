@@ -5,24 +5,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Gráfica Melfa{% endblock %}</title>
+    <title>{% block title %}Gráfica Melfa | Excelencia Gráfica{% endblock %}</title>
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts: Playfair Display for Serifs, Montserrat for Sans -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/web.css' %}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-dark: #000000;
+            --accent-orange: #ff6600;
+            --accent-orange-hover: #ff8533;
+            --text-light: #f8f9fa;
+            --text-muted: #888888;
+            --card-bg: #111111;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+            color: var(--accent-orange) !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-orange) !important;
+        }
+
+        .btn-orange {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 2rem;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-orange:hover {
+            background-color: var(--accent-orange-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+        }
+
+        .btn-outline-orange {
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
+            background: transparent;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 2rem;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-orange:hover {
+            background-color: var(--accent-orange);
+            color: white;
+        }
+
+        footer {
+            background-color: #050505;
+            border-top: 1px solid rgba(255, 102, 0, 0.1);
+            padding: 4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-orange);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-                <i class="fas fa-print me-2"></i>GRÁFICA MELFA
+                GRÁFICA MELFA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -36,15 +149,17 @@
                         <a class="nav-link" href="#servicios">Servicios</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#nosotros">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#contacto">Contacto</a>
                     </li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-outline-light btn-sm px-4 rounded-pill me-2"
-                            href="{% url 'lista_controles_postprensa' %}">
-                            <i class="fas fa-clipboard-check me-2"></i>Calidad
+                    <li class="nav-item ms-lg-3 d-flex gap-2">
+                        <a class="btn btn-outline-orange btn-sm" href="{% url 'lista_controles_postprensa' %}">
+                            <i class="bi bi-shield-check me-2"></i>Calidad
                         </a>
-                        <a class="btn btn-primary btn-sm px-4 rounded-pill" href="{% url 'lista_ordenes' %}">
-                            <i class="fas fa-sign-in-alt me-2"></i>Sistema de Órdenes
+                        <a class="btn btn-orange btn-sm" href="{% url 'lista_ordenes' %}">
+                            <i class="bi bi-gear-fill me-2"></i>Sistema
                         </a>
                     </li>
                 </ul>
@@ -53,18 +168,34 @@
     </nav>
 
     <!-- Main Content -->
-    {% block content %}
-    {% endblock %}
+    <main class="flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-auto">
+    <footer>
         <div class="container text-center">
-            <p class="mb-0">&copy; {% now "Y" %} Gráfica Melfa. Todos los derechos reservados.</p>
+            <div class="footer-logo">GRÁFICA MELFA</div>
+            <p class="text-muted mb-4 max-width-600 mx-auto">
+                Líderes en soluciones gráficas de alta calidad, combinando tradición artesanal con tecnología de
+                vanguardia.
+            </p>
+            <div class="mb-4">
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="text-muted small">
+                &copy; {% now "Y" %} Gráfica Melfa. Todos los derechos reservados.
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 
 </html>

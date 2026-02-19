@@ -1,83 +1,335 @@
 {% extends 'web/base.html' %}
 {% load static %}
 
+{% block extra_head %}
+<style>
+    /* Hero Section with Video */
+    .hero {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        z-index: 1;
+        background: #000;
+    }
+
+    #hero-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        z-index: -2;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        opacity: 0.6;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9));
+        z-index: -1;
+    }
+
+    .hero-content {
+        max-width: 900px;
+    }
+
+    .hero h1 {
+        font-size: 5.5rem;
+        margin-bottom: 1.5rem;
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: -2px;
+    }
+
+    .hero p {
+        font-size: 1.5rem;
+        color: #ddd;
+        margin-bottom: 3rem;
+        max-width: 650px;
+        font-weight: 300;
+        line-height: 1.4;
+    }
+
+    /* Section Styling */
+    .section-title h2 {
+        font-size: 4rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .subtitle {
+        color: var(--accent-orange);
+        text-transform: uppercase;
+        letter-spacing: 6px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    /* Service Cards (Updated) */
+    .service-card {
+        background: #080808;
+        border: 1px solid #1a1a1a;
+        transition: var(--transition-smooth);
+        height: 100%;
+    }
+
+    .service-card:hover {
+        border-color: var(--accent-orange);
+        background: #0f0f0f;
+        transform: translateY(-10px);
+    }
+
+    .service-icon {
+        font-size: 3rem;
+        color: var(--accent-orange);
+        margin-bottom: 2rem;
+        display: inline-block;
+    }
+
+    /* Mission / Vision Blocks */
+    .info-block {
+        padding: 3rem;
+        border-left: 2px solid var(--accent-orange);
+        background: rgba(255, 102, 0, 0.02);
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Hero Section -->
-<header class="hero-section d-flex align-items-center text-center text-white">
+
+<!-- Hero with Video -->
+<section class="hero">
+    <video autoplay muted loop playsinline id="hero-video">
+        <source src="https://www.agmelfa.com.ar/pub/img/movie.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h1 class="display-3 fw-bold mb-4 animate-fade-in">Soluciones de Impresión Profesional</h1>
-                <p class="lead mb-5 opacity-90">Calidad, rapidez y precisión para todas tus necesidades gráficas.
-                    Gestiona tus pedidos de forma eficiente.</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="#servicios" class="btn btn-outline-light btn-lg px-5 rounded-pill">Ver Servicios</a>
-                    <a href="{% url 'lista_ordenes' %}" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg">Ir al
-                        Sistema</a>
+        <div class="hero-content" data-aos="fade-up">
+            <span class="subtitle">Artes Gráficas Melfa</span>
+            <h1>Excelencia en <br><span class="text-orange italic">Flexografía.</span></h1>
+            <p>Brindamos soluciones integrales en etiquetas autoadhesivas con tecnología de vanguardia y una agilidad de
+                atención que nos distingue en el mercado.</p>
+            <div class="d-flex flex-wrap gap-4">
+                <a href="#contacto" class="btn btn-orange">Contactar SAC</a>
+                <a href="#servicios" class="btn btn-outline-orange">Nuestros Procesos</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Misión y Visión (Extraído de la web actual) -->
+<section id="nosotros" class="py-5 bg-black">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="info-block">
+                    <span class="subtitle">Nuestra Misión</span>
+                    <h3 class="serif mb-4 display-6">Superar Expectativas</h3>
+                    <p class="text-muted lead">Dedicamos nuestro mayor esfuerzo en lograr la excelencia en la producción
+                        de productos y en la agilidad de la atención, superando permanentemente las expectativas de
+                        nuestros clientes.</p>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="info-block">
+                    <span class="subtitle">Nuestra Visión</span>
+                    <h3 class="serif mb-4 display-6">Servicio Innovador</h3>
+                    <p class="text-muted lead">Ser reconocidos y preferidos por nuestro servicio gráfico innovador,
+                        integrándonos en la cadena de valor de los clientes para brindar soluciones sólidas y
+                        competitivas.</p>
                 </div>
             </div>
         </div>
     </div>
-</header>
+</section>
 
-<!-- Services Section -->
-<section id="servicios" class="py-5 bg-light">
+<!-- Especialidades (Actualizadas) -->
+<section id="servicios" class="py-5" style="background: #050505;">
     <div class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold display-5 text-dark">Nuestros Servicios</h2>
-            <div class="divider mx-auto bg-primary"></div>
+        <div class="section-title text-center mb-5" data-aos="fade-up">
+            <span class="subtitle">Tecnologías y Procesos</span>
+            <h2>Servicios de Impresión</h2>
         </div>
         <div class="row g-4">
-            <!-- Service 1 -->
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
-                    <div class="card-body text-center p-5">
-                        <div class="icon-circle bg-primary-subtle text-primary mb-4 mx-auto">
-                            <i class="fas fa-print fa-2x"></i>
-                        </div>
-                        <h4 class="card-title fw-bold">Impresión Offset</h4>
-                        <p class="card-text text-muted mt-3">Alta calidad para grandes volúmenes. Folletos, revistas,
-                            catálogos y más.</p>
-                    </div>
+            <!-- Flexografía -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card p-5">
+                    <i class="bi bi-gear-wide-connected service-icon"></i>
+                    <h4 class="mb-3">Flexografía</h4>
+                    <p class="text-muted small">Impresión rotativa de alta velocidad utilizando planchas flexibles con
+                        relieve. Ideal para grandes volúmenes.</p>
                 </div>
             </div>
-            <!-- Service 2 -->
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
-                    <div class="card-body text-center p-5">
-                        <div class="icon-circle bg-success-subtle text-success mb-4 mx-auto">
-                            <i class="fas fa-layer-group fa-2x"></i>
-                        </div>
-                        <h4 class="card-title fw-bold">Impresión Digital</h4>
-                        <p class="card-text text-muted mt-3">Rapidez y versatilidad para tiradas cortas. Tarjetas,
-                            flyers y documentos.</p>
-                    </div>
+            <!-- Hot Stamping -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card p-5">
+                    <i class="bi bi-droplet-fill service-icon"></i>
+                    <h4 class="mb-3">Hot Stamping</h4>
+                    <p class="text-muted small">Transferencia de láminas metálicas a alta temperatura. Brillo y
+                        distinción en escala oro, plata y cobre.</p>
                 </div>
             </div>
-            <!-- Service 3 -->
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
-                    <div class="card-body text-center p-5">
-                        <div class="icon-circle bg-warning-subtle text-warning mb-4 mx-auto">
-                            <i class="fas fa-pencil-ruler fa-2x"></i>
-                        </div>
-                        <h4 class="card-title fw-bold">Diseño Gráfico</h4>
-                        <p class="card-text text-muted mt-3">Creatividad al servicio de tu marca. Logotipos, branding y
-                            maquetación.</p>
-                    </div>
+            <!-- Relieve -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card p-5">
+                    <i class="bi bi-stack service-icon"></i>
+                    <h4 class="mb-3">Relieve</h4>
+                    <p class="text-muted small">Efecto táctil mediante cuños metálicos masculinos y femeninos que otorga
+                        una jerarquía única al diseño.</p>
+                </div>
+            </div>
+            <!-- Serigrafía -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="service-card p-5">
+                    <i class="bi bi-grid-3x3 service-icon"></i>
+                    <h4 class="mb-3">Serigrafía</h4>
+                    <p class="text-muted small">Aplicación de tintas con volumen y brillo sectorizado a través de mallas
+                        tensadas para un impacto visual máximo.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Call to Action -->
-<section class="py-5 bg-dark text-white text-center">
-    <div class="container py-4">
-        <h2 class="fw-bold mb-3">¿Listo para comenzar?</h2>
-        <p class="mb-4 text-white-50">Accede a nuestro sistema de gestión para crear y seguir tus órdenes de trabajo.
-        </p>
-        <a href="{% url 'lista_ordenes' %}" class="btn btn-primary btn-lg rounded-pill px-5">Acceder al Sistema</a>
+<!-- Enlace a Sistemas (Portal Interno) -->
+<section class="access-section py-5">
+    <div class="container py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8" data-aos="zoom-in">
+                <span class="subtitle mb-3">Portal de Gestión</span>
+                <h2 class="mb-4">Trazabilidad en tiempo real</h2>
+                <p class="text-light mb-5 opacity-75 lead">
+                    Nuestros clientes y equipo interno pueden monitorear el estado de las órdenes y los reportes de
+                    calidad flexográfica desde aquí.
+                </p>
+                <div class="d-flex flex-column flex-md-row gap-4 justify-content-center">
+                    <a href="{% url 'lista_ordenes' %}" class="btn btn-orange px-5 py-3">
+                        <i class="bi bi-box-seam me-2"></i> Seguimiento de Órdenes
+                    </a>
+                    <a href="{% url 'lista_controles_postprensa' %}" class="btn btn-outline-orange px-5 py-3">
+                        <i class="bi bi-check-circle me-2"></i> Reportes de Calidad
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- Contacto Actualizado -->
+<section id="contacto" class="py-5 bg-black">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-5" data-aos="fade-right">
+                <div class="section-title">
+                    <span class="subtitle">Estamos Cerca</span>
+                    <h2>Contáctenos</h2>
+                </div>
+                <div class="mt-5">
+                    <div class="mb-5 d-flex align-items-start">
+                        <i class="bi bi-geo-alt-fill me-4 fs-2 text-orange"></i>
+                        <div>
+                            <h5 class="text-white mb-1">Visítenos</h5>
+                            <p class="text-muted">Ituzaingó 2387, Mendoza<br>Argentina</p>
+                        </div>
+                    </div>
+                    <div class="mb-5 d-flex align-items-start">
+                        <i class="bi bi-telephone-fill me-4 fs-2 text-orange"></i>
+                        <div>
+                            <h5 class="text-white mb-1">Llámenos</h5>
+                            <p class="text-muted">+54 (261) 430-6316</p>
+                        </div>
+                        </li>
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-clock-fill me-4 fs-2 text-orange"></i>
+                            <div>
+                                <h5 class="text-white mb-1">Atención</h5>
+                                <p class="text-muted">Lunes a Viernes: 08:00 - 18:00 hs</p>
+                            </div>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 offset-lg-1" data-aos="fade-left">
+                        <div class="bg-dark p-5" style="background: #0a0a0a !important; border: 1px solid #1a1a1a;">
+                            <h4 class="mb-4 serif">Enviar Mensaje</h4>
+                            <form>
+                                <div class="row g-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small text-muted text-uppercase">Nombre</label>
+                                        <input type="text"
+                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                            style="border-color: #333 !important;">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small text-muted text-uppercase">Email</label>
+                                        <input type="email"
+                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                            style="border-color: #333 !important;">
+                                    </div>
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label small text-muted text-uppercase">Consulta</label>
+                                        <textarea
+                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                            rows="3" style="border-color: #333 !important;"></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-orange w-100 py-3">Enviar a SAC</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script>
+    AOS.init({
+        duration: 1200,
+        once: true
+    });
+
+    window.addEventListener('scroll', function () {
+        const nav = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            nav.style.backgroundColor = 'rgba(0, 0, 0, 0.98)';
+            nav.style.padding = '0.5rem 0';
+        } else {
+            nav.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            nav.style.padding = '1rem 0';
+        }
+    });
+
+    // Mobile Video Optimization: ensures video plays smoothly
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('hero-video');
+        if (video) {
+            video.play().catch(function (error) {
+                console.log("Video auto-play was prevented. Interaction may be required.");
+            });
+        }
+    });
+</script>
 {% endblock %}
