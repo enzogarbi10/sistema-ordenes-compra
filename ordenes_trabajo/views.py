@@ -13,14 +13,24 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 import io
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 # --- Cliente Views ---
+
+# --- Permissions Mixins ---
+class OrdenesGroupRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.groups.filter(name='Ordenes').exists()
+
+def ordenes_group_required(user):
+    return user.is_superuser or user.groups.filter(name='Ordenes').exists()
+
 class SuperUserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
 
-class ClienteListView(LoginRequiredMixin, ListView):
+
+class ClienteListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
     model = Cliente
     template_name = 'ordenes_trabajo/lista_clientes.html'
     context_object_name = 'clientes'
@@ -69,7 +79,7 @@ class ClienteDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, DeleteView):
     success_url = reverse_lazy('lista_clientes')
 
 # --- Orden Views ---
-class OrdenListView(LoginRequiredMixin, ListView):
+class OrdenListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
     model = OrdenCompra
     template_name = 'ordenes_trabajo/lista_ordenes.html'
     context_object_name = 'ordenes'
@@ -109,6 +119,7 @@ class OrdenListView(LoginRequiredMixin, ListView):
         return context
 
 @login_required
+@user_passes_test(ordenes_group_required)
 def crear_orden(request):
     if request.method == 'POST':
         form = OrdenCompraForm(request.POST, user=request.user)
@@ -339,6 +350,7 @@ class OrdenDeleteView(LoginRequiredMixin, DeleteView):
         return redirect(self.success_url)
 
 @login_required
+@user_passes_test(ordenes_group_required)
 def generar_pdf(request, pk):
     orden = get_object_or_404(OrdenCompra, pk=pk)
     pdf_content = _generate_pdf_bytes(orden)
@@ -354,7 +366,7 @@ from django.views.generic import TemplateView
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 
-class EstadisticasView(LoginRequiredMixin, TemplateView):
+class EstadisticasView(LoginRequiredMixin, OrdenesGroupRequiredMixin, TemplateView):
     template_name = 'ordenes_trabajo/estadisticas.html'
 
     def get_context_data(self, **kwargs):

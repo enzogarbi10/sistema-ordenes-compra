@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ordenes_trabajo',
     'web',
+    'postprensa',
 ]
 
 MIDDLEWARE = [
@@ -138,13 +139,13 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = BASE_DIR / 'emails'
 else:
-    # Production: Use SMTP
-    EMAIL_BACKEND = 'core.email_backend.EmailBackend'  # Custom backend for unverified SSL if needed
-    EMAIL_HOST = 'mail.agmelfa.com.ar'
+    # Production: Use Gmail (Allowed by PythonAnywhere Free Tier)
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = 'enzogarbi@agmelfa.com.ar'
-    EMAIL_HOST_PASSWORD = 'ENBI1003'
+    EMAIL_HOST_USER = 'graficamelfa@gmail.com'
+    EMAIL_HOST_PASSWORD = 'bkye nkvi zjdi vxjd'
     DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Auth Settings
@@ -152,3 +153,8 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'lista_ordenes'
 LOGOUT_REDIRECT_URL = 'login'
 
+
+# Session Configuration
+SESSION_COOKIE_AGE = 600  # 10 minutos en segundos
+SESSION_SAVE_EVERY_REQUEST = True  # Reiniciar el tiempo con cada actividad (timeout por inactividad)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Cerrar sesión al cerrar el navegador

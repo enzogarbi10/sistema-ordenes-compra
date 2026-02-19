@@ -27,5 +27,6 @@ urlpatterns = [
     path('accounts/password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('sistema/', include('ordenes_trabajo.urls')),
+    path('calidad/', include('postprensa.urls')),
     path('', include('web.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

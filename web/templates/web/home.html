@@ -1,58 +1,83 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .card-custom {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 3rem;
-            text-align: center;
-            max-width: 500px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-        h1 { font-weight: 700; margin-bottom: 1rem; }
-        p { margin-bottom: 2rem; opacity: 0.9; }
-        .btn-custom {
-            background-color: #fff;
-            color: #1e3c72;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-custom:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            background-color: #f8f9fa;
-            color: #1e3c72;
-        }
-    </style>
-</head>
-<body>
-    <div class="card-custom">
-        <h1>Mi Nuevo Proyecto</h1>
-        <p>Has reestructurado tu proyecto exitosamente. Aquí construiremos tu nueva web pública.</p>
-        
-        <a href="/sistema/" class="btn-custom">Ir al Sistema de Órdenes</a>
+{% extends 'web/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="hero-section d-flex align-items-center text-center text-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-3 fw-bold mb-4 animate-fade-in">Soluciones de Impresión Profesional</h1>
+                <p class="lead mb-5 opacity-90">Calidad, rapidez y precisión para todas tus necesidades gráficas.
+                    Gestiona tus pedidos de forma eficiente.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#servicios" class="btn btn-outline-light btn-lg px-5 rounded-pill">Ver Servicios</a>
+                    <a href="{% url 'lista_ordenes' %}" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg">Ir al
+                        Sistema</a>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+</header>
+
+<!-- Services Section -->
+<section id="servicios" class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5 text-dark">Nuestros Servicios</h2>
+            <div class="divider mx-auto bg-primary"></div>
+        </div>
+        <div class="row g-4">
+            <!-- Service 1 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
+                    <div class="card-body text-center p-5">
+                        <div class="icon-circle bg-primary-subtle text-primary mb-4 mx-auto">
+                            <i class="fas fa-print fa-2x"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Impresión Offset</h4>
+                        <p class="card-text text-muted mt-3">Alta calidad para grandes volúmenes. Folletos, revistas,
+                            catálogos y más.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Service 2 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
+                    <div class="card-body text-center p-5">
+                        <div class="icon-circle bg-success-subtle text-success mb-4 mx-auto">
+                            <i class="fas fa-layer-group fa-2x"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Impresión Digital</h4>
+                        <p class="card-text text-muted mt-3">Rapidez y versatilidad para tiradas cortas. Tarjetas,
+                            flyers y documentos.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Service 3 -->
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm service-card hover-lift">
+                    <div class="card-body text-center p-5">
+                        <div class="icon-circle bg-warning-subtle text-warning mb-4 mx-auto">
+                            <i class="fas fa-pencil-ruler fa-2x"></i>
+                        </div>
+                        <h4 class="card-title fw-bold">Diseño Gráfico</h4>
+                        <p class="card-text text-muted mt-3">Creatividad al servicio de tu marca. Logotipos, branding y
+                            maquetación.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-dark text-white text-center">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-3">¿Listo para comenzar?</h2>
+        <p class="mb-4 text-white-50">Accede a nuestro sistema de gestión para crear y seguir tus órdenes de trabajo.
+        </p>
+        <a href="{% url 'lista_ordenes' %}" class="btn btn-primary btn-lg rounded-pill px-5">Acceder al Sistema</a>
+    </div>
+</section>
+{% endblock %}

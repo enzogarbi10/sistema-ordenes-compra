@@ -1,0 +1,59 @@
+{% extends 'postprensa/base_postprensa.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">¿Está seguro que desea eliminar el siguiente control de calidad?</p>
+
+                    <table class="table table-bordered mb-3">
+                        <tr>
+                            <th class="bg-light" style="width: 40%;">Orden de Trabajo</th>
+                            <td><strong>OT #{{ control.orden }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Fecha</th>
+                            <td>{{ control.fecha|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Operario</th>
+                            <td>{{ control.operario }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Maquinista</th>
+                            <td>{{ control.maquinista }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Cantidad Descartada</th>
+                            <td>{{ control.cantidad_descartada }} unidades</td>
+                        </tr>
+                    </table>
+
+                    <div class="alert alert-warning small mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Esta acción eliminará permanentemente el control y todas sus imágenes asociadas. No se puede
+                        deshacer.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash me-1"></i> Sí, Eliminar
+                            </button>
+                        </form>
+                        <a href="{% url 'lista_controles_postprensa' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-lg me-1"></i> Cancelar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

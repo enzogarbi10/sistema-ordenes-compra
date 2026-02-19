@@ -1,0 +1,1194 @@
+﻿{% extends 'web/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    .opciones-dropdown {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 8px;
+        margin-top: 5px;
+        display: none;
+        /* Oculto por defecto */
+    }
+
+    /* Regla eliminada: display block solo al checkear */
+
+    /* Ajustes para scrollbar en lista de opciones */
+    .opciones-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .opciones-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .opciones-list::-webkit-scrollbar-thumb {
+        background: #ced4da;
+        border-radius: 3px;
+    }
+
+    .opciones-list::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="mb-4 text-center fw-bold text-danger">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>Control de Calidad - Postprensa
+            </h2>
+
+            <form method="post" enctype="multipart/form-data" id="controlForm">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if form.errors %}
+                <div class="alert alert-warning">
+                    <strong>Por favor corrija los siguientes errores:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: {{ errors|striptags }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- CARD PRINCIPAL: Datos de la Orden -->
+                <div
+                    class="card shadow-sm mb-4 border-top-0 border-end-0 border-bottom-0 border-start border-danger border-4">
+                    <div class="card-header bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold text-secondary">Datos de la Orden</h5>
+                            <span class="badge bg-secondary">{{ orden.id }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">N° Orden de
+                                    Trabajo</label>
+                                {{ form.orden }}
+                                {% if form.orden.errors %}
+                                <div class="text-danger small mt-1">{{ form.orden.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Cliente</label>
+                                {{ form.cliente }}
+                                {% if form.cliente.errors %}
+                                <div class="text-danger small mt-1">{{ form.cliente.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">N° Bobina</label>
+                                {{ form.bobina }}
+                                {% if form.bobina.errors %}
+                                <div class="text-danger small mt-1">{{ form.bobina.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Fecha</label>
+                                <input type="text" class="form-control" value="{% now 'd/m/Y' %}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCION MAQUINISTA Y OPERARIO -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person-badge me-2 text-primary"></i>Maquinista
+                                </label>
+                                <div class="input-group">
+                                    {{ form.maquinista }}
+                                    {% if user.is_staff %}
+                                    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#modalAgregarMaquinista" title="Nuevo Maquinista">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" type="button"
+                                        onclick="abrirEditarMaquinista()" title="Editar seleccionado">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" type="button"
+                                        onclick="confirmarEliminarMaquinista()" title="Eliminar seleccionado">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                {% if form.maquinista.errors %}
+                                <div class="text-danger small mt-1">{{ form.maquinista.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-people-fill me-2 text-success"></i>Operario Inspeccion
+                                </label>
+                                <div class="input-group">
+                                    {{ form.operario }}
+                                    {% if user.is_staff %}
+                                    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#modalAgregarOperario" title="Nuevo Operario">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" type="button"
+                                        onclick="abrirEditarOperario()" title="Editar seleccionado">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" type="button"
+                                        onclick="confirmarEliminarOperario()" title="Eliminar seleccionado">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                {% if form.operario.errors %}
+                                <div class="text-danger small mt-1">{{ form.operario.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCION DEFECTOS -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold text-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Registro de Defectos
+                        </h5>
+                        {% if user.is_staff %}
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold" data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarDefecto">
+                            <i class="bi bi-plus-lg me-1"></i> Nueva Categoría
+                        </button>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label fw-bold mb-3">Seleccione los tipos de defecto detectados:</label>
+
+                        <div class="row g-3 mb-4" id="defectos-container">
+                            {% for checkbox in form.defectos %}
+                            <div class="col-sm-6 col-md-4" id="defecto-col-{{ checkbox.data.value }}">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="{{ checkbox.data.value }}"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_{{ checkbox.data.value }}"
+                                                data-tipo-id="{{ checkbox.data.value }}" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_{{ checkbox.data.value }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                        {% if user.is_staff %}
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('{{ checkbox.data.value }}', '{{ checkbox.choice_label|escapejs }}')"
+                                                title="Agregar opcion a {{ checkbox.choice_label }}">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('{{ checkbox.data.value }}')"
+                                                title="Editar nombre de {{ checkbox.choice_label }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('{{ checkbox.data.value }}')"
+                                                title="Eliminar {{ checkbox.choice_label }}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-{{ checkbox.data.value }}">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-{{ checkbox.data.value }}"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <p class="text-muted fst-italic mb-0">
+                                    No hay tipos de defecto configurados.
+                                    {% if user.is_staff %}Use el boton "Tipo" para crear uno.{% endif %}
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Cantidad Descartada</label>
+                                <div class="input-group">
+                                    {{ form.cantidad_descartada }}
+                                    <span class="input-group-text bg-white">unidades</span>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold w-100 text-center">Observaciones</label>
+                                {{ form.detalle_defecto }}
+                                {% if form.detalle_defecto.errors %}
+                                <div class="text-danger small mt-1">{{ form.detalle_defecto.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- EVIDENCIA -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-camera me-2 text-secondary"></i>Evidencia del Error
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {{ formset.management_form }}
+                        <div class="row g-3">
+                            {% for imgform in formset %}
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 text-center bg-light h-100 position-relative">
+                                    {% if imgform.instance.pk %}
+                                    <div class="mb-2">
+                                        <a href="{{ imgform.instance.imagen.url }}" target="_blank">
+                                            <img src="{{ imgform.instance.imagen.url }}" class="img-fluid rounded mb-2"
+                                                style="max-height: 100px;">
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    <i class="bi bi-cloud-upload fs-1 text-muted d-block mb-2"></i>
+                                    {{ imgform.imagen }}
+                                    {% if imgform.instance.pk %}
+                                    <div class="form-check mt-2 small text-danger fw-bold">
+                                        {{ imgform.DELETE }}
+                                        <label class="form-check-label">Eliminar</label>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CIERRE DE CONTROL -->
+                <div class="card shadow-sm mb-4 border-start border-primary border-4" id="seccion-cierre">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-primary">
+                            <i class="bi bi-file-earmark-check me-2"></i>Cierre de Control e Inspección
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4 align-items-center">
+                            <div class="col-md-5 text-center">
+                                <label class="form-label fw-bold d-block text-muted small text-uppercase mb-3">¿Se llegó
+                                    a la cantidad total pedida?</label>
+                                <div class="btn-group w-100 shadow-sm" role="group">
+                                    <input type="radio" class="btn-check" name="llego_btn" id="llego_si"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-success border-2 py-3 fw-bold" for="llego_si">
+                                        <i class="bi bi-check-circle-fill me-2"></i> SÍ
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="llego_btn" id="llego_no"
+                                        autocomplete="off">
+                                    <label class="btn btn-outline-danger border-2 py-3 fw-bold" for="llego_no">
+                                        <i class="bi bi-x-circle-fill me-2"></i> NO
+                                    </label>
+                                </div>
+                                <div class="d-none">
+                                    {{ form.llego_cantidad }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-7 border-start" id="container-autorizacion" style="display: none;">
+                                <div class="ps-md-4">
+                                    <label class="form-label fw-bold text-danger small text-uppercase mb-2">
+                                        <i class="bi bi-exclamation-octagon me-1"></i> Requiere Autorización (Partida
+                                        Incompleta)
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="bi bi-person-check-fill text-danger"></i>
+                                        </span>
+                                        {{ form.autorizo_envio }}
+                                    </div>
+                                    {% if form.autorizo_envio.errors %}
+                                    <div class="text-danger small mt-1">{{ form.autorizo_envio.errors }}</div>
+                                    {% endif %}
+                                    <small class="text-muted d-block mt-2 fst-italic">
+                                        Seleccione quién autoriza el envío a pesar de no haber llegado a la cantidad.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-4 pt-3 border-top">
+                            <div class="col-12">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Notas Adicionales /
+                                    Observaciones Generales</label>
+                                {{ form.observaciones }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'home' %}" class="btn btn-secondary me-md-2 px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold">
+                        <i class="bi bi-check-circle me-2"></i>Registrar Control
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- DATA JSON PARA OPCIONES -->
+<script type="application/json" id="opciones-data">
+    {{ opciones_json|safe }}
+</script>
+
+<!-- MODALES (Resto del template igual) -->
+
+
+
+
+
+<!-- Modal Agregar Maquinista -->
+<div class="modal fade" id="modalAgregarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo Maquinista</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="nuevoMaquinistaNombre" placeholder="Nombre completo">
+                <div id="maquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarMaquinista">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Maquinista -->
+<div class="modal fade" id="modalEditarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Maquinista</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarMaquinistaId">
+                <input type="text" class="form-control mb-2" id="editarMaquinistaNombre" placeholder="Nombre completo">
+                <div id="editarMaquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarMaquinista">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Maquinista -->
+<div class="modal fade" id="modalEliminarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Maquinista</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar a <strong id="eliminarMaquinistaNombre"></strong>?</p>
+                <input type="hidden" id="eliminarMaquinistaId">
+                <div id="eliminarMaquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarMaquinista">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Operario -->
+<div class="modal fade" id="modalEditarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Operario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarOperarioId">
+                <input type="text" class="form-control mb-2" id="editarOperarioNombre" placeholder="Nombre completo">
+                <div id="editarOperarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarOperario">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalAgregarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo Operario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="nuevoOperarioNombre" placeholder="Nombre completo">
+                <div id="operarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarOperario">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Operario -->
+<div class="modal fade" id="modalEliminarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Operario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar a <strong id="eliminarOperarioNombre"></strong>?</p>
+                <input type="hidden" id="eliminarOperarioId">
+                <div id="eliminarOperarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarOperario">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Tipo Defecto -->
+<div class="modal fade" id="modalAgregarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Nuevo Tipo de Defecto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="nuevoDefectoNombre" placeholder="Nombre del defecto">
+                <div id="defectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarDefecto"
+                    onclick="guardarNuevoTipoDefecto()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Tipo Defecto -->
+<div class="modal fade" id="modalEditarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Tipo de Defecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select mb-3" id="editarDefectoSelect">
+                    <option value="">-- Seleccione --</option>
+                    {% for cb in form.defectos %}
+                    <option value="{{ cb.data.value }}" data-nombre="{{ cb.choice_label }}">{{ cb.choice_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <input type="text" class="form-control" id="editarDefectoNombre" placeholder="Nuevo nombre">
+                <div id="editarDefectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarDefecto">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Tipo Defecto -->
+<div class="modal fade" id="modalEliminarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Tipo de Defecto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select mb-3" id="eliminarDefectoSelect">
+                    <option value="">-- Seleccione --</option>
+                    {% for cb in form.defectos %}
+                    <option value="{{ cb.data.value }}">{{ cb.choice_label }}</option>
+                    {% endfor %}
+                </select>
+                <div id="eliminarDefectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarDefecto">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Opcion -->
+<div class="modal fade" id="modalAgregarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Nueva Opción para <span id="agregarOpcionTipoNombre" class="fw-bold"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="agregarOpcionTipoId">
+                <input type="text" class="form-control" id="nuevaOpcionNombre" placeholder="Nombre de la opción">
+                <div id="opcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarOpcion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Opcion -->
+<div class="modal fade" id="modalEditarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Opción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarOpcionId">
+                <input type="text" class="form-control" id="editarOpcionNombre" placeholder="Nuevo nombre">
+                <div id="editarOpcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarOpcion">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Opcion -->
+<div class="modal fade" id="modalEliminarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Opción</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar la opción <strong id="eliminarOpcionNombre"></strong>?</p>
+                <input type="hidden" id="eliminarOpcionId">
+                <div id="eliminarOpcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarOpcion">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const IS_STAFF = "{{ user.is_staff|yesno:'true,false' }}".trim() === "true";
+</script>
+
+<script>
+    function getCookie(name) {
+        let v = null;
+        if (document.cookie) {
+            document.cookie.split(';').forEach(c => {
+                c = c.trim();
+                if (c.startsWith(name + '=')) v = decodeURIComponent(c.substring(name.length + 1));
+            });
+        }
+        return v;
+    }
+    const csrfToken = getCookie('csrftoken');
+    let opcionesDisponibles = {};
+
+    function showErr(id, msg) {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = msg; el.classList.remove('d-none'); }
+    }
+    function hideErr(id) {
+        const el = document.getElementById(id);
+        if (el) { el.classList.add('d-none'); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fix para agregar clase form-control si falta (para evitar reinicio de server)
+        const dd = document.getElementById('id_detalle_defecto');
+        if (dd) dd.classList.add('form-control');
+
+        // Lógica de Cierre: Se llegó a la cantidad?
+        const btnSi = document.getElementById('llego_si');
+        const btnNo = document.getElementById('llego_no');
+        const realCheck = document.getElementById('id_llego_cantidad');
+        const containerAut = document.getElementById('container-autorizacion');
+
+        function actualizarCierre() {
+            if (btnNo.checked) {
+                realCheck.checked = false;
+                containerAut.style.display = 'block';
+                containerAut.classList.add('animate__animated', 'animate__fadeInRight');
+            } else {
+                realCheck.checked = true;
+                containerAut.style.display = 'none';
+            }
+        }
+
+        if (btnSi && btnNo) {
+            // Estado inicial: El modelo tiene default=True (Si se llego)
+            realCheck.checked = true;
+            btnSi.addEventListener('change', actualizarCierre);
+            btnNo.addEventListener('change', actualizarCierre);
+        }
+
+        // Cargar opciones iniciales desde JSON
+        const opcionesData = document.getElementById('opciones-data');
+        if (opcionesData) {
+            try {
+                opcionesDisponibles = JSON.parse(opcionesData.textContent);
+            } catch (e) { console.error('Error parsing opciones:', e); }
+        }
+
+        // Manejar checkboxes de defectos principales
+        // Manejar checkboxes de defectos principales
+        document.querySelectorAll('.defecto-checkbox').forEach(cb => {
+            // Cargar opciones siempre al inicio
+            cargarOpciones(cb.dataset.tipoId);
+            const container = document.getElementById('opciones-container-' + cb.dataset.tipoId);
+
+            // Inicializar visibilidad
+            if (cb.checked && container) {
+                container.style.display = 'block';
+            }
+
+            cb.addEventListener('change', function () {
+                const c = document.getElementById('opciones-container-' + this.dataset.tipoId);
+                if (this.checked) {
+                    if (c) c.style.display = 'block';
+                } else {
+                    if (c) c.style.display = 'none';
+                    // Desmarcar opciones al desmarcar el padre visualmente
+                    const lista = document.getElementById('opcion-list-' + this.dataset.tipoId);
+                    if (lista) lista.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.checked = false);
+                }
+            });
+        });
+    });
+
+    /**
+     * Carga las opciones como checkboxes dentro del contenedor especificado.
+     * @param {string} tipoId - ID del tipo de defecto.
+     * @param {Array} preselectedIds - Array de IDs de opciones a marcar.
+     */
+    function cargarOpciones(tipoId, preselectedIds = []) {
+        const container = document.getElementById('opcion-list-' + tipoId);
+        if (!container) return;
+
+        container.innerHTML = '';
+        const opciones = opcionesDisponibles[tipoId] || [];
+
+        if (opciones.length === 0) {
+            container.innerHTML = '<div class="text-muted fst-italic p-1 small">Sin opciones configuradas</div>';
+            return;
+        }
+
+        opciones.forEach(op => {
+            const div = document.createElement('div');
+            div.className = 'form-check mb-1 d-flex align-items-center justify-content-between option-item';
+
+            const leftDiv = document.createElement('div');
+            leftDiv.className = 'd-flex align-items-center flex-grow-1';
+
+            const chk = document.createElement('input');
+            chk.type = 'checkbox';
+            chk.className = 'form-check-input opcion-checkbox me-2';
+            chk.name = 'opciones_defecto_' + tipoId; // Nombre esperado por el backend
+            chk.value = op.id;
+            chk.id = 'opt-' + op.id;
+
+            if (preselectedIds.includes(op.id) || preselectedIds.includes(op.id.toString())) {
+                chk.checked = true;
+            }
+
+            const lbl = document.createElement('label');
+            lbl.className = 'form-check-label text-break small mb-0';
+            lbl.htmlFor = 'opt-' + op.id;
+            lbl.textContent = op.nombre;
+            lbl.style.cursor = 'pointer';
+
+            leftDiv.appendChild(chk);
+            leftDiv.appendChild(lbl);
+            div.appendChild(leftDiv);
+
+            if (IS_STAFF) {
+                const btnGroup = document.createElement('div');
+                btnGroup.className = 'btn-group btn-group-sm ms-2';
+
+                const btnEdit = document.createElement('button');
+                btnEdit.type = 'button';
+                btnEdit.className = 'btn btn-outline-warning py-0 px-2 me-1';
+                btnEdit.innerHTML = '<i class="bi bi-pencil"></i>';
+                btnEdit.onclick = (e) => { e.preventDefault(); abrirEditarOpcion(op.id, op.nombre, tipoId); };
+
+                const btnDel = document.createElement('button');
+                btnDel.type = 'button';
+                btnDel.className = 'btn btn-outline-danger py-0 px-2';
+                btnDel.innerHTML = '<i class="bi bi-trash"></i>';
+                btnDel.onclick = (e) => { e.preventDefault(); confirmarEliminarOpcion(op.id, op.nombre, tipoId); };
+
+                btnGroup.appendChild(btnEdit);
+                btnGroup.appendChild(btnDel);
+                div.appendChild(btnGroup);
+            }
+
+            container.appendChild(div);
+        });
+    }
+
+    // --- LOGICA MAQUINISTA ---
+    function buscarMaquinista() {
+        const legajo = document.getElementById('searchLegajo').value;
+        if (!legajo) return;
+
+        fetch(`/calidad/api/buscar-maquinista/?legajo=${legajo}`)
+            .then(r => r.json())
+            .then(data => {
+                const div = document.getElementById('maquinistaResults');
+                div.innerHTML = '';
+                if (data.encontrado && data.maquinista) {
+                    const m = data.maquinista;
+                    const btn = document.createElement('button');
+                    btn.className = 'list-group-item list-group-item-action';
+                    btn.textContent = `${m.nombre} ${m.apellido} (${m.legajo})`;
+                    btn.onclick = () => selectMaquinista(m.id, `${m.nombre} ${m.apellido}`);
+                    div.appendChild(btn);
+                } else {
+                    div.innerHTML = '<p class="text-danger mt-2">No encontrado</p>';
+                }
+            })
+            .catch(e => {
+                document.getElementById('maquinistaResults').innerHTML = '<p class="text-danger mt-2">Error al buscar</p>';
+            });
+    }
+
+    function selectMaquinista(id, nombre) {
+        const sel = document.getElementById('id_maquinista');
+        let exists = false;
+        for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value == id) {
+                sel.selectedIndex = i;
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = nombre;
+            opt.selected = true;
+            sel.appendChild(opt);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('modalBuscarMaquinista')).hide();
+    }
+
+
+
+    // --- LOGICA MAQUINISTA (CRUD) ---
+    document.getElementById('btnGuardarMaquinista')?.addEventListener('click', function () {
+        const nombre = document.getElementById('nuevoMaquinistaNombre').value.trim();
+        hideErr('maquinistaError');
+        if (!nombre) { showErr('maquinistaError', 'Requerido'); return; }
+
+        fetch("{% url 'agregar_maquinista' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('maquinistaError', data.error);
+            else {
+                const sel = document.getElementById('id_maquinista');
+                const opt = document.createElement('option');
+                opt.value = data.id;
+                opt.textContent = data.nombre;
+                opt.selected = true;
+                sel.appendChild(opt);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarMaquinista')).hide();
+            }
+        });
+    });
+
+    function abrirEditarMaquinista() {
+        const sel = document.getElementById('id_maquinista');
+        if (!sel.value) return;
+        document.getElementById('editarMaquinistaId').value = sel.value;
+        document.getElementById('editarMaquinistaNombre').value = sel.options[sel.selectedIndex].text;
+        hideErr('editarMaquinistaError');
+        new bootstrap.Modal(document.getElementById('modalEditarMaquinista')).show();
+    }
+
+    document.getElementById('btnActualizarMaquinista')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarMaquinistaId').value;
+        const nombre = document.getElementById('editarMaquinistaNombre').value.trim();
+        hideErr('editarMaquinistaError');
+        if (!nombre) { showErr('editarMaquinistaError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-maquinista/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarMaquinistaError', data.error);
+            else {
+                const sel = document.getElementById('id_maquinista');
+                const opt = sel.querySelector(`option[value="${pk}"]`);
+                if (opt) opt.textContent = data.nombre;
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarMaquinista')).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarMaquinista() {
+        const sel = document.getElementById('id_maquinista');
+        if (!sel.value) return;
+        document.getElementById('eliminarMaquinistaId').value = sel.value;
+        document.getElementById('eliminarMaquinistaNombre').textContent = sel.options[sel.selectedIndex].text;
+        hideErr('eliminarMaquinistaError');
+        new bootstrap.Modal(document.getElementById('modalEliminarMaquinista')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarMaquinista')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarMaquinistaId').value;
+        fetch('/calidad/api/eliminar-maquinista/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(d => {
+                if (!d.error) {
+                    const sel = document.getElementById('id_maquinista');
+                    sel.remove(sel.selectedIndex);
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarMaquinista')).hide();
+                } else { showErr('eliminarMaquinistaError', d.error); }
+            });
+    });
+
+    // --- LOGICA OPERARIOS ---
+    document.getElementById('btnGuardarOperario')?.addEventListener('click', function () {
+        const nombre = document.getElementById('nuevoOperarioNombre').value.trim();
+        hideErr('operarioError');
+        if (!nombre) { showErr('operarioError', 'Requerido'); return; }
+
+        fetch("{% url 'agregar_operario' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('operarioError', data.error);
+            else {
+                const s = document.getElementById('id_operario');
+                const opt = document.createElement('option');
+                opt.value = data.id;
+                opt.textContent = data.nombre;
+                opt.selected = true;
+                s.appendChild(opt);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarOperario')).hide();
+            }
+        });
+    });
+
+    function abrirEditarOperario() {
+        const sel = document.getElementById('id_operario');
+        if (!sel.value) return;
+        document.getElementById('editarOperarioId').value = sel.value;
+        document.getElementById('editarOperarioNombre').value = sel.options[sel.selectedIndex].text;
+        hideErr('editarOperarioError');
+        new bootstrap.Modal(document.getElementById('modalEditarOperario')).show();
+    }
+
+    document.getElementById('btnActualizarOperario')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarOperarioId').value;
+        const nombre = document.getElementById('editarOperarioNombre').value.trim();
+        hideErr('editarOperarioError');
+        if (!nombre) { showErr('editarOperarioError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-operario/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarOperarioError', data.error);
+            else {
+                const sel = document.getElementById('id_operario');
+                const opt = sel.querySelector(`option[value="${pk}"]`);
+                if (opt) opt.textContent = data.nombre;
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarOperario')).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarOperario() {
+        const s = document.getElementById('id_operario');
+        if (!s.value) return;
+        const t = s.options[s.selectedIndex].text;
+        document.getElementById('eliminarOperarioId').value = s.value;
+        document.getElementById('eliminarOperarioNombre').textContent = t;
+        new bootstrap.Modal(document.getElementById('modalEliminarOperario')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarOperario')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarOperarioId').value;
+        fetch('/calidad/api/eliminar-operario/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(d => {
+                if (!d.error) {
+                    const s = document.getElementById('id_operario');
+                    s.remove(s.selectedIndex);
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarOperario')).hide();
+                } else {
+                    showErr('eliminarOperarioError', d.error);
+                }
+            });
+    });
+
+    // --- LOGICA TIPOS DEFECTO (CRUD) ---
+    function guardarNuevoTipoDefecto() {
+        const nombre = document.getElementById('nuevoDefectoNombre').value.trim();
+        hideErr('defectoError');
+        if (!nombre) { showErr('defectoError', 'Requerido'); return; }
+
+        fetch("{% url 'agregar_tipo_defecto' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        })
+            .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+            .then(data => {
+                if (data.error) showErr('defectoError', data.error);
+                else location.reload();
+            })
+            .catch(e => showErr('defectoError', "Error: " + e.message));
+    }
+
+    function abrirEditarDefecto(id = '') {
+        const sel = document.getElementById('editarDefectoSelect');
+        sel.value = id;
+        document.getElementById('editarDefectoNombre').value = '';
+
+        if (id) {
+            const opt = sel.querySelector(`option[value="${id}"]`);
+            if (opt) document.getElementById('editarDefectoNombre').value = opt.dataset.nombre || opt.text;
+        }
+
+        hideErr('editarDefectoError');
+        new bootstrap.Modal(document.getElementById('modalEditarDefecto')).show();
+    }
+
+    document.getElementById('editarDefectoSelect')?.addEventListener('change', function () {
+        const opt = this.options[this.selectedIndex];
+        if (opt.value) document.getElementById('editarDefectoNombre').value = opt.dataset.nombre || opt.text;
+    });
+
+    document.getElementById('btnActualizarDefecto')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarDefectoSelect').value;
+        const nombre = document.getElementById('editarDefectoNombre').value.trim();
+        hideErr('editarDefectoError');
+
+        if (!pk) { showErr('editarDefectoError', 'Seleccione un defecto'); return; }
+        if (!nombre) { showErr('editarDefectoError', 'Nombre requerido'); return; }
+
+        fetch('/calidad/api/editar-tipo-defecto/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarDefectoError', data.error);
+            else location.reload();
+        });
+    });
+
+    function confirmarEliminarDefecto(id = '') {
+        document.getElementById('eliminarDefectoSelect').value = id;
+        hideErr('eliminarDefectoError');
+        new bootstrap.Modal(document.getElementById('modalEliminarDefecto')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarDefecto')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarDefectoSelect').value;
+        hideErr('eliminarDefectoError');
+
+        if (!pk) { showErr('eliminarDefectoError', 'Seleccione un defecto'); return; }
+
+        fetch('/calidad/api/eliminar-tipo-defecto/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(data => {
+                if (data.error) showErr('eliminarDefectoError', data.error);
+                else location.reload();
+            });
+    });
+
+
+    // --- LOGICA OPCIONES (CRUD) ---
+    function abrirAgregarOpcion(tipoId, tipoNombre) {
+        document.getElementById('agregarOpcionTipoId').value = tipoId;
+        document.getElementById('agregarOpcionTipoNombre').textContent = tipoNombre;
+        document.getElementById('nuevaOpcionNombre').value = '';
+        hideErr('opcionError');
+        new bootstrap.Modal(document.getElementById('modalAgregarOpcion')).show();
+    }
+
+    document.getElementById('btnGuardarOpcion')?.addEventListener('click', function () {
+        const tipoId = document.getElementById('agregarOpcionTipoId').value;
+        const nombre = document.getElementById('nuevaOpcionNombre').value.trim();
+        hideErr('opcionError');
+        if (!nombre) { showErr('opcionError', 'Requerido'); return; }
+
+        fetch("{% url 'agregar_opcion_defecto' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'tipo_defecto_id=' + tipoId + '&nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('opcionError', data.error);
+            else {
+                if (!opcionesDisponibles[tipoId]) opcionesDisponibles[tipoId] = [];
+                opcionesDisponibles[tipoId].push({ id: data.id, nombre: data.nombre });
+
+                const containerId = 'opcion-list-' + tipoId;
+                const container = document.getElementById(containerId);
+                let selected = [data.id];
+
+                if (container) {
+                    container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                }
+
+                cargarOpciones(tipoId, selected);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarOpcion')).hide();
+            }
+        });
+    });
+
+    function abrirEditarOpcion(id, actualNombre, tipoId) {
+        document.getElementById('editarOpcionId').value = id;
+        document.getElementById('editarOpcionNombre').value = actualNombre;
+        document.getElementById('modalEditarOpcion').dataset.tipoId = tipoId;
+        hideErr('editarOpcionError');
+        new bootstrap.Modal(document.getElementById('modalEditarOpcion')).show();
+    }
+
+    document.getElementById('btnActualizarOpcion')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarOpcionId').value;
+        const nombre = document.getElementById('editarOpcionNombre').value.trim();
+        hideErr('editarOpcionError');
+        if (!nombre) { showErr('editarOpcionError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-opcion-defecto/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarOpcionError', data.error);
+            else {
+                const modal = document.getElementById('modalEditarOpcion');
+                const tipoId = modal.dataset.tipoId;
+
+                if (tipoId && opcionesDisponibles[tipoId]) {
+                    const idx = opcionesDisponibles[tipoId].findIndex(o => o.id == pk);
+                    if (idx !== -1) opcionesDisponibles[tipoId][idx].nombre = data.nombre;
+
+                    const container = document.getElementById('opcion-list-' + tipoId);
+                    let selected = [];
+                    if (container) {
+                        container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                    }
+                    cargarOpciones(tipoId, selected);
+                }
+                bootstrap.Modal.getInstance(modal).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarOpcion(id, nombre, tipoId) {
+        document.getElementById('eliminarOpcionId').value = id;
+        document.getElementById('eliminarOpcionNombre').textContent = nombre;
+        document.getElementById('modalEliminarOpcion').dataset.tipoId = tipoId;
+        hideErr('eliminarOpcionError');
+
+        fetch('/calidad/api/eliminar-opcion-defecto/' + id + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(data => {
+                if (data.error) showErr('eliminarOpcionError', data.error);
+                else {
+                    const modal = document.getElementById('modalEliminarOpcion');
+                    const tipoId = modal.dataset.tipoId;
+
+                    if (tipoId && opcionesDisponibles[tipoId]) {
+                        opcionesDisponibles[tipoId] = opcionesDisponibles[tipoId].filter(o => o.id != id);
+
+                        const container = document.getElementById('opcion-list-' + tipoId);
+                        let selected = [];
+                        if (container) {
+                            container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                        }
+                        selected = selected.filter(val => val != id);
+
+                        cargarOpciones(tipoId, selected);
+                    }
+                    bootstrap.Modal.getInstance(modal).hide();
+                }
+            });
+    }
+
+</script>
+{% endblock %}

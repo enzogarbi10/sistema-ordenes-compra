@@ -1,0 +1,119 @@
+{% extends 'postprensa/base_postprensa.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2><i class="bi bi-clipboard-check"></i> Controles de Calidad Postprensa</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'crear_control_postprensa' %}" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Nuevo Control
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>N° OT</th>
+                        <th>Fecha</th>
+                        <th>Operario</th>
+                        <th>Maquinista</th>
+                        <th>Descarte</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for control in controles %}
+                    <tr>
+                        <td><strong>OT #{{ control.orden }}</strong></td>
+                        <td>{{ control.fecha|date:"d/m/Y H:i" }}</td>
+                        <td>{{ control.operario }}</td>
+                        <td>{{ control.maquinista }}</td>
+                        <td><span class="badge bg-danger">{{ control.cantidad_descartada }} un.</span></td>
+                        <td>
+                            {% if control.llego_cantidad %}
+                            <span class="badge bg-success">Completado</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pendiente</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'control_pdf' control.pk %}" class="btn btn-outline-danger"
+                                    title="Descargar PDF">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </a>
+
+                                {# Editar: staff O el creador del control #}
+                                {% if user.is_staff or control.creado_por == user %}
+                                <a href="{% url 'editar_control_postprensa' control.pk %}"
+                                    class="btn btn-outline-warning" title="Editar Control">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% endif %}
+
+                                {# Eliminar: solo staff #}
+                                {% if user.is_staff %}
+                                <button type="button" class="btn btn-outline-danger" title="Eliminar Control"
+                                    data-bs-toggle="modal" data-bs-target="#modalEliminar{{ control.pk }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% if user.is_staff %}
+                    <!-- Modal de confirmación para eliminar -->
+                    <div class="modal fade" id="modalEliminar{{ control.pk }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>Eliminar Control
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Está seguro que desea eliminar el control de calidad de la
+                                        <strong>OT #{{ control.orden }}</strong>?
+                                    </p>
+                                    <p class="text-muted small mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Fecha: {{ control.fecha|date:"d/m/Y H:i" }} —
+                                        Operario: {{ control.operario }} —
+                                        Esta acción no se puede deshacer.
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <form method="post" action="{% url 'eliminar_control_postprensa' control.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-trash me-1"></i> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted">No hay controles registrados aún.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
