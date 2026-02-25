@@ -145,7 +145,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Auth Settings
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'lista_ordenes'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
 
