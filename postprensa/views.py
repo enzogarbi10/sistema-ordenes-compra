@@ -587,92 +587,153 @@ def descargar_estadisticas_pdf(request):
 
 def generar_pdf_bytes_control(control):
     buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.enums import TA_CENTER
+    
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
     elements = []
     styles = getSampleStyleSheet()
     
+    # Custom styles
+    title_style = ParagraphStyle(name='CenterTitle', parent=styles['Title'], alignment=TA_CENTER, spaceAfter=20)
+    heading_style = ParagraphStyle(name='CenterHeading', parent=styles['Heading2'], alignment=TA_CENTER, spaceAfter=10, textColor=colors.HexColor('#333333'))
+    
     # --- Header con Logo ---
     logo_path = settings.BASE_DIR / 'static' / 'img' / 'logo.png'
-    title_text = f"Control de Calidad #{control.id}"
+    title_text = f"Reporte de Control de Calidad #{control.id}"
     
     if logo_path.exists():
-        img = Image(str(logo_path), width=120, height=40, kind='proportional')
-        img.hAlign = 'LEFT'
-        header_data = [[img, Paragraph(title_text, styles['Title'])]]
-        t_header = Table(header_data, colWidths=[150, 300])
-        t_header.setStyle(TableStyle([
-            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-            ('ALIGN', (1,0), (1,0), 'LEFT'),
-        ]))
-        elements.append(t_header)
+        try:
+            img = Image(str(logo_path), width=140, height=45, kind='proportional')
+            img.hAlign = 'LEFT'
+            header_data = [[img, Paragraph(title_text, title_style)]]
+            t_header = Table(header_data, colWidths=[160, 340], hAlign='CENTER')
+            t_header.setStyle(TableStyle([
+                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+                ('ALIGN', (1,0), (1,0), 'CENTER'),
+            ]))
+            elements.append(t_header)
+            elements.append(Spacer(1, 20))
+        except Exception:
+            elements.append(Paragraph(title_text, title_style))
+            elements.append(Spacer(1, 20))
     else:
-        elements.append(Paragraph(title_text, styles['Title']))
+        elements.append(Paragraph(title_text, title_style))
+        elements.append(Spacer(1, 20))
     
-    elements.append(Spacer(1, 10))
-    elements.append(Paragraph(f"Orden de Trabajo: {control.orden}", styles['Heading2']))
-    elements.append(Spacer(1, 10))
+    # 1. Info Principal
+    elements.append(Paragraph(f"Orden de Trabajo: {control.orden}", heading_style))
     
-    # 2. General Info Table
     data_info = [
-        ['Fecha:', control.fecha.strftime("%d/%m/%Y %H:%M")],
-        ['Operario:', str(control.operario) if control.operario else '-'],
-        ['Maquinista:', str(control.maquinista) if control.maquinista else '-'],
-        ['Bobina:', control.bobina or '-'],
-        ['Estado:', 'Aprobado' if control.llego_cantidad else 'Con Faltantes'],
+        ['Fecha del Control:', control.fecha.strftime("%d/%m/%Y %H:%M")],
+        ['Operario (Insp):', str(control.operario) if control.operario else 'No especificado'],
+        ['Maquinista:', str(control.maquinista) if control.maquinista else 'No especificado'],
+        ['N° de Bobina:', control.bobina or '-'],
+        ['Estado Final:', 'APROBADO (Cumple)' if control.llego_cantidad else 'CON FALTANTES / RECHAZO'],
     ]
-    t_info = Table(data_info, colWidths=[100, 300])
+    t_info = Table(data_info, colWidths=[150, 350], hAlign='CENTER')
     t_info.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#f2f2f2')),
+        ('TEXTCOLOR', (0,0), (0,-1), colors.HexColor('#333333')),
+        ('ALIGN', (0,0), (0,-1), 'RIGHT'),
+        ('ALIGN', (1,0), (1,-1), 'LEFT'),
         ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+        ('FONTNAME', (1,0), (1,-1), 'Helvetica'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.lightgrey),
     ]))
     elements.append(t_info)
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 25))
     
-    # 3. Defectos (dinámico)
-    elements.append(Paragraph("Detalle de Defectos", styles['Heading3']))
+    # 3. Defectos
+    elements.append(Paragraph("Detalle de Defectos Encontrados", heading_style))
     
     defectos_lista = control.defectos.all()
-    str_defectos = ", ".join([d.nombre for d in defectos_lista]) if defectos_lista.exists() else "Sin defectos marcados"
-    
+    if defectos_lista.exists():
+        str_defectos = ", ".join([d.nombre for d in defectos_lista])
+    else:
+        str_defectos = "Ninguno (Sin defectos marcados)"
+        
     data_defects = [
         ['Tipos de Defecto:', str_defectos],
         ['Cantidad Descartada:', f"{control.cantidad_descartada} unidades"],
-        ['Detalle:', control.detalle_defecto or '-'],
+        ['Detalle / Explicación:', control.detalle_defecto or 'Ninguno proporcionado'],
     ]
-    t_defects = Table(data_defects, colWidths=[120, 380])
+    t_defects = Table(data_defects, colWidths=[150, 350], hAlign='CENTER')
     t_defects.setStyle(TableStyle([
-        ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+        ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#fff0f0')),
         ('TEXTCOLOR', (0,0), (0,-1), colors.darkred),
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+        ('ALIGN', (0,0), (0,-1), 'RIGHT'),
+        ('ALIGN', (1,0), (1,-1), 'LEFT'),
+        ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
+        ('FONTNAME', (1,0), (1,-1), 'Helvetica'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.lightgrey),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     elements.append(t_defects)
-    elements.append(Spacer(1, 20))
+    elements.append(Spacer(1, 25))
     
-    # 4. Evidencia (Imagenes)
+    # 4. Evidencia Visual
     if control.imagenes.exists():
-        elements.append(Paragraph("Evidencia Visual", styles['Heading3']))
+        elements.append(Paragraph("Evidencia Fotográfica", heading_style))
         for img_obj in control.imagenes.all():
             try:
-                img = Image(img_obj.imagen.path, width=300, height=200, kind='proportional')
+                from PIL import Image as PILImage, ImageOps
+                
+                # Cargar imagen con Pillow, que procesa mejor los JPEGs y EXIFs
+                with PILImage.open(img_obj.imagen.path) as pil_img:
+                    # Convertimos a RGB siempre (por si es CMYK o RGBA que ReportLab no soporta bien)
+                    if pil_img.mode != 'RGB':
+                        pil_img = pil_img.convert('RGB')
+                        
+                    # Arreglamos la orientación si viene de un celular (respetar EXIF)
+                    try: pil_img = ImageOps.exif_transpose(pil_img)
+                    except: pass
+                    
+                    # Achicamos la imagen en memoria para que no reviente el PDF ni pese demasiado
+                    pil_img.thumbnail((800, 800))
+                    
+                    img_buffer = io.BytesIO()
+                    pil_img.save(img_buffer, format='JPEG', quality=85)
+                    img_buffer.seek(0)
+                    
+                img = Image(img_buffer, width=350, height=250, kind='proportional')
+                img.hAlign = 'CENTER'
                 elements.append(img)
+                
                 if img_obj.descripcion:
-                    elements.append(Paragraph(f"Nota: {img_obj.descripcion}", styles['Italic']))
-                elements.append(Spacer(1, 10))
-            except Exception:
-                elements.append(Paragraph("[Error cargando imagen]", styles['Normal']))
+                    desc_style = ParagraphStyle(name='Desc', parent=styles['Italic'], alignment=TA_CENTER)
+                    elements.append(Spacer(1, 5))
+                    elements.append(Paragraph(f"Nota: {img_obj.descripcion}", desc_style))
+                elements.append(Spacer(1, 20))
+            except Exception as e:
+                import traceback
+                print(f"Error PDF IMG: {e}")
+                traceback.print_exc()
+                elements.append(Paragraph("[No se pudo cargar una de las imágenes adjuntas]", ParagraphStyle(name='Err', alignment=TA_CENTER, textColor=colors.red)))
+                elements.append(Spacer(1, 20))
 
     # 5. Cierre
-    elements.append(Spacer(1, 20))
-    elements.append(Paragraph("Cierre del Control", styles['Heading3']))
+    elements.append(Spacer(1, 15))
+    elements.append(Paragraph("Resolución y Cierre", heading_style))
     data_closure = [
-        ['Autorizó Envío:', control.autorizo_envio or '-'],
-        ['Observaciones:', control.observaciones or '-'],
+        ['Autorizó Envío:', control.autorizo_envio or 'No especificado'],
+        ['Observaciones Grales:', control.observaciones or 'Ninguna'],
     ]
-    t_closure = Table(data_closure, colWidths=[100, 400])
+    t_closure = Table(data_closure, colWidths=[150, 350], hAlign='CENTER')
     t_closure.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (0,-1), colors.HexColor('#e6f2ff')),
+        ('TEXTCOLOR', (0,0), (0,-1), colors.HexColor('#003366')),
+        ('ALIGN', (0,0), (0,-1), 'RIGHT'),
+        ('ALIGN', (1,0), (1,-1), 'LEFT'),
         ('FONTNAME', (0,0), (0,-1), 'Helvetica-Bold'),
-        ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 8),
+        ('TOPPADDING', (0,0), (-1,-1), 8),
+        ('GRID', (0,0), (-1,-1), 0.5, colors.lightgrey),
     ]))
     elements.append(t_closure)
     
