@@ -73,21 +73,32 @@ ItemOrdenFormSet = inlineformset_factory(
     extra=1, can_delete=True
 )
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import SetPasswordForm
 
 class CustomUserCreationForm(UserCreationForm):
-    is_staff = forms.BooleanField(required=False, label="Es Administrador")
+    is_staff = forms.BooleanField(
+        required=False, 
+        label="Es Administrador (Acceso Total)",
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    grupos_acceso = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.filter(name__in=['Calidad', 'Ordenes']),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input ms-2 me-1'}),
+        required=False,
+        label="Sistemas Permitidos (Solo si NO es Administrador)"
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('email', 'is_staff')
 
     def save(self, commit=True):
-        user = super().save(commit=False)
-        user.is_staff = self.cleaned_data['is_staff']
+        user = super().save(commit=commit)
         if commit:
+            user.is_staff = self.cleaned_data['is_staff']
             user.save()
+            user.groups.set(self.cleaned_data['grupos_acceso'])
         return user
 
 class AdminPasswordChangeForm(SetPasswordForm):
@@ -97,7 +108,17 @@ class AdminPasswordChangeForm(SetPasswordForm):
             field.widget.attrs['class'] = 'form-control'
 
 class UserUpdateForm(forms.ModelForm):
-    is_staff = forms.BooleanField(required=False, label="Es Administrador")
+    is_staff = forms.BooleanField(
+        required=False, 
+        label="Es Administrador (Acceso Total)",
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    grupos_acceso = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.filter(name__in=['Calidad', 'Ordenes']),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input ms-2 me-1'}),
+        required=False,
+        label="Sistemas Permitidos (Solo si NO es Administrador)"
+    )
 
     class Meta:
         model = User
@@ -111,3 +132,10 @@ class UserUpdateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['is_staff'].initial = self.instance.is_staff
+            self.fields['grupos_acceso'].initial = self.instance.groups.all()
+
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            user.groups.set(self.cleaned_data['grupos_acceso'])
+        return user

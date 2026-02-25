@@ -1,4 +1,5 @@
 {% load static %}
+{% load web_extras %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -184,12 +185,23 @@
                             href="{% if request.resolver_match.url_name != 'home' %}{% url 'home' %}{% endif %}#contacto">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-3 d-flex gap-2">
+                        {% if request.user.is_authenticated %}
+                        {% if request.user|has_group:"Calidad" %}
                         <a class="btn btn-outline-orange btn-sm" href="{% url 'lista_controles_postprensa' %}">
                             <i class="bi bi-shield-check me-2"></i>Calidad
                         </a>
+                        {% endif %}
+
+                        {% if request.user|has_group:"Ordenes" %}
                         <a class="btn btn-orange btn-sm" href="{% url 'lista_ordenes' %}">
                             <i class="bi bi-gear-fill me-2"></i>Sistema
                         </a>
+                        {% endif %}
+                        {% else %}
+                        <a class="btn btn-orange btn-sm" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
