@@ -79,7 +79,7 @@ class ClienteDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, DeleteView):
     success_url = reverse_lazy('lista_clientes')
 
 # --- Orden Views ---
-class OrdenListView(LoginRequiredMixin, ListView):
+class OrdenListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
     model = OrdenCompra
     template_name = 'ordenes_trabajo/lista_ordenes.html'
     context_object_name = 'ordenes'
@@ -119,6 +119,7 @@ class OrdenListView(LoginRequiredMixin, ListView):
         return context
 
 @login_required
+@user_passes_test(ordenes_group_required)
 def crear_orden(request):
     if request.method == 'POST':
         form = OrdenCompraForm(request.POST, user=request.user)
@@ -317,6 +318,7 @@ def _generate_pdf_bytes(orden):
     return pdf_bytes
 
 @login_required
+@user_passes_test(ordenes_group_required)
 def editar_orden(request, pk):
     orden = get_object_or_404(OrdenCompra, pk=pk)
     
@@ -345,7 +347,7 @@ def editar_orden(request, pk):
         'titulo': f'Editar Orden N°{orden.numero}'
     })
 
-class OrdenDeleteView(LoginRequiredMixin, DeleteView):
+class OrdenDeleteView(LoginRequiredMixin, OrdenesGroupRequiredMixin, DeleteView):
     model = OrdenCompra
     template_name = 'ordenes_trabajo/confirmar_borrado.html'
     success_url = reverse_lazy('lista_ordenes')
