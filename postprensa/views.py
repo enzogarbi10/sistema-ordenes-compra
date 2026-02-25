@@ -585,8 +585,6 @@ def descargar_estadisticas_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="reporte_calidad.pdf"'
     return response
 
-@login_required
-@user_passes_test(calidad_group_required)
 def generar_pdf_bytes_control(control):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
