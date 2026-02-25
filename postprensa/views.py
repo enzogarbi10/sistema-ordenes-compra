@@ -685,13 +685,19 @@ def generar_pdf_bytes_control(control):
             try:
                 from PIL import Image as PILImage, ImageOps
                 
-                # Cargar imagen usando el manejador de archivos interno de Django
-                # Esto soluciona problemas de rutas físicas en PythonAnywhere
-                img_buffer = io.BytesIO()
+                # Cargar imagen usando el manejador de archivos interno de Django a BytesIO primero
+                # Esto soluciona problemas de rutas físicas y PERMISOS en el servidor (Errno 13)
+                img_data_buffer = io.BytesIO()
                 
                 with img_obj.imagen.open('rb') as f:
-                    with PILImage.open(f) as pil_img:
-                        # Convertimos a RGB siempre
+                    img_data_buffer.write(f.read())
+                    
+                img_data_buffer.seek(0)
+                
+                img_buffer = io.BytesIO()
+                
+                with PILImage.open(img_data_buffer) as pil_img:
+                    # Convertimos a RGB siempre
                         if pil_img.mode != 'RGB':
                             pil_img = pil_img.convert('RGB')
                             
