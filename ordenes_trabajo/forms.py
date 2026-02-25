@@ -93,6 +93,10 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('email', 'is_staff')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['grupos_acceso'].queryset = Group.objects.filter(name__in=['Calidad', 'Ordenes'])
+
     def save(self, commit=True):
         user = super().save(commit=commit)
         if commit:
@@ -130,6 +134,7 @@ class UserUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['grupos_acceso'].queryset = Group.objects.filter(name__in=['Calidad', 'Ordenes'])
         if self.instance and self.instance.pk:
             self.fields['is_staff'].initial = self.instance.is_staff
             self.fields['grupos_acceso'].initial = self.instance.groups.all()
