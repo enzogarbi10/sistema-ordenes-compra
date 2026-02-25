@@ -17,12 +17,20 @@ class ControlCalidadForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 
+    # Subida de multiples archivos manual
+    evidencias = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+        required=False,
+        label="Evidencia del Error (opcional, subir fotos)"
+    )
+
     class Meta:
         model = ControlCalidad
         fields = [
             'orden', 'operario', 'maquinista', 'cliente', 'bobina', 'cantidad_descartada',
             'defectos', 'opciones_defecto',
-            'detalle_defecto', 'llego_cantidad', 'autorizo_envio', 'observaciones'
+            'detalle_defecto', 'llego_cantidad', 'autorizo_envio', 'observaciones',
+            'no_conformidad', 'tipo_no_conformidad', 'nro_no_conformidad'
         ]
         widgets = {
             'detalle_defecto': forms.Textarea(attrs={'rows': 2, 'class': 'form-control', 'placeholder': 'Detalle el problema...'}),
@@ -36,6 +44,9 @@ class ControlCalidadForm(forms.ModelForm):
             'llego_cantidad': forms.CheckboxInput(attrs={'class': 'd-none', 'id': 'id_llego_cantidad'}),
             'defectos': forms.CheckboxSelectMultiple(),
             'opciones_defecto': forms.CheckboxSelectMultiple(),
+            'no_conformidad': forms.Select(attrs={'class': 'form-select', 'id': 'id_no_conformidad'}),
+            'tipo_no_conformidad': forms.Select(attrs={'class': 'form-select', 'id': 'id_tipo_no_conformidad'}),
+            'nro_no_conformidad': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_nro_no_conformidad', 'placeholder': 'Nro. NC asociada'}),
         }
 
     def __init__(self, *args, **kwargs):

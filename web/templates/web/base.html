@@ -125,6 +125,19 @@
             font-size: 1.8rem;
             margin-bottom: 1rem;
         }
+
+        /* Fix legibilidad de Inputs */
+        .form-control,
+        .form-select,
+        .form-check-input {
+            color: #1a1a1a !important;
+            /* Fuerza color oscuro para el texto */
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+            opacity: 1;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -143,16 +156,32 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Inicio</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                            href="{% url 'home' %}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#servicios">Servicios</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'muestras' %}active{% endif %}"
+                            href="{% url 'muestras' %}">Muestras</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#nosotros">Nosotros</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'tecnologia' %}active{% endif %}"
+                            href="{% url 'tecnologia' %}">Tecnología</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contacto">Contacto</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'clientes' %}active{% endif %}"
+                            href="{% url 'clientes' %}">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% if request.resolver_match.url_name != 'home' %}{% url 'home' %}{% endif %}#servicios">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% if request.resolver_match.url_name != 'home' %}{% url 'home' %}{% endif %}#nosotros">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% if request.resolver_match.url_name != 'home' %}{% url 'home' %}{% endif %}#contacto">Contacto</a>
                     </li>
                     <li class="nav-item ms-lg-3 d-flex gap-2">
                         <a class="btn btn-outline-orange btn-sm" href="{% url 'lista_controles_postprensa' %}">

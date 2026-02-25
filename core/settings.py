@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-7#55)(9g9604m5yz!3%tpeqrfn)%avtky1e5xrk)fhrrx7*sqc
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']  # For production, change this to your specific domain (e.g. ['tusuario.pythonanywhere.com'])
+CSRF_TRUSTED_ORIGINS = ['https://*.pythonanywhere.com', 'http://127.0.0.1', 'http://localhost']
 
 
 # Application definition
@@ -134,19 +135,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email Configuration
 # Email Configuration
-if DEBUG:
-    # Development: Save emails to local folder
-    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-    EMAIL_FILE_PATH = BASE_DIR / 'emails'
-else:
-    # Production: Use Gmail (Allowed by PythonAnywhere Free Tier)
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = 'graficamelfa@gmail.com'
-    EMAIL_HOST_PASSWORD = 'bkye nkvi zjdi vxjd'
-    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'graficamelfa@gmail.com'
+EMAIL_HOST_PASSWORD = 'bkye nkvi zjdi vxjd'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Auth Settings
 LOGIN_URL = 'login'

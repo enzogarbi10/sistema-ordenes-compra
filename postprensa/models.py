@@ -96,6 +96,20 @@ class ControlCalidad(models.Model):
     # Cierre
     llego_cantidad = models.BooleanField("¿Se llegó a la cantidad?", default=True)
     autorizo_envio = models.CharField("Autorizó Envío", max_length=100, blank=True)
+    
+    # No Conformidades
+    TIPO_NC_CHOICES = [
+        ('INTERNA', 'Interna'),
+        ('EXTERNA', 'Externa'),
+    ]
+    SUBTIPO_NC_CHOICES = [
+        ('RECLAMO', 'Reclamo'),
+        ('RECHAZO', 'Rechazo'),
+    ]
+    no_conformidad = models.CharField("No Conformidad", max_length=10, choices=TIPO_NC_CHOICES, blank=True, null=True)
+    tipo_no_conformidad = models.CharField("Tipo (Externa)", max_length=10, choices=SUBTIPO_NC_CHOICES, blank=True, null=True)
+    nro_no_conformidad = models.CharField("N° referencial asociada", max_length=50, blank=True)
+
     observaciones = models.TextField("Observaciones Generales", blank=True)
     
     # Auditoría
@@ -125,3 +139,15 @@ class ImagenControl(models.Model):
     def __str__(self):
         return f"Imagen para {self.control}"
 
+
+class NotificacionEmail(models.Model):
+    email = models.EmailField("Correo Electrónico", unique=True)
+    activo = models.BooleanField("Activo", default=True, help_text="Si está activo, recibirá los correos automáticos al registrar controles.")
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = "Notificación por Correo"
+        verbose_name_plural = "Notificaciones por Correo"
+        ordering = ['email']

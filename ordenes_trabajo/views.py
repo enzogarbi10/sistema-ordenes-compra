@@ -79,7 +79,7 @@ class ClienteDeleteView(LoginRequiredMixin, SuperUserRequiredMixin, DeleteView):
     success_url = reverse_lazy('lista_clientes')
 
 # --- Orden Views ---
-class OrdenListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
+class OrdenListView(LoginRequiredMixin, ListView):
     model = OrdenCompra
     template_name = 'ordenes_trabajo/lista_ordenes.html'
     context_object_name = 'ordenes'
@@ -119,7 +119,6 @@ class OrdenListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
         return context
 
 @login_required
-@user_passes_test(ordenes_group_required)
 def crear_orden(request):
     if request.method == 'POST':
         form = OrdenCompraForm(request.POST, user=request.user)
@@ -320,6 +319,14 @@ def _generate_pdf_bytes(orden):
 @login_required
 def editar_orden(request, pk):
     orden = get_object_or_404(OrdenCompra, pk=pk)
+    
+    # Seguridad: Un cliente solo puede editar sus propias órdenes
+    user = request.user
+    if not (user.is_superuser or user.is_staff):
+        if orden.cliente.user != user:
+            from django.core.exceptions import PermissionDenied
+            raise PermissionDenied("No tienes permiso para editar esta orden.")
+            
     if request.method == 'POST':
         form = OrdenCompraForm(request.POST, instance=orden, user=request.user)
         formset = ItemOrdenFormSet(request.POST, request.FILES, instance=orden)
@@ -343,6 +350,13 @@ class OrdenDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'ordenes_trabajo/confirmar_borrado.html'
     success_url = reverse_lazy('lista_ordenes')
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user = self.request.user
+        if not (user.is_superuser or user.is_staff):
+            queryset = queryset.filter(cliente__user=user)
+        return queryset
+
     def form_valid(self, form):
         self.object = self.get_object()
         self.object.active = False
@@ -350,9 +364,16 @@ class OrdenDeleteView(LoginRequiredMixin, DeleteView):
         return redirect(self.success_url)
 
 @login_required
-@user_passes_test(ordenes_group_required)
 def generar_pdf(request, pk):
     orden = get_object_or_404(OrdenCompra, pk=pk)
+    
+    # Seguridad: Un cliente solo puede generar el PDF de sus propias órdenes
+    user = request.user
+    if not (user.is_superuser or user.is_staff):
+        if orden.cliente.user != user:
+            from django.core.exceptions import PermissionDenied
+            raise PermissionDenied("No tienes permiso para ver esta orden.")
+            
     pdf_content = _generate_pdf_bytes(orden)
     
     response = HttpResponse(pdf_content, content_type='application/pdf')

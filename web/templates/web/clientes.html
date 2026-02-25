@@ -1,0 +1,324 @@
+{% extends 'web/base.html' %}
+{% load static %}
+
+{% block title %}Nuestros Clientes - Gráfica Melfa{% endblock %}
+
+{% block extra_head %}
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .sub-navbar {
+        position: sticky;
+        top: 70px;
+        background: #111e25;
+        /* Sleek navy/dark corporate style */
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: top 0.3s ease;
+    }
+
+    .sub-nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        padding: 15px 25px;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: all 0.3s;
+        border-bottom: 2px solid transparent;
+    }
+
+    .sub-nav-link:hover,
+    .sub-nav-link.active {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: 2px solid #5ab0db;
+    }
+
+    .showcase-block {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 120px 0;
+        overflow: hidden;
+    }
+
+    /* Default showcase background if none provided */
+    .showcase-block {
+        background: radial-gradient(circle at 50% 50%, #1a1a1a, #000000);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 150px 0;
+        overflow: hidden;
+    }
+
+    /* Sumatik Style - Diagonal Cuts */
+    .corte-inclinado-derecha {
+        clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
+        margin-bottom: -8%;
+        z-index: 1;
+    }
+
+    .corte-inclinado-izquierda {
+        clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%);
+        padding-top: 180px;
+        z-index: 2;
+    }
+
+    .texture-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.04"/></svg>');
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .showcase-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .line-title {
+        font-size: 4rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+    }
+
+    .line-subtitle {
+        color: #5ab0db;
+        /* Calming trust-blue for corporate relationships */
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .line-description {
+        font-size: 1.25rem;
+        color: #cccccc;
+        font-weight: 300;
+        line-height: 1.6;
+        margin-bottom: 2.5rem;
+        max-width: 600px;
+    }
+
+    .client-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+        justify-content: flex-start;
+        opacity: 0.7;
+    }
+
+    .client-logos i {
+        font-size: 2.5rem;
+        color: #fff;
+        transition: all 0.3s;
+    }
+
+    .client-logos i:hover {
+        opacity: 1;
+        color: #5ab0db;
+        transform: scale(1.1);
+    }
+
+    .client-img {
+        height: 60px;
+        width: auto;
+        filter: grayscale(100%) brightness(200%);
+        /* Keeps logos neutral and white */
+        transition: all 0.3s;
+    }
+
+    .client-img:hover {
+        filter: grayscale(0%) brightness(100%);
+        transform: scale(1.05);
+    }
+
+    .product-display {
+        position: relative;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .product-img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: cover;
+        box-shadow: 0 30px 40px rgba(0, 0, 0, 0.6);
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        border-radius: 8px;
+    }
+
+    .product-img:hover {
+        transform: scale(1.03) translateY(-10px);
+    }
+
+    .samples-hero {
+        padding-top: 180px;
+        padding-bottom: 80px;
+        background: #000;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .line-title {
+            font-size: 3rem;
+        }
+
+        .product-display {
+            height: 350px;
+            margin-bottom: 40px;
+        }
+
+        .sub-nav-link {
+            padding: 10px 15px;
+            font-size: 0.75rem;
+        }
+
+        .client-logos {
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Intro Header -->
+<section class="samples-hero">
+    <div class="container">
+        <span class="line-subtitle" data-aos="fade-down">Partners de Confianza</span>
+        <h1 class="serif display-2 fw-bold text-white mb-4" data-aos="fade-up">Nuestros Clientes</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;" data-aos="fade-up" data-aos-delay="100">
+            Marcas líderes confían en Gráfica Melfa para llevar su imagen a las manos del consumidor. Nos adaptamos a
+            los niveles de exigencia más altos de cada industria.
+        </p>
+    </div>
+</section>
+
+<!-- Sub Navigation -->
+<nav class="sub-navbar" id="subNavbar">
+    {% for sec in sectores %}
+    <a href="#{{ sec.nombre_clave }}" class="sub-nav-link">{{ sec.titulo|truncatechars:20 }}</a>
+    {% endfor %}
+</nav>
+
+{% for sec in sectores %}
+<!-- Section: {{ sec.titulo }} -->
+<section id="{{ sec.nombre_clave }}"
+    class="showcase-block {% if forloop.counter0|divisibleby:2 %}corte-inclinado-derecha{% else %}corte-inclinado-izquierda{% endif %}"
+    style="{% if sec.fondo_css %}background: {{ sec.fondo_css|safe }};{% endif %}">
+    <div class="texture-overlay"></div>
+    <div class="container showcase-content">
+        <div
+            class="row align-items-center {% if forloop.counter0|divisibleby:2 %}flex-column-reverse flex-lg-row{% endif %}">
+
+            {% if forloop.counter0|divisibleby:2 %}
+            <div class="col-lg-5" data-aos="fade-right">
+                <span class="line-subtitle">{{ sec.subtitulo }}</span>
+                <h2 class="serif line-title text-white">{{ sec.titulo|safe }}</h2>
+                <p class="line-description">
+                    {{ sec.descripcion }}
+                </p>
+                <!-- Placeholder icons representing client logos -->
+                <div class="client-logos mt-4">
+                    {% for icon in sec.get_iconos_list %}
+                    <i class="{{ icon }}"></i>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+                <div class="product-display">
+                    <img src="{% if sec.imagen %}{{ sec.imagen.url }}{% endif %}" class="product-img"
+                        alt="{{ sec.titulo }}">
+                </div>
+            </div>
+
+            {% else %}
+
+            <div class="col-lg-7 mb-5 mb-lg-0" data-aos="fade-right">
+                <div class="product-display">
+                    <img src="{% if sec.imagen %}{{ sec.imagen.url }}{% endif %}" class="product-img"
+                        alt="{{ sec.titulo }}">
+                </div>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+                <span class="line-subtitle">{{ sec.subtitulo }}</span>
+                <h2 class="serif line-title text-white">{{ sec.titulo|safe }}</h2>
+                <p class="line-description">
+                    {{ sec.descripcion }}
+                </p>
+                <!-- Placeholder icons representing client logos -->
+                <div class="client-logos mt-4">
+                    {% for icon in sec.get_iconos_list %}
+                    <i class="{{ icon }}"></i>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script>
+    AOS.init({ duration: 1000, once: true, offset: 100 });
+    window.addEventListener('scroll', function () {
+        const mainNav = document.querySelector('.navbar');
+        const subNav = document.getElementById('subNavbar');
+        if (window.scrollY > 50) {
+            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.98)';
+            subNav.style.top = mainNav.offsetHeight + 'px';
+        } else {
+            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            subNav.style.top = '70px';
+        }
+    });
+
+    const sections = document.querySelectorAll('.showcase-block');
+    const navLinks = document.querySelectorAll('.sub-nav-link');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            if (scrollY >= (section.offsetTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+{% endblock %}

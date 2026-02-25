@@ -9,15 +9,17 @@ from django.db import transaction
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.conf import settings
+from django.core.mail import EmailMessage
 import io
 import json
+import threading
 
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
-from .models import ControlCalidad, ImagenControl, Maquinista, OperarioInspeccion, TipoDefecto, OpcionDefecto
+from .models import ControlCalidad, ImagenControl, Maquinista, OperarioInspeccion, TipoDefecto, OpcionDefecto, NotificacionEmail
 from ordenes_trabajo.models import Cliente
 from .forms import ControlCalidadForm, ImagenControlForm
 
@@ -40,7 +42,7 @@ class ControlListView(LoginRequiredMixin, CalidadGroupRequiredMixin, ListView):
 @login_required
 @user_passes_test(calidad_group_required)
 def crear_control(request):
-    ImagenFormSet = inlineformset_factory(ControlCalidad, ImagenControl, form=ImagenControlForm, extra=1, can_delete=False)
+    ImagenFormSet = inlineformset_factory(ControlCalidad, ImagenControl, form=ImagenControlForm, extra=0, can_delete=False)
     
     if request.method == 'POST':
         form = ControlCalidadForm(request.POST)
@@ -56,6 +58,15 @@ def crear_control(request):
                 for img in imagenes:
                     img.control = control
                     img.save()
+                    
+                # Procesar múltiple subida de fotos
+                archivos_nombres = request.FILES.getlist('evidencias')
+                for archivo_file in archivos_nombres:
+                    ImagenControl.objects.create(control=control, imagen=archivo_file)
+                    
+            # Invocar notificación enviando en hilo paralelo
+            threading.Thread(target=enviar_email_nuevo_control_bg, args=(control.id,)).start()
+            
             return redirect('lista_controles_postprensa')
     else:
         form = ControlCalidadForm()
@@ -86,7 +97,7 @@ def editar_control(request, pk):
     
     ImagenFormSet = inlineformset_factory(
         ControlCalidad, ImagenControl, form=ImagenControlForm,
-        extra=1, can_delete=True
+        extra=0, can_delete=True
     )
     
     if request.method == 'POST':
@@ -97,6 +108,12 @@ def editar_control(request, pk):
             with transaction.atomic():
                 form.save()
                 formset.save()
+                
+                # Procesar múltiple subida de fotos extra en edición
+                archivos_nombres = request.FILES.getlist('evidencias')
+                for archivo_file in archivos_nombres:
+                    ImagenControl.objects.create(control=control, imagen=archivo_file)
+                    
             return redirect('lista_controles_postprensa')
     else:
         form = ControlCalidadForm(instance=control)
@@ -354,6 +371,7 @@ class EstadisticasPostprensaView(LoginRequiredMixin, CalidadGroupRequiredMixin, 
         filter_anio = self.request.GET.get('anio', '')
         filter_maquinista = self.request.GET.get('maquinista', '')
         filter_tipo_defecto = self.request.GET.get('tipo_defecto', '')
+        filter_opcion_defecto = self.request.GET.get('opcion_defecto', '')
 
         if filter_mes:
             qs = qs.filter(fecha__month=filter_mes)
@@ -363,12 +381,14 @@ class EstadisticasPostprensaView(LoginRequiredMixin, CalidadGroupRequiredMixin, 
             qs = qs.filter(maquinista__nombre__icontains=filter_maquinista)
         if filter_tipo_defecto:
             qs = qs.filter(defectos__id=filter_tipo_defecto)
+        if filter_opcion_defecto:
+            qs = qs.filter(opciones_defecto__id=filter_opcion_defecto)
 
-        # 1. Total Descartes por Mes
-        descartes_mes = qs.annotate(month=TruncMonth('fecha')) \
+        # 1. Total Descartes por Mes (cronológico)
+        descartes_mes = list(qs.annotate(month=TruncMonth('fecha')) \
             .values('month') \
             .annotate(total_descarte=Sum('cantidad_descartada')) \
-            .order_by('-month')
+            .order_by('month'))
             
         # 2. Defectos Más Comunes (dinámico)
         total = qs.count()
@@ -376,29 +396,87 @@ class EstadisticasPostprensaView(LoginRequiredMixin, CalidadGroupRequiredMixin, 
             defectos_comunes = TipoDefecto.objects.filter(activo=True).annotate(
                 cantidad=Count('controlcalidad', filter=Q(controlcalidad__in=qs))
             ).order_by('-cantidad')
-            defectos_sorted = {d.nombre: d.cantidad for d in defectos_comunes}
+            defectos_sorted = {d.nombre: d.cantidad for d in defectos_comunes if d.cantidad > 0}
+            
+            # Sub-errores (Opciones)
+            opciones_comunes = OpcionDefecto.objects.filter(activo=True).annotate(
+                cantidad=Count('controlcalidad', filter=Q(controlcalidad__in=qs))
+            ).order_by('-cantidad')
+            
+            opciones_raw_json = []
+            opciones_sorted = {}
+            for o in opciones_comunes:
+                if o.cantidad > 0:
+                    opciones_sorted[f"{o.tipo_defecto.nombre} - {o.nombre}"] = o.cantidad
+                    opciones_raw_json.append({
+                        'tipo_id': o.tipo_defecto.id,
+                        'tipo_nombre': o.tipo_defecto.nombre,
+                        'nombre': o.nombre,
+                        'cantidad': o.cantidad
+                    })
         else:
             defectos_sorted = {}
+            opciones_sorted = {}
+            opciones_raw_json = []
 
-        # 3. Descartes por Maquinista
-        descartes_maquinista = qs.values('maquinista__nombre') \
+        # 3. Descartes por Maquinista con Desglose de Errores
+        maquinistas_qs = qs.values('maquinista__nombre', 'maquinista__id') \
             .annotate(total=Sum('cantidad_descartada')) \
             .order_by('-total')
-        descartes_maquinista = [
-            {
-                'maquinista': item['maquinista__nombre'], 
-                'total': item['total'],
-                'porcentaje': min(item['total'] or 0, 100)
-            }
-            for item in descartes_maquinista
-        ]
+            
+        descartes_maquinista = []
+        for item in maquinistas_qs:
+            maq_id = item['maquinista__id']
+            maq_qs = qs.filter(maquinista__id=maq_id) if maq_id else qs.filter(maquinista__isnull=True)
+            
+            # Contar Subtipos (OpcionDefecto)
+            opciones = OpcionDefecto.objects.filter(controlcalidad__in=maq_qs).annotate(
+                cantidad=Count('controlcalidad')
+            ).order_by('-cantidad')
+            
+            # Contar Tipos (TipoDefecto)
+            tipos = TipoDefecto.objects.filter(controlcalidad__in=maq_qs).annotate(
+                cantidad=Count('controlcalidad')
+            ).order_by('-cantidad')
+            
+            desglose = []
+            for op in opciones:
+                if op.cantidad > 0:
+                    desglose.append({'nombre': op.nombre, 'cantidad': op.cantidad})
+                    
+            if not desglose:
+                for t in tipos:
+                    if t.cantidad > 0:
+                        desglose.append({'nombre': t.nombre, 'cantidad': t.cantidad})
+            
+            total_mq = item['total'] or 0
+            descartes_maquinista.append({
+                'maquinista': item['maquinista__nombre'] or "Sin Maquinista", 
+                'total': total_mq,
+                'porcentaje': min((total_mq / (sum(x['total'] or 0 for x in maquinistas_qs) or 1)) * 100, 100),
+                'desglose': desglose
+            })
             
         # 4. No llegaron a cantidad
         no_llego_cantidad = qs.filter(llego_cantidad=False).count()
 
+        # JSON para Gráficos
+        chart_meses_labels = [item['month'].strftime("%b %Y") if item['month'] else "Sin Fecha" for item in descartes_mes]
+        chart_meses_data = [item['total_descarte'] or 0 for item in descartes_mes]
+        
+        chart_defectos_labels = list(defectos_sorted.keys())
+        chart_defectos_data = list(defectos_sorted.values())
+        
+        chart_opciones_labels = list(opciones_sorted.keys())
+        chart_opciones_data = list(opciones_sorted.values())
+        
+        chart_maquinistas_labels = [item['maquinista'] for item in descartes_maquinista]
+        chart_maquinistas_data = [item['total'] for item in descartes_maquinista]
+
         # Listas para filtros
         maquinistas_list = Maquinista.objects.filter(activo=True).values_list('nombre', flat=True)
         tipos_defecto_list = TipoDefecto.objects.filter(activo=True)
+        opciones_defecto_list = OpcionDefecto.objects.filter(activo=True).select_related('tipo_defecto').order_by('tipo_defecto__nombre', 'nombre')
 
         # Helper for month selection in template without using spaces/==
         meses_selected = {f"mes_{i}": "selected" if filter_mes == str(i) else "" for i in range(1, 13)}
@@ -408,17 +486,38 @@ class EstadisticasPostprensaView(LoginRequiredMixin, CalidadGroupRequiredMixin, 
         for t in tipos_defecto_list:
             t.is_selected = "selected" if filter_tipo_defecto == str(t.id) else ""
             
+        for op in opciones_defecto_list:
+            op.is_selected = "selected" if filter_opcion_defecto == str(op.id) else ""
+            
         context['descartes_mes'] = descartes_mes
         context['defectos_comunes'] = defectos_sorted
+        context['opciones_comunes'] = opciones_sorted
         context['descartes_maquinista'] = descartes_maquinista
         context['no_llego_cantidad'] = no_llego_cantidad
         context['total_controles'] = total
+        
         context['filter_mes'] = filter_mes
         context['filter_anio'] = filter_anio
         context['filter_maquinista'] = filter_maquinista
         context['filter_tipo_defecto'] = filter_tipo_defecto
+        context['filter_opcion_defecto'] = filter_opcion_defecto
+        
         context['maquinistas_list'] = maquinistas_list
         context['tipos_defecto_list'] = tipos_defecto_list
+        context['opciones_defecto_list'] = opciones_defecto_list
+        
+        # Variables JSON para Chart.js
+        import json
+        context['chart_meses_labels'] = json.dumps(chart_meses_labels)
+        context['chart_meses_data'] = json.dumps(chart_meses_data)
+        context['chart_defectos_labels'] = json.dumps(chart_defectos_labels)
+        context['chart_defectos_data'] = json.dumps(chart_defectos_data)
+        context['chart_opciones_labels'] = json.dumps(chart_opciones_labels)
+        context['chart_opciones_data'] = json.dumps(chart_opciones_data)
+        context['chart_maquinistas_labels'] = json.dumps(chart_maquinistas_labels)
+        context['chart_maquinistas_data'] = json.dumps(chart_maquinistas_data)
+        context['opciones_raw_json'] = json.dumps(opciones_raw_json)
+
         return context
 
 
@@ -488,8 +587,7 @@ def descargar_estadisticas_pdf(request):
 
 @login_required
 @user_passes_test(calidad_group_required)
-def control_pdf(request, pk):
-    control = get_object_or_404(ControlCalidad, pk=pk)
+def generar_pdf_bytes_control(control):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
     elements = []
@@ -581,8 +679,53 @@ def control_pdf(request, pk):
     elements.append(t_closure)
     
     doc.build(elements)
-    pdf = buffer.getvalue()
+    pdf_bytes = buffer.getvalue()
     buffer.close()
+    return pdf_bytes
+
+def enviar_email_nuevo_control_bg(control_id):
+    try:
+        control = ControlCalidad.objects.get(pk=control_id)
+        destinatarios = list(NotificacionEmail.objects.filter(activo=True).values_list('email', flat=True))
+        if not destinatarios:
+            return
+        
+        pdf_bytes = generar_pdf_bytes_control(control)
+        subject = f"Nuevo Control de Calidad Registrado: OT #{control.orden}"
+        
+        creator_name = control.creado_por.username if control.creado_por else 'Sistema'
+        body = f"""Hola,
+        
+Se ha registrado un NUEVO control de calidad en el sistema.
+
+Detalles:
+- OT Nro: {control.orden}
+- Fecha de Control: {control.fecha.strftime("%d/%m/%Y %H:%M")}
+- Operario: {control.operario}
+- Creado por: {creator_name}
+
+Adjunto a este correo encontrará el reporte en formato PDF con el detalle de defectos, cantidades, maquinas y la evidencia en imágenes.
+
+Saludos automáticos,
+Sistema Gráfica Melfa"""
+
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=destinatarios,
+        )
+        email.attach(f"Control_{control.orden}_{control.id}.pdf", pdf_bytes, 'application/pdf')
+        email.send(fail_silently=False)
+    except Exception as e:
+        print(f"[MAIL_ERROR] No se pudo enviar notificación de control {control_id}: {e}")
+
+@login_required
+@user_passes_test(calidad_group_required)
+def control_pdf(request, pk):
+    control = get_object_or_404(ControlCalidad, pk=pk)
+    
+    pdf = generar_pdf_bytes_control(control)
     
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="control_{control.id}.pdf"'

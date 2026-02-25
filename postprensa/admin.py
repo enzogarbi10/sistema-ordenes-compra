@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import ControlCalidad, ImagenControl, Maquinista, OperarioInspeccion, TipoDefecto, OpcionDefecto
+from .models import ControlCalidad, ImagenControl, Maquinista, OperarioInspeccion, TipoDefecto, OpcionDefecto, NotificacionEmail
+
+@admin.register(NotificacionEmail)
+class NotificacionEmailAdmin(admin.ModelAdmin):
+    list_display = ('email', 'activo')
+    list_filter = ('activo',)
+    search_fields = ('email',)
 
 class ImagenControlInline(admin.TabularInline):
     model = ImagenControl

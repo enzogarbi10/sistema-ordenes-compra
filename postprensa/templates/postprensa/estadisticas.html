@@ -8,7 +8,7 @@
 <!-- Filters -->
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
-        <form method="get" class="row g-3 align-items-end">
+        <form method="get" class="row g-2 align-items-end">
             <!-- Mes -->
             <div class="col-md-2">
                 <label class="form-label small fw-bold">Mes</label>
@@ -30,13 +30,13 @@
             </div>
 
             <!-- Año -->
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <label class="form-label small fw-bold">Año</label>
                 <input type="number" name="anio" class="form-control form-control-sm" value="{{ filter_anio }}">
             </div>
 
             <!-- Maquinista -->
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label small fw-bold">Maquinista</label>
                 <input type="text" list="maquinistas_list" name="maquinista" class="form-control form-control-sm"
                     value="{{ filter_maquinista }}" placeholder="Nombre...">
@@ -58,8 +58,20 @@
                 </select>
             </div>
 
+            <!-- Sub-Error -->
+            <div class="col-md-3">
+                <label class="form-label small fw-bold">Sub-Error</label>
+                <select name="opcion_defecto" class="form-select form-select-sm">
+                    <option value="">Todos</option>
+                    {% for op in opciones_defecto_list %}
+                    <option value="{{ op.id }}" {{ op.is_selected }}>{{ op.tipo_defecto.nombre }} - {{ op.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <!-- Botones -->
-            <div class="col-md-3 d-flex gap-2">
+            <div class="col-md-2 d-flex gap-2">
                 <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
                     <i class="bi bi-filter"></i> Filtrar
                 </button>
@@ -72,11 +84,13 @@
     </div>
 </div>
 
+<!-- Tarjetas Resumen -->
 <div class="row mb-4">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="card bg-primary text-white h-100 shadow-sm">
             <div class="card-body">
-                <h6 class="card-title text-uppercase mb-2" style="font-size: 0.8rem; opacity: 0.9;">Total Controles</h6>
+                <h6 class="card-title text-uppercase mb-2" style="font-size: 0.8rem; opacity: 0.9;">Total Controles
+                    Realizados</h6>
                 <div class="d-flex align-items-center">
                     <i class="bi bi-clipboard-check display-4 me-3"></i>
                     <span class="display-6 fw-bold">{{ total_controles }}</span>
@@ -84,7 +98,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         <div class="card bg-danger text-white h-100 shadow-sm">
             <div class="card-body">
                 <h6 class="card-title text-uppercase mb-2" style="font-size: 0.8rem; opacity: 0.9;">Órdenes con
@@ -93,92 +107,190 @@
                     <i class="bi bi-exclamation-octagon display-4 me-3"></i>
                     <span class="display-6 fw-bold">{{ no_llego_cantidad }}</span>
                 </div>
-                <small>No se llegó a la cantidad requerida</small>
+                <small>No se llegó a la cantidad requerida en estos controles</small>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Gráficos y Tablas Combinadas -->
 <div class="row">
     <!-- Total Descartes por Mes -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-danger h-100">
             <div class="card-header bg-danger text-white">
-                <h5 class="card-title mb-0">Descartes por Mes</h5>
+                <h5 class="card-title mb-0"><i class="bi bi-graph-up"></i> Evolución de Descartes por Mes</h5>
             </div>
             <div class="card-body">
-                {% if descartes_mes %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Mes</th>
-                            <th>Total Descartado (un.)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in descartes_mes %}
-                        <tr>
-                            <td>{{ item.month|date:"F Y" }}</td>
-                            <td><strong>{{ item.total_descarte }}</strong></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% else %}
-                <p class="text-muted">No hay datos registrados aún.</p>
-                {% endif %}
+                <div class="row align-items-center h-100">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        {% if descartes_mes %}
+                        <table class="table table-striped table-hover table-sm border align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Mes</th>
+                                    <th class="text-end">Descarte (un.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in descartes_mes %}
+                                <tr>
+                                    <td>{{ item.month|date:"F Y" }}</td>
+                                    <td class="text-end fw-bold text-danger">{{ item.total_descarte }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No hay registros mensuales todavía.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8" style="position: relative; height:300px;">
+                        <canvas id="chartMeses"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Defectos Más Comunes -->
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-warning h-100">
             <div class="card-header bg-warning text-dark">
-                <h5 class="card-title mb-0">Defectos Más Frecuentes</h5>
+                <h5 class="card-title mb-0"><i class="bi bi-pie-chart-fill"></i> Tipos de Defectos (General)</h5>
             </div>
             <div class="card-body">
-                {% if defectos_comunes %}
-                <ul class="list-group">
-                    {% for defecto, cantidad in defectos_comunes.items %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ defecto }}
-                        <span class="badge bg-primary rounded-pill">{{ cantidad }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p class="text-muted">No hay defectos registrados.</p>
-                {% endif %}
+                <div class="row align-items-center h-100">
+                    <div class="col-md-4 mb-3 mb-md-0" style="max-height: 300px; overflow-y: auto;">
+                        {% if defectos_comunes %}
+                        <ol class="list-group list-group-numbered shadow-sm">
+                            {% for defecto, cantidad in defectos_comunes.items %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto fw-bold text-wrap">{{ defecto }}</div>
+                                <span class="badge bg-warning text-dark rounded-pill">{{ cantidad }}</span>
+                            </li>
+                            {% endfor %}
+                        </ol>
+                        {% else %}
+                        <p class="text-muted">No hay defectos registrados.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8" style="position: relative; height:300px;">
+                        <canvas id="chartDefectos"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub-Defectos Chart -->
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-secondary h-100">
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="bi bi-diagram-3-fill"></i> Sub-Errores Frecuentes (Específicos)
+                </h5>
+                <select id="filtro_unidad_suberrores" class="form-select form-select-sm w-auto d-inline-block">
+                    <option value="ALL">Todas las Unidades</option>
+                </select>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center h-100">
+                    <div class="col-md-4 mb-3 mb-md-0" style="max-height: 300px; overflow-y: auto;">
+                        <ul class="list-group shadow-sm" id="lista_sub_errores">
+                            <!-- JS will populate this -->
+                        </ul>
+                        <p class="text-muted d-none" id="msg_no_suberrores">No hay sub-errores registrados.</p>
+                    </div>
+                    <div class="col-md-8" style="position: relative; height:300px;">
+                        <canvas id="chartOpciones"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Descartes por Maquinista -->
     <div class="col-md-12 mb-4">
-        <div class="card border-info">
+        <div class="card shadow-sm border-info h-100">
             <div class="card-header bg-info text-white">
-                <h5 class="card-title mb-0">Desempeño por Maquinista</h5>
+                <h5 class="card-title mb-0"><i class="bi bi-person-fill"></i> Desempeño por Maquinista</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center h-100">
+                    <div class="col-md-4 mb-3 mb-md-0" style="max-height: 300px; overflow-y: auto;">
+                        {% if descartes_maquinista %}
+                        <table class="table table-hover table-sm align-middle border shadow-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Maquinista</th>
+                                    <th class="text-end">Total (un.)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in descartes_maquinista %}
+                                <tr>
+                                    <td class="fw-bold">{{ item.maquinista }}</td>
+                                    <td class="text-end fw-bold text-info">{{ item.total }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No hay datos de maquinistas.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8" style="position: relative; height:300px;">
+                        <canvas id="chartMaquinistas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla Detalle por Maquinista Completo -->
+    <div class="col-md-12 mb-4">
+        <div class="card border-dark shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0"><i class="bi bi-list-columns-reverse"></i> Detalle General de Errores por
+                    Maquinista</h5>
             </div>
             <div class="card-body">
                 {% if descartes_maquinista %}
                 <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead>
+                    <table class="table align-middle table-hover border">
+                        <thead class="table-light">
                             <tr>
                                 <th>Maquinista</th>
-                                <th>Total Descartado</th>
-                                <th>Barra Visual</th>
+                                <th>Listado de Errores Reportados</th>
+                                <th>Total Descartado (unidades)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in descartes_maquinista %}
                             <tr>
-                                <td>{{ item.maquinista }}</td>
-                                <td>{{ item.total }} un.</td>
-                                <td style="width: 50%;">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar"
+                                <td style="width: 20%;">
+                                    <h6 class="mb-0 fw-bold">{{ item.maquinista }}</h6>
+                                </td>
+                                <td style="width: 55%;">
+                                    {% if item.desglose %}
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for error in item.desglose %}
+                                        <div class="border rounded p-1 small bg-light">
+                                            <i class="bi bi-bug-fill text-danger"></i>
+                                            {{ error.nombre }}:
+                                            <strong class="text-danger">{{ error.cantidad }}</strong>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <span class="text-muted small"><i class="bi bi-check-circle text-success"></i> Sin
+                                        errores reportados</span>
+                                    {% endif %}
+                                </td>
+                                <td style="width: 25%;">
+                                    <strong class="fs-5">{{ item.total }} un.</strong>
+                                    <div class="progress mt-2 shadow-sm" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" role="progressbar"
                                             data-width="{{ item.porcentaje }}" aria-valuemin="0" aria-valuemax="100">
                                         </div>
                                     </div>
@@ -189,7 +301,7 @@
                     </table>
                 </div>
                 {% else %}
-                <p class="text-muted">No hay datos de maquinistas.</p>
+                <p class="text-muted text-center my-3">No hay datos de maquinistas disponibles.</p>
                 {% endif %}
             </div>
         </div>
@@ -198,8 +310,184 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Importación de Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Variables injectadas por Django (JSON)
+        const mesesLabels = JSON.parse('{{ chart_meses_labels|escapejs }}' || '[]');
+        const mesesData = JSON.parse('{{ chart_meses_data|escapejs }}' || '[]');
+
+        const defectosLabels = JSON.parse('{{ chart_defectos_labels|escapejs }}' || '[]');
+        const defectosData = JSON.parse('{{ chart_defectos_data|escapejs }}' || '[]');
+
+        const opcionesLabels = JSON.parse('{{ chart_opciones_labels|escapejs }}' || '[]');
+        const opcionesData = JSON.parse('{{ chart_opciones_data|escapejs }}' || '[]');
+
+        const maquinasLabels = JSON.parse('{{ chart_maquinistas_labels|escapejs }}' || '[]');
+        const maquinasData = JSON.parse('{{ chart_maquinistas_data|escapejs }}' || '[]');
+
+        const opcionesRaw = JSON.parse('{{ opciones_raw_json|escapejs }}' || '[]');
+
+        // Opciones comunes Chart.js
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        };
+
+        // 1. Chart Meses (Líneas)
+        const ctxMeses = document.getElementById('chartMeses');
+        if (ctxMeses && mesesLabels.length > 0) {
+            new Chart(ctxMeses.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: mesesLabels,
+                    datasets: [{
+                        label: 'Unidades Descartadas',
+                        data: mesesData,
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#dc3545',
+                        pointRadius: 4
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
+        // 2. Chart Maquinistas (Barras)
+        const ctxMaq = document.getElementById('chartMaquinistas');
+        if (ctxMaq && maquinasLabels.length > 0) {
+            new Chart(ctxMaq.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: maquinasLabels,
+                    datasets: [{
+                        label: 'Total Descartado (un.)',
+                        data: maquinasData,
+                        backgroundColor: 'rgba(13, 202, 240, 0.7)',
+                        borderColor: '#0dcaf0',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        const pieColors = ['#ffc107', '#dc3545', '#198754', '#0d6efd', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'];
+
+        // 3. Chart Defectos (Doughnut)
+        const ctxDefectos = document.getElementById('chartDefectos');
+        if (ctxDefectos && defectosLabels.length > 0) {
+            new Chart(ctxDefectos.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: defectosLabels,
+                    datasets: [{
+                        data: defectosData,
+                        backgroundColor: pieColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: Object.assign({}, commonOptions, { cutout: '60%' })
+            });
+        }
+
+        // 4. Chart Sub-Errores Opciones (Pie) Dinámico
+        const ctxOpciones = document.getElementById('chartOpciones');
+        let chartOpcionesInstance = null;
+
+        const filtroUnidad = document.getElementById('filtro_unidad_suberrores');
+        const listaSubeErrores = document.getElementById('lista_sub_errores');
+        const msgNoSubeErrores = document.getElementById('msg_no_suberrores');
+
+        function actualizarSubErrores(unidadSeleccionada) {
+            // Filtrar los datos crudos
+            let datosFiltrados = opcionesRaw;
+            if (unidadSeleccionada !== 'ALL') {
+                datosFiltrados = opcionesRaw.filter(op => op.tipo_nombre === unidadSeleccionada);
+            }
+
+            // Actualizar Lista HTML
+            listaSubeErrores.innerHTML = '';
+            if (datosFiltrados.length === 0) {
+                msgNoSubeErrores.classList.remove('d-none');
+                listaSubeErrores.classList.add('d-none');
+            } else {
+                msgNoSubeErrores.classList.add('d-none');
+                listaSubeErrores.classList.remove('d-none');
+                datosFiltrados.forEach(op => {
+                    // Mostrar "Tipo - Opcion" si están todos, si no, solo "Opcion"
+                    const labelMostrar = unidadSeleccionada === 'ALL' ? `${op.tipo_nombre} - ${op.nombre}` : op.nombre;
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.innerHTML = `
+                        <span class="text-truncate fw-medium" style="max-width: 85%;" title="${labelMostrar}">${labelMostrar}</span>
+                        <span class="badge bg-secondary rounded-pill">${op.cantidad}</span>
+                    `;
+                    listaSubeErrores.appendChild(li);
+                });
+            }
+
+            // Preparar arrays para el gráfico
+            const cLabels = datosFiltrados.map(op => unidadSeleccionada === 'ALL' ? `${op.tipo_nombre} - ${op.nombre}` : op.nombre);
+            const cData = datosFiltrados.map(op => op.cantidad);
+
+            // Actualizar o crear Chart
+            if (chartOpcionesInstance) {
+                chartOpcionesInstance.data.labels = cLabels;
+                chartOpcionesInstance.data.datasets[0].data = cData;
+                chartOpcionesInstance.update();
+            } else if (ctxOpciones) {
+                chartOpcionesInstance = new Chart(ctxOpciones.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: cLabels,
+                        datasets: [{
+                            data: cData,
+                            backgroundColor: pieColors.slice().reverse(),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: commonOptions
+                });
+            }
+        }
+
+        // Inicializar el filtro combo
+        if (opcionesRaw.length > 0 && filtroUnidad) {
+            const tiposUnicos = [...new Set(opcionesRaw.map(op => op.tipo_nombre))];
+            tiposUnicos.forEach(tipo => {
+                const opt = document.createElement('option');
+                opt.value = tipo;
+                opt.textContent = tipo;
+                filtroUnidad.appendChild(opt);
+            });
+
+            filtroUnidad.addEventListener('change', (e) => {
+                actualizarSubErrores(e.target.value);
+            });
+
+            // Render inicial
+            actualizarSubErrores('ALL');
+        } else if (filtroUnidad) {
+            actualizarSubErrores('ALL');
+        }
+
+        // Inicializar barras de progreso html manuales
         document.querySelectorAll('.progress-bar').forEach(function (bar) {
             const width = bar.getAttribute('data-width');
             if (width) {

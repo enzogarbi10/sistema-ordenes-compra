@@ -1,0 +1,414 @@
+{% extends 'web/base.html' %}
+{% load static %}
+
+{% block title %}Muestras de Etiquetas - Gráfica Melfa{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Prevent overall scroll snapping issues if any, ensuring smooth behavior */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Sub-Navbar for filtering/jumping */
+    .sub-navbar {
+        position: sticky;
+        top: 70px;
+        background: #8b3a2b;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: top 0.3s ease;
+    }
+
+    .sub-nav-link {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        padding: 15px 25px;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 600;
+        transition: all 0.3s;
+        border-bottom: 2px solid transparent;
+    }
+
+    .sub-nav-link:hover,
+    .sub-nav-link.active {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.15);
+        border-bottom: 2px solid #fff;
+    }
+
+    /* Hero intro */
+    .samples-hero {
+        padding-top: 180px;
+        padding-bottom: 80px;
+        background: #000;
+        text-align: center;
+    }
+
+    .line-subtitle {
+        color: var(--accent-orange);
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    /* PERFECT SUMATIK ROCK-SOLID SLANTED GRID */
+    .muestras-slant-container {
+        width: 100%;
+        overflow: hidden;
+        /* Hides the oversized rows */
+        background: #000;
+    }
+
+    .slant-grid-wrapper {
+        width: 120vw;
+        margin-left: -10vw;
+        transform: skewX(-15deg);
+        /* SKEW THE ENTIRE GRID! Perfect diagonal lines */
+    }
+
+    .slant-row {
+        display: flex;
+        width: 100%;
+        min-height: 480px;
+    }
+
+    /* Every column inside inherently gets the slanted borders seamlessly */
+    .s-col {
+        overflow: hidden;
+        /* Clips content exactly to the slanted borders! Impossible to deform */
+        display: flex;
+        position: relative;
+    }
+
+    /* We un-skew the contents so text and images sit straight naturally */
+    .s-content-unskew {
+        transform: skewX(15deg);
+        width: 120%;
+        /* Counter the un-skew boundary shrinkage */
+        margin-left: -10%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Column Sizing (4 cols x 22.5% = 90%. Remainder 10% auto-assigned to spacers) */
+    .s-col-img {
+        flex: 0 0 22.5%;
+        width: 22.5%;
+        max-width: 22.5%;
+    }
+
+    .s-col-img .s-content-unskew {
+        width: 140%;
+        /* Wider un-skew field to guarantee image is never clipped at corners */
+        margin-left: -20%;
+    }
+
+    .s-col-text {
+        flex: 0 0 22.5%;
+        width: 22.5%;
+        max-width: 22.5%;
+        background-color: #fff;
+    }
+
+    .s-col-text .s-content-unskew {
+        align-items: flex-start;
+        padding: 0 16%;
+        /* Gives text nice breathing room */
+        text-align: left;
+    }
+
+    .s-spacer {
+        flex: 0 0 5%;
+        width: 5%;
+        max-width: 5%;
+        /* Explicit 5% margin on each edge safely */
+    }
+
+    /* Images */
+    .s-img {
+        max-width: 75%;
+        max-height: 400px;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
+        transition: transform 0.4s ease;
+    }
+
+    .s-col-img:hover .s-img {
+        transform: scale(1.05) translateY(-5px);
+    }
+
+    /* Typography */
+    .s-subtitle {
+        color: #ba1111;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .s-title {
+        font-family: var(--serif-font), serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        line-height: 1.1;
+        color: #111;
+        margin-bottom: 1rem;
+    }
+
+    .s-desc {
+        color: #666;
+        font-size: 0.90rem;
+        line-height: 1.5;
+        margin-bottom: 1.2rem;
+    }
+
+    .varietal-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .s-tag-box {
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #777;
+        padding: 4px 8px;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+    }
+
+    /* Colorful tools */
+    .bg-white {
+        background-color: #fff;
+    }
+
+    .bg-red {
+        background-color: #b80d0d;
+    }
+
+    .bg-black {
+        background-color: #0c0c0c;
+    }
+
+    .texture-overlay {
+        position: absolute;
+        top: -50%;
+        bottom: -50%;
+        left: -50%;
+        right: -50%;
+        background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.04"/></svg>');
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Mobile override completely unwraps the skew for clean viewing */
+    @media (max-width: 1100px) {
+        .slant-grid-wrapper {
+            transform: none;
+            width: 100vw;
+            margin-left: 0;
+        }
+
+        .slant-row {
+            flex-direction: column;
+            border-bottom: 10px solid #000;
+        }
+
+        .s-spacer {
+            display: none !important;
+        }
+
+        .s-col {
+            width: 100%;
+            min-height: 380px;
+        }
+
+        .s-col-img,
+        .s-col-text {
+            flex: auto;
+        }
+
+        .s-content-unskew {
+            transform: none;
+            width: 100%;
+            margin-left: 0;
+            padding: 40px 10%;
+            align-items: center !important;
+            text-align: center !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Intro Header -->
+<section class="samples-hero">
+    <div class="container">
+        <span class="line-subtitle" data-aos="fade-down">Nuestra Excelencia</span>
+        <h1 class="serif display-2 fw-bold text-white mb-4" data-aos="fade-up">Portfolio de Etiquetas</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px;" data-aos="fade-up" data-aos-delay="100">
+            Descubra nuestro estándar de calidad flexográfica. Adaptamos tecnologías de impresión de vanguardia para
+            dotar a sus productos de una identidad inconfundible.
+        </p>
+    </div>
+</section>
+
+<!-- Sub Navigation (Sticky Menu) -->
+<nav class="sub-navbar" id="subNavbar">
+    {% for cat in categorias %}
+    <a href="#{{ cat.nombre_clave }}" class="sub-nav-link">{{ cat.titulo|striptags|truncatechars:15 }}</a>
+    {% endfor %}
+</nav>
+
+<!-- Dynamic Slanted Grid -->
+<div class="muestras-slant-container">
+    <div class="slant-grid-wrapper">
+        {% for cat in categorias %}
+
+        <!-- ALGORITMO DE FILAS: Open Row every 2 items -->
+        {% if forloop.counter0|divisibleby:2 %}
+        <div class="slant-row">
+            <!-- Left border spacer -->
+            {% if forloop.counter0|divisibleby:4 %}
+            <div class="s-col s-spacer bg-white"></div>
+            {% else %}
+            <div class="s-col s-spacer bg-red"></div>
+            {% endif %}
+            {% endif %}
+
+            <!-- TYPE A: IMAGE then TEXT -->
+            {% if forloop.counter0|divisibleby:4 or forloop.counter0|add:"-1"|divisibleby:4 %}
+
+            <div class="s-col s-col-img"
+                style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #e9ecef;{% endif %}">
+                <div class="texture-overlay"></div>
+                <div class="s-content-unskew">
+                    {% if cat.imagen %}
+                    <img src="{{ cat.imagen.url }}" class="s-img" alt="{{ cat.titulo|striptags }}">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="s-col s-col-text" id="{{ cat.nombre_clave }}"> <!-- ID link for jumping -->
+                <div class="s-content-unskew" data-aos="fade-up" data-aos-offset="50">
+                    <span class="s-subtitle">{{ cat.subtitulo }}</span>
+                    <h3 class="s-title">{{ cat.titulo|safe }}</h3>
+                    <p class="s-desc">{{ cat.descripcion }}</p>
+                    <div class="varietal-tags">
+                        {% for tag in cat.get_etiquetas_list %}
+                        <div class="s-tag-box">{{ tag }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- TYPE B: TEXT then IMAGE -->
+            {% else %}
+
+            <div class="s-col s-col-text" id="{{ cat.nombre_clave }}"> <!-- ID link for jumping -->
+                <div class="s-content-unskew" data-aos="fade-up" data-aos-offset="50">
+                    <span class="s-subtitle" style="color: #666;">{{ cat.subtitulo }}</span>
+                    <h3 class="s-title">{{ cat.titulo|safe }}</h3>
+                    <p class="s-desc">{{ cat.descripcion }}</p>
+                    <div class="varietal-tags">
+                        {% for tag in cat.get_etiquetas_list %}
+                        <div class="s-tag-box">{{ tag }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="s-col s-col-img"
+                style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #e9ecef;{% endif %}">
+                <div class="texture-overlay"></div>
+                <div class="s-content-unskew">
+                    {% if cat.imagen %}
+                    <img src="{{ cat.imagen.url }}" class="s-img" alt="{{ cat.titulo|striptags }}">
+                    {% endif %}
+                </div>
+            </div>
+
+            {% endif %}
+
+            <!-- ALGORITMO DE FILAS: Close Row every 2 items or on very last item -->
+            {% if forloop.counter0|add:"1"|divisibleby:2 or forloop.last %}
+            <!-- Right border spacer -->
+            {% if forloop.counter0 == 1 or forloop.counter0 == 5 or forloop.counter0 == 9 %}
+            <div class="s-col s-spacer bg-black"></div>
+            {% else %}
+            <div class="s-col s-spacer bg-white"></div>
+            {% endif %}
+        </div> <!-- end slant-row -->
+        {% endif %}
+
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Reuse AOS for animations from base -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 50
+    });
+
+    // Update main navbar to be fully solid if not at top, and adjust subnavbar
+    window.addEventListener('scroll', function () {
+        const mainNav = document.querySelector('.navbar');
+        const subNav = document.getElementById('subNavbar');
+
+        if (window.scrollY > 50) {
+            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.98)';
+            let navHeight = mainNav.offsetHeight;
+            subNav.style.top = navHeight + 'px';
+        } else {
+            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            subNav.style.top = '70px';
+        }
+    });
+
+    // Subnav active state updating based on scroll position
+    const sections = document.querySelectorAll('.s-col-text[id]');
+    const navLinks = document.querySelectorAll('.sub-nav-link');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+            if (scrollY >= (sectionTop - 300)) {
+                let id = section.getAttribute('id');
+                if (id) current = id;
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current) && current !== '') {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+{% endblock %}

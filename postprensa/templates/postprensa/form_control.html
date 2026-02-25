@@ -275,29 +275,51 @@
                     </div>
                     <div class="card-body">
                         {{ formset.management_form }}
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-info-circle me-1"></i>Puedes subir múltiples fotografías o capturas a la vez
+                            seleccionándolas juntas.
+                        </p>
                         <div class="row g-3">
                             {% for imgform in formset %}
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 text-center bg-light h-100 position-relative">
-                                    {% if imgform.instance.pk %}
+                            {% if imgform.instance.pk %}
+                            <div class="col-md-4 col-lg-3">
+                                <div
+                                    class="border rounded p-3 text-center bg-light h-100 position-relative shadow-sm hover-shadow transition-all">
                                     <div class="mb-2">
                                         <a href="{{ imgform.instance.imagen.url }}" target="_blank">
                                             <img src="{{ imgform.instance.imagen.url }}" class="img-fluid rounded mb-2"
                                                 style="max-height: 100px;">
                                         </a>
                                     </div>
-                                    {% endif %}
-                                    <i class="bi bi-cloud-upload fs-1 text-muted d-block mb-2"></i>
-                                    {{ imgform.imagen }}
-                                    {% if imgform.instance.pk %}
-                                    <div class="form-check mt-2 small text-danger fw-bold">
-                                        {{ imgform.DELETE }}
-                                        <label class="form-check-label">Eliminar</label>
+                                    <!-- Hide the original field visually, just show delete -->
+                                    <div class="d-none">
+                                        {{ imgform.imagen }}
                                     </div>
-                                    {% endif %}
+                                    <div class="form-check mt-2 small text-danger fw-bold d-inline-block">
+                                        {{ imgform.DELETE }}
+                                        <label class="form-check-label">Eliminar Guardada</label>
+                                    </div>
+                                    {{ imgform.id }}
                                 </div>
                             </div>
+                            {% endif %}
                             {% endfor %}
+
+                            <!-- ÚNICA CAJA NUEA MULTIPLE -->
+                            <div class="col-12 mt-3">
+                                <div class="border rounded p-3 bg-light shadow-sm">
+                                    <label class="form-label fw-bold" for="{{ form.evidencias.id_for_label }}"><i
+                                            class="bi bi-cloud-arrow-up text-primary me-2"></i>Nueva Evidencia</label>
+                                    <input type="file" name="evidencias" accept="image/*" class="form-control"
+                                        id="{{ form.evidencias.id_for_label }}" multiple>
+                                    {% if form.evidencias.errors %}
+                                    <div class="text-danger small mt-1">{{ form.evidencias.errors }}</div>
+                                    {% endif %}
+
+                                    <!-- PREVISUALIZACION DINÁMICA -->
+                                    <div id="evidencias-preview-container" class="row mt-3 g-3"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -310,8 +332,9 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="row g-4 align-items-center">
-                            <div class="col-md-5 text-center">
+                        <div class="row g-4 pt-2">
+                            <!-- Columna Izquierda: Cantidad -->
+                            <div class="col-md-5">
                                 <label class="form-label fw-bold d-block text-muted small text-uppercase mb-3">¿Se llegó
                                     a la cantidad total pedida?</label>
                                 <div class="btn-group w-100 shadow-sm" role="group">
@@ -332,15 +355,68 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-7 border-start" id="container-autorizacion" style="display: none;">
+                            <!-- Columna Derecha: No Conformidad -->
+                            <div class="col-md-7 border-start">
                                 <div class="ps-md-4">
-                                    <label class="form-label fw-bold text-danger small text-uppercase mb-2">
-                                        <i class="bi bi-exclamation-octagon me-1"></i> Requiere Autorización (Partida
-                                        Incompleta)
+                                    <label class="form-label fw-bold d-block text-muted small text-uppercase mb-3">
+                                        <i class="bi bi-exclamation-square me-1"></i> Reporte de No Conformidad
                                     </label>
-                                    <div class="input-group input-group-lg">
-                                        <span class="input-group-text bg-white border-end-0">
-                                            <i class="bi bi-person-check-fill text-danger"></i>
+
+                                    <div class="btn-group w-100 shadow-sm" role="group">
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_ninguna" value="" autocomplete="off" checked>
+                                        <label class="btn btn-outline-secondary border-2 fw-bold"
+                                            for="nc_ninguna">Ninguna</label>
+
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_interna" value="INTERNA" autocomplete="off">
+                                        <label class="btn btn-outline-warning border-2 fw-bold text-dark"
+                                            for="nc_interna">Interna</label>
+
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_externa" value="EXTERNA" autocomplete="off">
+                                        <label class="btn btn-outline-danger border-2 fw-bold"
+                                            for="nc_externa">Externa</label>
+                                    </div>
+                                    <div class="d-none">
+                                        {{ form.no_conformidad }}
+                                    </div>
+
+                                    <!-- Panel Extra para Externa -->
+                                    <div id="panel_nc_externa"
+                                        class="mt-3 p-3 bg-light border border-danger-subtle rounded d-none">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-sm-6">
+                                                <label
+                                                    class="form-label fw-bold text-danger small text-uppercase">Clase</label>
+                                                {{ form.tipo_no_conformidad }}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label fw-bold text-danger small text-uppercase">N°
+                                                    Asociada</label>
+                                                {{ form.nro_no_conformidad }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila Inferior: Observaciones y Autorización -->
+                        <div class="row g-4 mt-4 pt-3 border-top align-items-end">
+                            <div class="col-md-6 border-end">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Notas Adicionales /
+                                    Observaciones Generales</label>
+                                {{ form.observaciones }}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="ps-md-3">
+                                    <label class="form-label fw-bold text-dark small text-uppercase mb-2">
+                                        <i class="bi bi-person-check-fill me-1"></i> Autorización de Entrega
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="bi bi-shield-lock text-muted"></i>
                                         </span>
                                         {{ form.autorizo_envio }}
                                     </div>
@@ -348,17 +424,10 @@
                                     <div class="text-danger small mt-1">{{ form.autorizo_envio.errors }}</div>
                                     {% endif %}
                                     <small class="text-muted d-block mt-2 fst-italic">
-                                        Seleccione quién autoriza el envío a pesar de no haber llegado a la cantidad.
+                                        Seleccione quién autoriza el envío final, sin importar si la partida está
+                                        completa o no.
                                     </small>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="row g-3 mt-4 pt-3 border-top">
-                            <div class="col-12">
-                                <label class="form-label fw-bold text-muted small text-uppercase">Notas Adicionales /
-                                    Observaciones Generales</label>
-                                {{ form.observaciones }}
                             </div>
                         </div>
                     </div>
@@ -681,24 +750,46 @@
         const btnSi = document.getElementById('llego_si');
         const btnNo = document.getElementById('llego_no');
         const realCheck = document.getElementById('id_llego_cantidad');
-        const containerAut = document.getElementById('container-autorizacion');
 
-        function actualizarCierre() {
-            if (btnNo.checked) {
-                realCheck.checked = false;
-                containerAut.style.display = 'block';
-                containerAut.classList.add('animate__animated', 'animate__fadeInRight');
+        function actualizarLlegoCantidad() {
+            realCheck.checked = !btnNo.checked;
+        }
+
+        if (btnSi && btnNo && realCheck) {
+            btnSi.addEventListener('change', actualizarLlegoCantidad);
+            btnNo.addEventListener('change', actualizarLlegoCantidad);
+            if (realCheck.checked) {
+                btnSi.checked = true;
             } else {
-                realCheck.checked = true;
-                containerAut.style.display = 'none';
+                btnNo.checked = true;
             }
         }
 
-        if (btnSi && btnNo) {
-            // Estado inicial: El modelo tiene default=True (Si se llego)
-            realCheck.checked = true;
-            btnSi.addEventListener('change', actualizarCierre);
-            btnNo.addEventListener('change', actualizarCierre);
+        // Lógica de Cierre: No Conformidad
+        const realNC = document.getElementById('id_no_conformidad');
+        const panelExterna = document.getElementById('panel_nc_externa');
+        const inputTipoNC = document.getElementById('id_tipo_no_conformidad');
+        const inputNroNC = document.getElementById('id_nro_no_conformidad');
+
+        document.querySelectorAll('.btn-nc-toggle').forEach(btn => {
+            btn.addEventListener('change', function () {
+                if (realNC) realNC.value = this.value;
+
+                if (this.value === 'EXTERNA') {
+                    panelExterna.classList.remove('d-none');
+                } else {
+                    panelExterna.classList.add('d-none');
+                    if (inputTipoNC) inputTipoNC.value = '';
+                    if (inputNroNC) inputNroNC.value = '';
+                }
+            });
+        });
+
+        // Sincronizar UI NC con el valor inicial oculto
+        if (realNC && realNC.value) {
+            const btnActivado = document.querySelector(`.btn-nc-toggle[value="${realNC.value}"]`);
+            if (btnActivado) btnActivado.checked = true;
+            if (realNC.value === 'EXTERNA' && panelExterna) panelExterna.classList.remove('d-none');
         }
 
         // Cargar opciones iniciales desde JSON
@@ -762,7 +853,7 @@
             const chk = document.createElement('input');
             chk.type = 'checkbox';
             chk.className = 'form-check-input opcion-checkbox me-2';
-            chk.name = 'opciones_defecto_' + tipoId; // Nombre esperado por el backend
+            chk.name = 'opciones_defecto'; // Nombre esperado por el backend
             chk.value = op.id;
             chk.id = 'opt-' + op.id;
 
@@ -1189,6 +1280,87 @@
                 }
             });
     }
+
+    // --- PREVISUALIZACIÓN DE IMÁGENES EVITANDO RECARGA ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const evidenciasInput = document.querySelector('input[name="evidencias"]');
+        const previewContainer = document.getElementById('evidencias-preview-container');
+
+        if (evidenciasInput && previewContainer) {
+
+            function renderPreviews() {
+                previewContainer.innerHTML = '';
+                const files = Array.from(evidenciasInput.files);
+
+                files.forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const colDiv = document.createElement('div');
+                            colDiv.className = 'col-6 col-sm-4 col-md-3 text-center position-relative mt-4';
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'img-thumbnail shadow-sm';
+                            img.style.maxHeight = '130px';
+                            img.style.width = '100%';
+                            img.style.objectFit = 'cover';
+                            img.style.borderRadius = '8px';
+                            img.style.border = '2px solid var(--accent-orange)';
+
+                            const label = document.createElement('div');
+                            label.className = 'small text-muted text-truncate mt-1 fw-bold px-2';
+                            label.title = file.name;
+                            label.textContent = file.name;
+
+                            // Botón para eliminar esta foto específica antes de enviar
+                            const removeBtn = document.createElement('button');
+                            removeBtn.type = 'button';
+                            removeBtn.className = 'btn btn-danger btn-sm position-absolute rounded-circle shadow pb-1';
+                            removeBtn.style.top = '-10px';
+                            removeBtn.style.right = '5px';
+                            removeBtn.style.width = '26px';
+                            removeBtn.style.height = '26px';
+                            removeBtn.style.padding = '0';
+                            removeBtn.style.lineHeight = '1';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.title = 'Descartar archivo';
+                            removeBtn.style.fontWeight = 'bold';
+                            removeBtn.style.fontSize = '18px';
+
+                            removeBtn.onclick = function () {
+                                // Crear un nuevo objeto de transferencia de archivos válido
+                                const dt = new DataTransfer();
+                                const currentFiles = Array.from(evidenciasInput.files);
+
+                                // Volver a añadir todos MENOS el que clickeamos para eliminar
+                                currentFiles.forEach((f, i) => {
+                                    if (i !== index) dt.items.add(f);
+                                });
+
+                                // Pisar la data del input original con la lista limpia
+                                evidenciasInput.files = dt.files;
+
+                                // Volver a redibujar todo en base a la lista nueva
+                                renderPreviews();
+                            };
+
+                            colDiv.appendChild(img);
+                            colDiv.appendChild(removeBtn);
+                            colDiv.appendChild(label);
+                            previewContainer.appendChild(colDiv);
+                        }
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Cada vez que seleccionan archivos nuevos, que dibuje todo nuevo
+            evidenciasInput.addEventListener('change', renderPreviews);
+        }
+    });
 
 </script>
 {% endblock %}
