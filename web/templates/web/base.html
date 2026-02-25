@@ -186,13 +186,19 @@
                     </li>
                     <li class="nav-item ms-lg-3 d-flex gap-2">
                         {% if request.user.is_authenticated %}
-                        {% if request.user|has_group:"Calidad" %}
+                        {% if request.user.is_superuser %}
+                        <a class="btn btn-outline-light btn-sm" href="{% url 'admin:index' %}">
+                            <i class="bi bi-gear-wide-connected me-2"></i>Admin
+                        </a>
+                        {% endif %}
+
+                        {% if request.user|has_group:"Calidad" or request.user.is_superuser %}
                         <a class="btn btn-outline-orange btn-sm" href="{% url 'lista_controles_postprensa' %}">
                             <i class="bi bi-shield-check me-2"></i>Calidad
                         </a>
                         {% endif %}
 
-                        {% if request.user|has_group:"Ordenes" %}
+                        {% if request.user|has_group:"Ordenes" or request.user.is_superuser %}
                         <a class="btn btn-orange btn-sm" href="{% url 'lista_ordenes' %}">
                             <i class="bi bi-gear-fill me-2"></i>Sistema
                         </a>

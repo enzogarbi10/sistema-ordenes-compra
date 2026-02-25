@@ -120,6 +120,13 @@
                             {{ user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}"><i
+                                        class="bi bi-gear-wide-connected me-1"></i>Panel Admin</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            {% endif %}
                             <li>
                                 <form action="{% url 'logout' %}" method="post" class="d-inline">
                                     {% csrf_token %}
