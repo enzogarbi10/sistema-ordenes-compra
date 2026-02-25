@@ -682,24 +682,28 @@ def generar_pdf_bytes_control(control):
         elements.append(Paragraph("Evidencia Fotográfica", heading_style))
         for img_obj in control.imagenes.all():
             try:
+                import io
                 from PIL import Image as PILImage, ImageOps
                 
-                # Cargar imagen con Pillow, que procesa mejor los JPEGs y EXIFs
-                with PILImage.open(img_obj.imagen.path) as pil_img:
-                    # Convertimos a RGB siempre (por si es CMYK o RGBA que ReportLab no soporta bien)
-                    if pil_img.mode != 'RGB':
-                        pil_img = pil_img.convert('RGB')
+                # Cargar imagen usando el manejador de archivos interno de Django
+                # Esto soluciona problemas de rutas físicas en PythonAnywhere
+                img_buffer = io.BytesIO()
+                
+                with img_obj.imagen.open('rb') as f:
+                    with PILImage.open(f) as pil_img:
+                        # Convertimos a RGB siempre
+                        if pil_img.mode != 'RGB':
+                            pil_img = pil_img.convert('RGB')
+                            
+                        # Respetar orientación de celulares (EXIF)
+                        try: pil_img = ImageOps.exif_transpose(pil_img)
+                        except: pass
                         
-                    # Arreglamos la orientación si viene de un celular (respetar EXIF)
-                    try: pil_img = ImageOps.exif_transpose(pil_img)
-                    except: pass
-                    
-                    # Achicamos la imagen en memoria para que no reviente el PDF ni pese demasiado
-                    pil_img.thumbnail((800, 800))
-                    
-                    img_buffer = io.BytesIO()
-                    pil_img.save(img_buffer, format='JPEG', quality=85)
-                    img_buffer.seek(0)
+                        # Achicamos y optimizamos
+                        pil_img.thumbnail((800, 800))
+                        pil_img.save(img_buffer, format='JPEG', quality=85)
+                
+                img_buffer.seek(0)
                     
                 img = Image(img_buffer, width=350, height=250, kind='proportional')
                 img.hAlign = 'CENTER'
@@ -714,7 +718,8 @@ def generar_pdf_bytes_control(control):
                 import traceback
                 print(f"Error PDF IMG: {e}")
                 traceback.print_exc()
-                elements.append(Paragraph("[No se pudo cargar una de las imágenes adjuntas]", ParagraphStyle(name='Err', alignment=TA_CENTER, textColor=colors.red)))
+                error_msg = str(e)[:100] # Mostrar primeros 100 caracteres del error real
+                elements.append(Paragraph(f"[Error: No se encontró la imagen ({error_msg})]", ParagraphStyle(name='Err', alignment=TA_CENTER, textColor=colors.red)))
                 elements.append(Spacer(1, 20))
 
     # 5. Cierre
