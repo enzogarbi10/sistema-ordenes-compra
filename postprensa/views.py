@@ -586,6 +586,7 @@ def descargar_estadisticas_pdf(request):
     return response
 
 def generar_pdf_bytes_control(control):
+    # Ya hay un import io global en la línea 13
     buffer = io.BytesIO()
     from reportlab.lib.pagesizes import letter
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -682,7 +683,6 @@ def generar_pdf_bytes_control(control):
         elements.append(Paragraph("Evidencia Fotográfica", heading_style))
         for img_obj in control.imagenes.all():
             try:
-                import io
                 from PIL import Image as PILImage, ImageOps
                 
                 # Cargar imagen usando el manejador de archivos interno de Django
