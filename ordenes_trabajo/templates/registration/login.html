@@ -1,37 +1,99 @@
 {% extends 'ordenes_trabajo/base.html' %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-                <h4 class="mb-0">Iniciar Sesión</h4>
+<style>
+    body {
+        background-color: #f4f6f9;
+        /* Soft background */
+    }
+
+    .login-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .login-header {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 2rem 0;
+        border-bottom: 4px solid #ff6600;
+    }
+
+    .form-control {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn-login {
+        background-color: #ff6600;
+        border-color: #ff6600;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding: 0.75rem;
+        border-radius: 50rem;
+        transition: all 0.3s;
+    }
+
+    .btn-login:hover {
+        background-color: #e65c00;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+</style>
+
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-12 col-md-6 col-lg-4">
+        <div class="card login-card">
+            <div class="card-header login-header text-center text-white border-0">
+                <h3 class="mb-0 fw-bold" style="font-family: 'Playfair Display', serif;">
+                    <i class="bi bi-box-arrow-in-right text-warning me-2"></i>Ingreso al Sistema
+                </h3>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4 p-md-5">
                 <form method="post">
                     {% csrf_token %}
                     {% if form.errors %}
-                    <div class="alert alert-danger">
-                        Usuario o contraseña incorrectos.
+                    <div class="alert alert-danger shadow-sm rounded-3 fw-bold small">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Usuario o contraseña incorrectos.
                     </div>
                     {% endif %}
 
-                    <div class="mb-3">
-                        <label for="id_username" class="form-label">Usuario</label>
-                        <input type="text" name="username" class="form-control" id="id_username" required autofocus>
+                    <div class="mb-4">
+                        <label for="id_username" class="form-label fw-bold text-secondary">Usuario</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i
+                                    class="bi bi-person text-secondary"></i></span>
+                            <input type="text" name="username" class="form-control border-start-0 bg-light"
+                                id="id_username" required autofocus>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="id_password" class="form-label">Contraseña</label>
-                        <input type="password" name="password" class="form-control" id="id_password" required>
-                        <div class="text-end mt-1">
-                            <small><a href="{% url 'password_reset' %}" class="text-decoration-none">¿Olvidaste tu
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label fw-bold text-secondary">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i
+                                    class="bi bi-key text-secondary"></i></span>
+                            <input type="password" name="password" class="form-control border-start-0 bg-light"
+                                id="id_password" required>
+                        </div>
+                        <div class="text-end mt-2">
+                            <small><a href="{% url 'password_reset' %}"
+                                    class="text-decoration-none text-muted fw-semibold">¿Olvidaste tu
                                     contraseña?</a></small>
                         </div>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Ingresar</button>
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-login shadow-sm">
+                            Iniciar Sesión <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
                     </div>
                 </form>
             </div>
