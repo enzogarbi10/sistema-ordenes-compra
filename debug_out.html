@@ -1,0 +1,3216 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica Melfa | Excelencia Gráfica</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Playfair Display for Serifs, Montserrat for Sans -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/web.css">
+
+    <!-- TomSelect CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-dark: #000000;
+            --accent-orange: #ff6600;
+            --accent-orange-hover: #ff8533;
+            --text-light: #f8f9fa;
+            --text-muted: #888888;
+            --card-bg: #111111;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 102, 0, 0.2);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+            color: var(--accent-orange) !important;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-orange) !important;
+        }
+
+        .btn-orange {
+            background-color: var(--accent-orange);
+            color: white;
+            border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 2rem;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-orange:hover {
+            background-color: var(--accent-orange-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.3);
+        }
+
+        .btn-outline-orange {
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
+            background: transparent;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 2rem;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-orange:hover {
+            background-color: var(--accent-orange);
+            color: white;
+        }
+
+        footer {
+            background-color: #050505;
+            border-top: 1px solid rgba(255, 102, 0, 0.1);
+            padding: 4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-orange);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Fix legibilidad de Inputs */
+        .form-control,
+        .form-select,
+        .form-check-input {
+            color: #1a1a1a !important;
+            /* Fuerza color oscuro para el texto */
+        }
+
+        .form-control::placeholder {
+            color: #6c757d;
+            opacity: 1;
+        }
+    </style>
+    
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                GRÁFICA MELFA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link "
+                            href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link "
+                            href="/muestras/">Muestras</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link "
+                            href="/tecnologia/">Tecnología</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link "
+                            href="/clientes/">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="/#servicios">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="/#nosotros">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="/#contacto">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 d-flex gap-2">
+                        
+                        
+                        <a class="btn btn-outline-light btn-sm" href="/admin/">
+                            <i class="bi bi-gear-wide-connected me-2"></i>Admin
+                        </a>
+                        
+
+                        
+                        <a class="btn btn-outline-orange btn-sm" href="/calidad/">
+                            <i class="bi bi-shield-check me-2"></i>Calidad
+                        </a>
+                        
+
+                        
+                        <a class="btn btn-orange btn-sm" href="/sistema/">
+                            <i class="bi bi-gear-fill me-2"></i>Sistema
+                        </a>
+                        
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+    .opciones-dropdown {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 8px;
+        margin-top: 5px;
+        display: none;
+        /* Oculto por defecto */
+    }
+
+    /* Regla eliminada: display block solo al checkear */
+
+    /* Ajustes para scrollbar en lista de opciones */
+    .opciones-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .opciones-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .opciones-list::-webkit-scrollbar-thumb {
+        background: #ced4da;
+        border-radius: 3px;
+    }
+
+    .opciones-list::-webkit-scrollbar-thumb:hover {
+        background: #adb5bd;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="mb-4 text-center fw-bold text-danger">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>Control de Calidad - Postprensa
+            </h2>
+
+            <form method="post" enctype="multipart/form-data" id="controlForm">
+                <input type="hidden" name="csrfmiddlewaretoken" value="2nfM3nz36UGpcGVADyfDfqMVRrI8LTvid8vJnp1ixfskHXnsAOknPBkwHA6kkbZy">
+
+                
+
+                
+
+                <!-- CARD PRINCIPAL: Datos de la Orden -->
+                <div
+                    class="card shadow-sm mb-4 border-top-0 border-end-0 border-bottom-0 border-start border-danger border-4">
+                    <div class="card-header bg-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold text-secondary">Datos de la Orden</h5>
+                            <span class="badge bg-secondary"></span>
+                        </div>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">N° Orden de
+                                    Trabajo</label>
+                                <input type="text" name="orden" class="form-control" placeholder="Ingrese N° de Orden" maxlength="50" required id="id_orden">
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Cliente</label>
+                                <select name="cliente" class="form-select" id="id_cliente">
+  <option value="" selected>-- Seleccione un cliente --</option>
+
+  <option value="346">[557] ** ANULADO 1 **</option>
+
+  <option value="262">[472] ** ANULADO 2 **</option>
+
+  <option value="237">[446] ** ANULADO 3 **</option>
+
+  <option value="14">214 - Grupo Avinea S.A.</option>
+
+  <option value="10">277 - Norton S.A.</option>
+
+  <option value="4">339 - Bodegas Salentein S.A.</option>
+
+  <option value="12">354 - Domaine Bousquet S.A</option>
+
+  <option value="11">364 - Algodon Wines Estates S.R.L.</option>
+
+  <option value="2">376 - Mondovino Argentina S.A.</option>
+
+  <option value="5">453 - Valle de la Puerta S.A</option>
+
+  <option value="13">453 - Valle de la Puerta S.A.</option>
+
+  <option value="1">546 - Expo Agro La Reserva</option>
+
+  <option value="140">[349] 6 FACONES S.A.</option>
+
+  <option value="3">641 - Converfrut S.A.</option>
+
+  <option value="8">764 - Bodega y Viñedos Sanchez S.A.</option>
+
+  <option value="7">770 - Diaz Maria Cristina</option>
+
+  <option value="6">805 - K-Bin S.A.</option>
+
+  <option value="211">[420] A+ POSITIVO</option>
+
+  <option value="195">[404] A. GABRIEL BRACONI</option>
+
+  <option value="269">[479] A. ZINGARETTI E HIJOS S.A</option>
+
+  <option value="568">[780] ABEI CONSULTORA SA</option>
+
+  <option value="644">[857] ABUCOLO WINES SAS</option>
+
+  <option value="502">[714] AC-DC CONSULTORA S.A.</option>
+
+  <option value="415">[626] ACONQUIJA S.R.L.</option>
+
+  <option value="318">[529] ACORDES S.R.L.</option>
+
+  <option value="174">[383] ADVISER S.A.</option>
+
+  <option value="510">[722] AGR GANADERA LA EMILIA SA</option>
+
+  <option value="25">[22] AGRO ANDINA S.A.</option>
+
+  <option value="530">[742] AGRO FW S.A.</option>
+
+  <option value="598">[810] AGRO JG S.A.</option>
+
+  <option value="324">[535] AGRO SEVILLA ARGENTINA SA</option>
+
+  <option value="555">[767] AGROAZUL SRL E.F.</option>
+
+  <option value="236">[445] AGROINDU. CARRICONDO S.A.</option>
+
+  <option value="531">[839] AGROINDUSTRIAS CIALPIL SA</option>
+
+  <option value="39">[108] AGROOLIVICOLA DE CUYO SRL</option>
+
+  <option value="42">[150] AGROPEC.  LOS CARDENALES</option>
+
+  <option value="397">[608] AGROROSAL S.A.</option>
+
+  <option value="331">[542] AGROVIT RURAL S.A.</option>
+
+  <option value="291">[501] AIMURAI S.A.</option>
+
+  <option value="373">[584] AIR COMPUTERS SRL</option>
+
+  <option value="147">[356] ALCAZAR SRL</option>
+
+  <option value="395">[606] ALCOBA PABLO DANIEL</option>
+
+  <option value="254">[464] ALCOHOLES INOCENTI SRL</option>
+
+  <option value="33">[48] ALFREDO LUIS VINASSA</option>
+
+  <option value="311">[521] ALFREDO TALOTTI</option>
+
+  <option value="155">[364] ALGODON WINE ESTATES SRL</option>
+
+  <option value="402">[613] ALLIANZ ARG COMP SEG S.A.</option>
+
+  <option value="49">[216] ALLIED DOMECQ ARG. S.A.</option>
+
+  <option value="545">[757] ALMABRAS SA</option>
+
+  <option value="648">[861] ALTASUR ARGENTINA SA</option>
+
+  <option value="119">[328] ALTO ROSARIO S.A.</option>
+
+  <option value="151">[360] ALTOCEDRO S.A.</option>
+
+  <option value="188">[397] ALTOS LAS HORMIGAS SAVI C</option>
+
+  <option value="157">[366] AN BI S.A.</option>
+
+  <option value="148">[357] ANDEAN WINERIES S.R.L.</option>
+
+  <option value="314">[524] ANDELUNA CELLARS S.R.L.</option>
+
+  <option value="560">[772] ANDEVIN SAS</option>
+
+  <option value="159">[368] ANDREAS VOLLMER</option>
+
+  <option value="352">[563] ANDRISANI MARCELO OSCAR</option>
+
+  <option value="287">[497] ANGEL CAMACHO ArgentinaSA</option>
+
+  <option value="326">[537] ANGIORD SACI</option>
+
+  <option value="313">[523] ANGULO AGROPECUARIA</option>
+
+  <option value="78">[281] ANPHORA S.A.</option>
+
+  <option value="471">[683] ANTONIO GONZALEZ S.A.</option>
+
+  <option value="472">[684] ANTUCURA S.A.</option>
+
+  <option value="652">[865] APPALACHIA WINES SAS</option>
+
+  <option value="133">[342] ARAGON Tomás Alberto</option>
+
+  <option value="234">[443] ARBOIT, MARIO DARIO</option>
+
+  <option value="474">[686] ARENAS S.A.</option>
+
+  <option value="345">[556] ARGENCERES S.A.</option>
+
+  <option value="481">[693] ARGENFRUIT S.A.</option>
+
+  <option value="548">[760] ARIAS ARTURO GUILLERMO</option>
+
+  <option value="283">[493] ARIEL GARCIA</option>
+
+  <option value="587">[799] ARTE Y BURBUJAS SA</option>
+
+  <option value="450">[662] ARTEL INC</option>
+
+  <option value="407">[618] ARTES GRAF. MODERNAS S.A.</option>
+
+  <option value="126">[335] ARTES GRAFICAS RAAL S.A.</option>
+
+  <option value="37">[100] ARTES GRÁFICAS MELFA S.A.</option>
+
+  <option value="379">[590] ARUTA D INOCENZO S.A.</option>
+
+  <option value="267">[477] ASENS PABLO MIGUEL</option>
+
+  <option value="470">[682] ASOC COOP E.E.A. MZA INTA</option>
+
+  <option value="537">[749] ATEK SA</option>
+
+  <option value="74">[275] ATILO AVENA E HIJOS S.A.</option>
+
+  <option value="307">[517] AVICOLA LUJAN DE CUYO S.A</option>
+
+  <option value="224">[433] AYLLUS SRL</option>
+
+  <option value="569">[781] AZIN LEANDRO MIGUEL</option>
+
+  <option value="649">[862] AZZONI FEDERICO</option>
+
+  <option value="212">[421] AZZURRO</option>
+
+  <option value="487">[699] B Y B SRL</option>
+
+  <option value="59">[242] B Y P S.R.L.</option>
+
+  <option value="58">[241] B.V.A. S.A.</option>
+
+  <option value="583">[795] BARBERA FACUNDO JESUS</option>
+
+  <option value="225">[434] BARBERIS HNOS S.A.</option>
+
+  <option value="536">[748] BATERIAS BORGIA SA</option>
+
+  <option value="383">[594] BAX EMPRENDIMIENTOS S.A.</option>
+
+  <option value="621">[833] BDFM SA</option>
+
+  <option value="263">[473] BEAU LIEU S.A</option>
+
+  <option value="607">[819] BEDZENT TOMAS</option>
+
+  <option value="441">[653] BEE S.A. EF</option>
+
+  <option value="134">[343] BELASCO DE BAQUEDANO S.A.</option>
+
+  <option value="635">[848] BELHARA ESTATE SA</option>
+
+  <option value="632">[845] BENAVIDES CARLOS GUILLERM</option>
+
+  <option value="306">[516] BENEGAS LYNCH F. JOSE</option>
+
+  <option value="633">[846] BENEGAS SA</option>
+
+  <option value="261">[471] BEPA SRL</option>
+
+  <option value="238">[447] BGA ESTR. DE LOS ANDES SA</option>
+
+  <option value="464">[676] BGA JEAN BOUSQUET Tupu SA</option>
+
+  <option value="365">[576] BGA JOSE QUATTROCCHI S.A.</option>
+
+  <option value="506">[718] BGA MAURICIO LORCA SA</option>
+
+  <option value="585">[797] BGA MONTLAIZ SA</option>
+
+  <option value="508">[720] BGA PIATELLI VINEYARDS</option>
+
+  <option value="400">[611] BGA PLAZA DE GRILLOS SAEF</option>
+
+  <option value="327">[538] BGA Y CAVAS DE WEINERT SA</option>
+
+  <option value="420">[631] BGA Y FCA DE AMINGA S.R.L</option>
+
+  <option value="264">[474] BGA Y VDOS ARGENTIA S.A</option>
+
+  <option value="83">[288] BGA Y VDOS SAN POLO SAICA</option>
+
+  <option value="414">[625] BGA Y VDOS VIAMONTE S.R.L</option>
+
+  <option value="217">[426] BGAS MAZA TONCONOGY SRL</option>
+
+  <option value="505">[717] BGAS NICOLAS CATENA SA</option>
+
+  <option value="87">[293] BGAS NIETO SENETINER S.A.</option>
+
+  <option value="524">[736] BGAS Y VDOS A. MARAÑON SA</option>
+
+  <option value="461">[673] BGAS Y VDOS CROTTA S.A.</option>
+
+  <option value="68">[260] BGAS Y VDOS DEL VALLE S.A</option>
+
+  <option value="570">[782] BGAS Y VDOS GABRIELLI SA</option>
+
+  <option value="526">[738] BGAS Y VDOS LOPEZ SAIYC</option>
+
+  <option value="440">[652] BGAS Y VDOS PULENTA S.A.</option>
+
+  <option value="552">[764] BGAS Y VDOS SANCHEZ S.A.</option>
+
+  <option value="295">[505] BGAS Y VDOS. RUBINO HNO</option>
+
+  <option value="362">[573] BGAS Y VIÑEDOS RENACER SA</option>
+
+  <option value="86">[292] BGAS. HISPANO ARG. S.A.</option>
+
+  <option value="106">[315] BGAS. Y VDOS HUARPE S.A.</option>
+
+  <option value="500">[712] BIANCHINO JUAN CARLOS</option>
+
+  <option value="413">[624] BILUSAMA WINES SRL</option>
+
+  <option value="617">[829] BIOAGGIL ARGENTINA SA</option>
+
+  <option value="567">[779] BIOMARK SRL</option>
+
+  <option value="185">[394] BLAMEX S.A.</option>
+
+  <option value="433">[645] BLANCHARD Y LURTON SA  EF</option>
+
+  <option value="543">[755] BLANCO GABRIEL</option>
+
+  <option value="122">[331] BLANCO, JOSE ANTONIO</option>
+
+  <option value="92">[300] BOD. LA ESPERANZA S.A.</option>
+
+  <option value="624">[836] BODEGA ANTIGAL SA</option>
+
+  <option value="546">[758] BODEGA AUGUSTO PULENTA SA</option>
+
+  <option value="203">[412] BODEGA CUARTO SURCO S.A.</option>
+
+  <option value="341">[552] BODEGA DEL MAESTRE  S.A.</option>
+
+  <option value="422">[633] BODEGA DIAMANDES S.A.</option>
+
+  <option value="166">[375] BODEGA EL ESTECO S.A.</option>
+
+  <option value="319">[530] BODEGA FAMILIA SCHOROEDER</option>
+
+  <option value="363">[574] BODEGA FURLOTTI S.A.</option>
+
+  <option value="547">[759] BODEGA HAGMANN SRL</option>
+
+  <option value="334">[545] BODEGA J A CICCHITTI S.A.</option>
+
+  <option value="110">[319] BODEGA LA AZUL S.A.</option>
+
+  <option value="285">[495] BODEGA LOS CERRILLOS S.A.</option>
+
+  <option value="76">[277] BODEGA NORTON S.A.</option>
+
+  <option value="235">[444] BODEGA RUCA MALEN S.A.</option>
+
+  <option value="191">[400] BODEGA SHETIRA S.A.</option>
+
+  <option value="226">[435] BODEGA UNIVERSO AUSTRAL</option>
+
+  <option value="360">[571] BODEGA VICENTINA S.A.</option>
+
+  <option value="467">[679] BODEGA VISTALBA S.A.</option>
+
+  <option value="459">[671] BODEGAS CARO S.A.</option>
+
+  <option value="21">[7] BODEGAS CHANDON S.A.</option>
+
+  <option value="280">[490] BODEGAS ESMERALDA S.A.</option>
+
+  <option value="50">[218] BODEGAS FABRE S.A.</option>
+
+  <option value="630">[843] BODEGAS GIAROLI S.R.L</option>
+
+  <option value="315">[525] BODEGAS LLAVER S.A.</option>
+
+  <option value="130">[339] BODEGAS SALENTEIN S.A.</option>
+
+  <option value="573">[785] BODEGAS SAN HUBERTO SA</option>
+
+  <option value="136">[345] BODEGAS TERRANOVA S.A.</option>
+
+  <option value="60">[244] BOMBAL MARIA LORINE</option>
+
+  <option value="578">[790] BONETTO FRATELLI SA</option>
+
+  <option value="562">[774] BRUNACCI VICENTE</option>
+
+  <option value="521">[733] BULNES SA</option>
+
+  <option value="527">[739] BUSCEMA ROSA NELIDA</option>
+
+  <option value="138">[347] Bga y Vdos O. FOURNIER SA</option>
+
+  <option value="61">[246] Bod y Viñ FILIPPO FIGARI</option>
+
+  <option value="396">[607] C G SOCIEDAD ANONIMA</option>
+
+  <option value="600">[812] CABA SA</option>
+
+  <option value="451">[663] CALABRO ANTONELLA</option>
+
+  <option value="561">[773] CALLIERIS SERGIO ARNALDO</option>
+
+  <option value="401">[612] CAMPAL S.A.</option>
+
+  <option value="378">[589] CANEPA S.R.L.</option>
+
+  <option value="323">[534] CANGIALOSI, ALDO ERNESTO</option>
+
+  <option value="444">[656] CAREY MARTIN</option>
+
+  <option value="625">[837] CARINAE SA</option>
+
+  <option value="15">[1] CARLETTI S.A.</option>
+
+  <option value="89">[295] CARLOS A. MULLER Y Otros</option>
+
+  <option value="52">[220] CASA QUIROS S.A.</option>
+
+  <option value="177">[386] CASA VINICOLA REYTER S.A.</option>
+
+  <option value="406">[617] CASARENA BGAS Y VDOS S.A.</option>
+
+  <option value="595">[807] CASIANA S.A.</option>
+
+  <option value="251">[461] CASTIGLIONE S.A.</option>
+
+  <option value="222">[431] CAV Y VIÑ EL ACEQUION S.A</option>
+
+  <option value="117">[326] CAVAS DE LOS ANDES SRL</option>
+
+  <option value="651">[864] CAVAS DE PERDRIEL SA</option>
+
+  <option value="150">[359] CAVAS DEL 23 S.R.L.</option>
+
+  <option value="388">[599] CAVAS DEL ATUEL S.A.</option>
+
+  <option value="63">[251] CAVAS ROSELL BOHER S.A.</option>
+
+  <option value="289">[499] CECCHIN ALBERTO OSCAR</option>
+
+  <option value="332">[543] CELASSO ARTURO CARLOS AND</option>
+
+  <option value="425">[637] CENTRO ENOLO RIVADAVIA SA</option>
+
+  <option value="382">[593] CEPAS DE LUNLUNTA S.A.</option>
+
+  <option value="549">[761] CERRO CORREA SRL</option>
+
+  <option value="113">[322] CHEVAL DES ANDES S.A.</option>
+
+  <option value="539">[751] CLARA DEL VALLE SA</option>
+
+  <option value="153">[362] CLOP Y CLOP SOC DE HECHO</option>
+
+  <option value="512">[724] CLOS DE LOS SIETE S.A.</option>
+
+  <option value="528">[740] CLUB DE PRODUCCIO CUYO SA</option>
+
+  <option value="201">[410] CO VIT PTE QUINTANA LTDA</option>
+
+  <option value="250">[460] CODORNIU ARGENTINA S.A.</option>
+
+  <option value="321">[532] COLLE DI BOASI S.A.</option>
+
+  <option value="426">[638] COMERCIALIZA SUPEGON SAEF</option>
+
+  <option value="244">[454] COMPAÑIA ANDINA SA ORFILA</option>
+
+  <option value="563">[775] CONEJERO LACOMBE NICOLAS</option>
+
+  <option value="483">[695] CONTEXTO S.R.L.</option>
+
+  <option value="429">[641] CONVERFRUT S.A.</option>
+
+  <option value="176">[385] COOP VIT GRAL ALVEAR Ltda</option>
+
+  <option value="634">[847] COOP VIT IN GIAGNONI LTDA</option>
+
+  <option value="274">[484] COOP VIT NUEVA CALIFORNIA</option>
+
+  <option value="84">[289] COOP. HORT. OLIV.FORESTAL</option>
+
+  <option value="146">[355] COOP. PROD VIT. CAFAYATE</option>
+
+  <option value="28">[33] COOP. RIO DIAMANTE LTDA</option>
+
+  <option value="619">[831] COTOPAXI SA</option>
+
+  <option value="46">[211] COVISAN S.R.L.</option>
+
+  <option value="297">[507] CUARTO DOMINIO S.A.</option>
+
+  <option value="565">[777] CUATRO FINCAS SA</option>
+
+  <option value="228">[437] CURSOR S.A.</option>
+
+  <option value="476">[688] CUVELIER DE LOS ANDES SA</option>
+
+  <option value="164">[373] CUYOTRANS S.A.</option>
+
+  <option value="489">[701] Com Vinicola EL SUREÑO SA</option>
+
+  <option value="553">[765] DALCON SA</option>
+
+  <option value="190">[399] DANTE ROBINO S.A.</option>
+
+  <option value="108">[317] DAROMSUR S.R.L.</option>
+
+  <option value="540">[752] DE BUENA CEPA SA E/F</option>
+
+  <option value="189">[398] DE MI CAMPO S.A.</option>
+
+  <option value="503">[715] DEL ARCO ANA LAURA</option>
+
+  <option value="551">[763] DEPATRICIAS SAS</option>
+
+  <option value="20">[6] DI NASSO, DANIEL</option>
+
+  <option value="34">[60] DIAGEO ARGENTINA S.A.</option>
+
+  <option value="516">[728] DIAZ JORGE ROBERTO</option>
+
+  <option value="589">[801] DIAZ LISANDRO ARIEL</option>
+
+  <option value="558">[770] DIAZ MARIA CRISTINA</option>
+
+  <option value="309">[519] DIEGO BALLESTER</option>
+
+  <option value="436">[648] DIGIT S.A.</option>
+
+  <option value="438">[650] DILDROME S.A.</option>
+
+  <option value="301">[511] DIMAX S.R.L</option>
+
+  <option value="180">[389] DIONISIO E. ZANETTI</option>
+
+  <option value="639">[852] DIONISIO SRL</option>
+
+  <option value="258">[468] DIUVA S.A</option>
+
+  <option value="498">[710] DLB S.A.</option>
+
+  <option value="158">[367] DOBLE PET S. A.</option>
+
+  <option value="102">[311] DOLIUM S.A.</option>
+
+  <option value="145">[354] DOMAINE BOUSQUET S.A.</option>
+
+  <option value="391">[602] DOMINGO RASTRILLA</option>
+
+  <option value="507">[719] DOMINIO DEL PLATA SA</option>
+
+  <option value="137">[346] DON HECTOR S.A.</option>
+
+  <option value="430">[642] DOS PUENTES S.A.</option>
+
+  <option value="572">[784] DUFRE SA</option>
+
+  <option value="303">[513] DULCOR S.A</option>
+
+  <option value="631">[844] DUNAMINA SRL</option>
+
+  <option value="288">[498] EDITORA DEL ESTE S.A.</option>
+
+  <option value="542">[754] EL LADO B S.A.</option>
+
+  <option value="494">[706] EL MORO S.R.L.</option>
+
+  <option value="411">[622] EL NOGALAR S.A.</option>
+
+  <option value="16">[2] EL TREBOL S.A.</option>
+
+  <option value="98">[306] ELASKAR IBRAHIN Y NAZAR</option>
+
+  <option value="142">[351] ELIAS HERMANOS S.A.</option>
+
+  <option value="475">[687] EMPRENDIMIENTOS ARG. S.A.</option>
+
+  <option value="339">[550] ERAL BRAVO S.A.</option>
+
+  <option value="603">[815] ERATOS SAS</option>
+
+  <option value="41">[122] ESCORIHUELA EST.VITIV. SA</option>
+
+  <option value="351">[562] ESPIRITU DE ARGENTINA S.A</option>
+
+  <option value="618">[830] ESPIRITUOSOS DE OESTE SAS</option>
+
+  <option value="637">[850] ESPUMOSOS DEL VALLE SAS</option>
+
+  <option value="374">[585] EST EL ESTE DEL JUNCAL SA</option>
+
+  <option value="187">[396] ESTABLECIM.  BAUDRON S.A.</option>
+
+  <option value="421">[632] ESTACION RAFAEL NUÑEZ S.A</option>
+
+  <option value="310">[520] ESTUDIO DIZEN</option>
+
+  <option value="207">[416] ESTUDIO LOGOS</option>
+
+  <option value="335">[546] EXP AGROP LA RESERVA S.A.</option>
+
+  <option value="216">[425] EXPOFRUT S.A.</option>
+
+  <option value="206">[415] F DISEÑO</option>
+
+  <option value="282">[492] FABRIL ALTO VERDE S.A.</option>
+
+  <option value="628">[841] FADEL ALEJANDRO ALBERTO</option>
+
+  <option value="57">[240] FAMILIA CASSONE S.A.</option>
+
+  <option value="366">[577] FAMILIA MORALES</option>
+
+  <option value="473">[685] FAMILIA NOFAL ALONSO SA</option>
+
+  <option value="601">[813] FAMILIA ZANCHETTA SRL</option>
+
+  <option value="381">[592] FANTELLI, JESUS, MER, CAR</option>
+
+  <option value="47">[212] FAUAZ, CASPE Y CELESTINO</option>
+
+  <option value="488">[700] FE CO AGRO DE SAN JUAN</option>
+
+  <option value="38">[104] FECOVITA COOP. LTDA.</option>
+
+  <option value="271">[481] FELIX LAVAQUE S.A.</option>
+
+  <option value="616">[828] FENIX WINES-VINEYARDS SA</option>
+
+  <option value="405">[616] FILUS S.A.</option>
+
+  <option value="571">[783] FINCA 1948 SA</option>
+
+  <option value="240">[449] FINCA AGOSTINO HNOS S.A.</option>
+
+  <option value="417">[628] FINCA BETH S.A.</option>
+
+  <option value="497">[709] FINCA BLOUSSON S.A.</option>
+
+  <option value="392">[603] FINCA CUADRO BENEGAS S.A.</option>
+
+  <option value="249">[459] FINCA DE LA JUANITA S.A.</option>
+
+  <option value="418">[629] FINCA DON CARLOS S.A.</option>
+
+  <option value="255">[465] FINCA EL NEVADO S.A.</option>
+
+  <option value="35">[87] FINCA FLICHMAN S.A.</option>
+
+  <option value="519">[731] FINCA LA ALEGRIA S.A.</option>
+
+  <option value="245">[455] FINCA LA AMALIA S.A.</option>
+
+  <option value="213">[422] FINCA LA CELIA S.A.</option>
+
+  <option value="375">[586] FINCA LA LUZ S.A.</option>
+
+  <option value="94">[302] FINCA LA PAZ S.R.L.</option>
+
+  <option value="328">[539] FINCA LAS CASUARINAS SRL</option>
+
+  <option value="389">[600] FINCA MARALE S.A.</option>
+
+  <option value="281">[491] FINCA ROCIO S.A.</option>
+
+  <option value="182">[391] FINCA SOPHENIA S.A.</option>
+
+  <option value="390">[601] FINCA VON WIGSTEIN S.A.</option>
+
+  <option value="404">[615] FINCAMAR S.R.L.</option>
+
+  <option value="79">[283] FINCAS ANDINAS S.A.</option>
+
+  <option value="154">[363] FINCAS CALEDONIA S.A.</option>
+
+  <option value="647">[860] FINCAS DE AGRELO SA</option>
+
+  <option value="276">[486] FINCAS DON NICASIO S.A.</option>
+
+  <option value="231">[440] FINCAS PATAGONICAS S.A.</option>
+
+  <option value="655">[868] FINCAS SAN SEBASTIAN SRL</option>
+
+  <option value="348">[559] FIRTH BRENNAN MICHAEL</option>
+
+  <option value="584">[796] FISHING WINE SAS</option>
+
+  <option value="581">[793] FLECHAS DE LOS ANDES SA</option>
+
+  <option value="646">[859] FRACCIONADORA SAN JUAN SA</option>
+
+  <option value="204">[413] FRANCISCO CARPIO</option>
+
+  <option value="241">[450] FREIXENET ARGENTINA S.A.</option>
+
+  <option value="613">[825] FRUTIHORTICOLA FMN S.A.</option>
+
+  <option value="480">[692] FUENTES GOMEZ DIEGO</option>
+
+  <option value="273">[483] GABRIELA DI MARIA</option>
+
+  <option value="292">[502] GABUTTI S.A. OLIV. VITIV</option>
+
+  <option value="529">[741] GARBIN ESTATE SA</option>
+
+  <option value="90">[296] GENTILE COLLINS S.A.</option>
+
+  <option value="522">[734] GIACOMETTI ALEXIS SEBASTI</option>
+
+  <option value="544">[756] GIASONE FERNANDO JAVIER</option>
+
+  <option value="550">[762] GIBSS JOSE GUILLERMO</option>
+
+  <option value="492">[704] GIMENEZ OMIL GERMAN GUSTA</option>
+
+  <option value="447">[659] GIMENEZ RILI S.A.</option>
+
+  <option value="554">[766] GIN COTTON S A</option>
+
+  <option value="109">[318] GIORGIO LUIS LISANDRO</option>
+
+  <option value="152">[361] GLOBAL UNION S.A.</option>
+
+  <option value="453">[665] GOLDEN WINES &amp; VINEY. SA</option>
+
+  <option value="627">[840] GONZALEZ EDUARDO JOSE</option>
+
+  <option value="278">[488] GOYENECHEA S.A.</option>
+
+  <option value="239">[448] GRAFICA KOGAN</option>
+
+  <option value="611">[823] GRAFIN ARGENTINA SA</option>
+
+  <option value="517">[729] GRAPPOLO S.A.</option>
+
+  <option value="344">[555] GRAVENT S.A.</option>
+
+  <option value="48">[214] GRUPO AVINEA S.A.</option>
+
+  <option value="308">[518] GRUPO GARBIN</option>
+
+  <option value="184">[393] GRUPO IMPRESORES S.A.</option>
+
+  <option value="31">[41] GRUPO PEÑAFLOR S.A.</option>
+
+  <option value="71">[265] GYPSIES S. A.</option>
+
+  <option value="403">[614] H.Q.F. SRL</option>
+
+  <option value="456">[668] HERNANDEZ, RODRIGO MANUEL</option>
+
+  <option value="193">[402] HESS FAMILY LATINAMERI SA</option>
+
+  <option value="445">[657] HINOJOSA JOSE A Y RAMON S</option>
+
+  <option value="115">[324] HINOJOSA, ELVIRA ESTHER</option>
+
+  <option value="279">[489] HIPOCLOR SRL</option>
+
+  <option value="169">[378] HOROMEB S.A.</option>
+
+  <option value="198">[407] HUDSON CIOVINI WINES S.A.</option>
+
+  <option value="219">[428] HUENTALA COOP TRABAJ LTDA</option>
+
+  <option value="460">[672] HUMBERTO CANALE SACIIF</option>
+
+  <option value="199">[408] HWR PRODUCCIONES</option>
+
+  <option value="615">[827] IDC GROUP SA</option>
+
+  <option value="610">[822] IGLUSA S.A.S.</option>
+
+  <option value="590">[802] IMPORTADORA BS AS SRL</option>
+
+  <option value="424">[636] IN. SALESIANA ARG N.B.A.Z</option>
+
+  <option value="643">[856] INC. J.S. SAS</option>
+
+  <option value="161">[370] INST PROV JUEGOS Y CASINO</option>
+
+  <option value="482">[694] INSTAPANEL ARGENTINA S.A.</option>
+
+  <option value="612">[824] INTEGRACION REGIONAL SRL</option>
+
+  <option value="162">[371] INVER Y PROY NATUR S.A.</option>
+
+  <option value="196">[405] INVERMEN S.A.</option>
+
+  <option value="353">[564] ISENA S.A.</option>
+
+  <option value="247">[457] Inst Salesiana DON BOSCO</option>
+
+  <option value="242">[452] J MANRESA Y R QUIROGA S.H</option>
+
+  <option value="22">[8] J. LLORENTE Y CIA. S.A.</option>
+
+  <option value="156">[365] JARAMA S.R.L.</option>
+
+  <option value="538">[750] JASMINE MONET SRL</option>
+
+  <option value="82">[286] JAURE WINERY S.A.</option>
+
+  <option value="45">[209] JFL ARGENTINA S.A.</option>
+
+  <option value="221">[430] JO.I.P.A. S.A.</option>
+
+  <option value="533">[745] JORGE ALBERTO GALLARDO</option>
+
+  <option value="367">[578] JORGE BELARDI</option>
+
+  <option value="101">[310] JORGE FRANCISCO CEREZO</option>
+
+  <option value="69">[263] JOSE BARRANCO S.A.</option>
+
+  <option value="131">[340] JOSE MASTROENI S.A.</option>
+
+  <option value="653">[866] JOSE NUCETE E HIJOS</option>
+
+  <option value="183">[392] JUAN CARLOS CIOFFI</option>
+
+  <option value="312">[522] JUMBO</option>
+
+  <option value="593">[805] K-BIN SOCIEDAD ANONIMA</option>
+
+  <option value="205">[414] KAIKEN S.A.</option>
+
+  <option value="468">[680] KOGAN FEDERICO ESTEBAN</option>
+
+  <option value="99">[307] KOSAS &amp; KASAS S.A.</option>
+
+  <option value="594">[806] L B SA</option>
+
+  <option value="168">[377] L.M.I. S.A.</option>
+
+  <option value="36">[94] LA AGRICOLA S.A.</option>
+
+  <option value="143">[352] LA ALQUERIA S.A.</option>
+
+  <option value="77">[279] LA CASA DEL REY S.A.</option>
+
+  <option value="393">[604] LA CHAMPAÑERA S.A.</option>
+
+  <option value="114">[323] LA ESPERANZA DE LOS ANDES</option>
+
+  <option value="477">[689] LA GIOLINA S.A.</option>
+
+  <option value="496">[708] LA GOTA SRL</option>
+
+  <option value="336">[547] LA INVERSORA S.A.</option>
+
+  <option value="398">[609] LA IRIDE SRL</option>
+
+  <option value="656">[869] LA MAGDALENA S.A.</option>
+
+  <option value="577">[789] LA MEME SRL</option>
+
+  <option value="97">[305] LA RIOJANA COOP. LTDA</option>
+
+  <option value="29">[35] LA RURAL S.A.</option>
+
+  <option value="24">[18] LA VENDIMIA S.A.</option>
+
+  <option value="588">[800] LABARI GASTON EDUARDO</option>
+
+  <option value="223">[432] LABELS PLAST S.A.</option>
+
+  <option value="304">[514] LABORATORIO TABLADA SRL</option>
+
+  <option value="485">[697] LABORATORIOS COSMEN SRL</option>
+
+  <option value="509">[721] LAGARDE S.A.</option>
+
+  <option value="479">[691] LAS CAÑITAS S.A.</option>
+
+  <option value="100">[308] LAS MARIANAS AGROEN. S.A.</option>
+
+  <option value="355">[566] LATINFINA S.A.</option>
+
+  <option value="64">[252] LAUR DIVISION ACEITE SAEF</option>
+
+  <option value="200">[409] LEBIN S.A.</option>
+
+  <option value="349">[560] LEGADO S.A.</option>
+
+  <option value="81">[285] LEJAR DISTRIBUIDORA S.R.L</option>
+
+  <option value="192">[401] LEONCIO ARIZU S.A.</option>
+
+  <option value="284">[494] LIDERAR CIA. GRAL. DE SEG</option>
+
+  <option value="229">[438] LITOGRAFÍA CUYO S.A.</option>
+
+  <option value="270">[480] LIVLASA S.A.</option>
+
+  <option value="252">[462] LLIHUE S.A.</option>
+
+  <option value="650">[863] LLOVERAS ZARATE MARIA M.</option>
+
+  <option value="356">[567] LOPEZ RICARDO ANTONIO</option>
+
+  <option value="128">[337] LOS ALVES S.A.</option>
+
+  <option value="566">[778] LOS AMORES DE VISTAFLORES</option>
+
+  <option value="357">[568] LOS CERROS DE SAN JUAN SA</option>
+
+  <option value="230">[439] LOS DOMADOS S.A.</option>
+
+  <option value="394">[605] LOS FERMINES S.A.</option>
+
+  <option value="622">[834] LOS HAROLDOS SA</option>
+
+  <option value="380">[591] LOS PUENTES SRL</option>
+
+  <option value="591">[803] LOS SOCAVONES SA</option>
+
+  <option value="641">[854] LOS VINOS DEL SOL SA</option>
+
+  <option value="233">[442] LUIS SEGUNDO CORREAS S.A.</option>
+
+  <option value="17">[3] LUIS SEGUNDO LANZA</option>
+
+  <option value="337">[548] LUJAN AGRICOLA SRL</option>
+
+  <option value="361">[572] LUPIANEZ Y BELINSKY S.H.</option>
+
+  <option value="369">[580] MAAL SOCIEDAD ANONIMA</option>
+
+  <option value="149">[358] MADAULE DE LAGABBE SA</option>
+
+  <option value="525">[737] MAINQUE S.A.</option>
+
+  <option value="597">[809] MALKA SRL</option>
+
+  <option value="129">[338] MANUEL EDGARDO MONTILLA</option>
+
+  <option value="623">[835] MARCHIONNO WALTER DAMIAN</option>
+
+  <option value="457">[669] MARIA Y ADELINA S.A.</option>
+
+  <option value="515">[727] MARIVALEN S.A.</option>
+
+  <option value="347">[558] MARTIN JAVIER EDUARDO</option>
+
+  <option value="490">[702] MARTINEZ FRANCISCO ANTONI</option>
+
+  <option value="511">[723] MARZZAN SANDRA RITA</option>
+
+  <option value="484">[696] MASSA LYNCH PATRICIO</option>
+
+  <option value="290">[500] MASTROPIETRO ALDO</option>
+
+  <option value="333">[544] MATZA S.A.</option>
+
+  <option value="139">[348] MAURICIO Y DUILIO MASIERO</option>
+
+  <option value="608">[820] MDA CONSULTORA S.A.</option>
+
+  <option value="410">[621] MEDINGER CHRISTIAN EGON</option>
+
+  <option value="458">[670] MELODIA WINES S.A.</option>
+
+  <option value="343">[554] MENDIETA AGUSTIN</option>
+
+  <option value="499">[711] MENDOZA RED WINES SA</option>
+
+  <option value="111">[320] MENDOZA VINEYARDS S. A.</option>
+
+  <option value="62">[250] MERIDIANO S.A.</option>
+
+  <option value="466">[678] MEVI S.A.</option>
+
+  <option value="116">[325] MIJAIL MAMONTOFF</option>
+
+  <option value="175">[384] MILLAN S.A.</option>
+
+  <option value="446">[658] MIRALUNA SRL</option>
+
+  <option value="432">[644] MISTURA S.A.</option>
+
+  <option value="179">[388] MOLINOS RIO D/L PLATA SA</option>
+
+  <option value="167">[376] MONDOVINO ARGENTINA S.A.</option>
+
+  <option value="462">[674] MONTEVIEJO S.A.</option>
+
+  <option value="596">[808] MORASSUTTI ERNESTO ANIBAL</option>
+
+  <option value="103">[312] MORCHIO Y MEGLIOLI S.A.</option>
+
+  <option value="520">[732] MORIXE HERMANOS SACI</option>
+
+  <option value="305">[515] MUDAD FRANCISCO ESTEBAN</option>
+
+  <option value="259">[469] MULTI GRUAS S.A.</option>
+
+  <option value="442">[654] MUNICIPALIDAD DE HUALFIN</option>
+
+  <option value="368">[579] MUÑOZ DEL TORO PATAG S.A.</option>
+
+  <option value="88">[294] MUÑOZ HUGO ALBERTO</option>
+
+  <option value="654">[867] N. S. L. SRL</option>
+
+  <option value="486">[698] NET INFORMATICA SRL</option>
+
+  <option value="385">[596] NICOLAS JOEL DONNOLA</option>
+
+  <option value="534">[746] NOR SUD SA</option>
+
+  <option value="105">[314] NUCLEO DE ENLACE S.R.L.</option>
+
+  <option value="317">[528] NUTRECO ALIMENTOS S.A.</option>
+
+  <option value="419">[630] OENOLAB S.R.L.</option>
+
+  <option value="364">[575] OFA MACHINES &amp; TOOLS SRL</option>
+
+  <option value="277">[487] OILCO S.A.</option>
+
+  <option value="125">[334] OJO DE VINO S.A.</option>
+
+  <option value="645">[858] OLIVARES DON IGNASIO SA</option>
+
+  <option value="257">[467] OLIVICOLA LAVALLE SRL</option>
+
+  <option value="638">[851] ONWARD S.A.S.</option>
+
+  <option value="541">[753] OPEN WINGS SA.</option>
+
+  <option value="104">[313] OPERA VINEYARDS S.A.</option>
+
+  <option value="359">[570] OPTIMUM VINEAM S.A.</option>
+
+  <option value="340">[551] ORIGEN SUR SRL</option>
+
+  <option value="299">[509] ORLANDO ADRIAN MARCELO</option>
+
+  <option value="469">[681] ORTIZ OSVALDO FRANCISCO</option>
+
+  <option value="141">[350] OSCAR AUGUSTO ANDREATTA</option>
+
+  <option value="163">[372] PALAZZO, JORGE ALBERTO</option>
+
+  <option value="431">[643] PALMEN DIPS SRL</option>
+
+  <option value="579">[791] PALUMBO ANA MARIA</option>
+
+  <option value="73">[272] PAPILLON S.R.L.</option>
+
+  <option value="412">[623] PARDO MARTIN SALVADOR</option>
+
+  <option value="18">[4] PASCUAL TOSO S.A.U.</option>
+
+  <option value="350">[561] PASSIONATE WINE S.A.</option>
+
+  <option value="66">[255] PEDRO CARRICONDO</option>
+
+  <option value="437">[649] PERMASUR S.A.</option>
+
+  <option value="40">[111] PERNOD RICARD ARG. S.R.L.</option>
+
+  <option value="427">[639] PETRINI EDUARDO RAUL</option>
+
+  <option value="320">[531] PEÑIWEN S.A.</option>
+
+  <option value="636">[849] PIEDRA MARCADA SAS</option>
+
+  <option value="495">[707] PILON JEAN FRANCOIS</option>
+
+  <option value="428">[640] PLACERES DEL MUNDO SRL</option>
+
+  <option value="296">[506] PLACORD S.A.</option>
+
+  <option value="30">[39] POIDOMANI CARLOS RAFAEL</option>
+
+  <option value="202">[411] POLINA S.A.</option>
+
+  <option value="564">[776] POLOC SA</option>
+
+  <option value="408">[619] PONCE, ANDRES MAURICIO</option>
+
+  <option value="574">[786] PORTABELLA IGNACIO</option>
+
+  <option value="376">[587] POSADA SOCIAL S.R.L.</option>
+
+  <option value="387">[598] PREMIER WINES S.A.</option>
+
+  <option value="535">[747] PRETEXTO S.A.</option>
+
+  <option value="208">[417] PRODUCCION SRL</option>
+
+  <option value="275">[485] PRODUMEN S.A.</option>
+
+  <option value="51">[219] PUTRUELLE Hnos.</option>
+
+  <option value="604">[816] QUALE SA</option>
+
+  <option value="559">[771] QUATRINI VIVIANA ALEJANDR</option>
+
+  <option value="582">[794] QUIMAN DISEÑO E IMAGEN SA</option>
+
+  <option value="132">[341] QUINTA AGRONOMICA S.A.</option>
+
+  <option value="329">[540] R P B SOCIEDAD ANONIMA</option>
+
+  <option value="227">[436] RACHED YAMNA CRISTINA</option>
+
+  <option value="599">[811] RAFAEL REINA SA</option>
+
+  <option value="43">[181] RAFAEL SALAFIA e H. S.R.L</option>
+
+  <option value="95">[303] RAICES DE AGRELO S.A.</option>
+
+  <option value="620">[832] RAMA CAIDA SA</option>
+
+  <option value="532">[744] RAMSADA SRL</option>
+
+  <option value="27">[29] RECOARO S.A.</option>
+
+  <option value="399">[610] RECTIFICACIONES LUJAN SRL</option>
+
+  <option value="354">[565] RED CLUSTER S.A.</option>
+
+  <option value="75">[276] REGIONAL TRADE SAU</option>
+
+  <option value="53">[226] RESERO S.A.</option>
+
+  <option value="302">[512] RICHARDI F  MENENGAZ SRL</option>
+
+  <option value="501">[713] RINAUDO JUAN CARLOS LUJAN</option>
+
+  <option value="386">[597] RIO DULCE S.A.</option>
+
+  <option value="67">[259] RISSO PATRON</option>
+
+  <option value="85">[291] RO MAY S.A.</option>
+
+  <option value="55">[230] ROBINO Y CIA. S.A.</option>
+
+  <option value="70">[264] ROCA S.A.</option>
+
+  <option value="592">[804] RODRIGUEZ LUCAS</option>
+
+  <option value="209">[418] RODRÍGUEZ HNOS.TRANS. S.A</option>
+
+  <option value="272">[482] S A ROBERTO BUSTOS LTDA</option>
+
+  <option value="409">[620] S.A. ANGULO AGROP E INMOB</option>
+
+  <option value="606">[818] S.R.D. SRL</option>
+
+  <option value="127">[336] SANATORIO ARGENTINO SRL</option>
+
+  <option value="629">[842] SANCHEZ JOSE CARLOS</option>
+
+  <option value="576">[788] SANCHEZ WILLIAM FERMIN</option>
+
+  <option value="72">[267] SANGIORGIO &amp; FORNARI SRL</option>
+
+  <option value="575">[787] SANTAMARIA MOSCHETTA SEBA</option>
+
+  <option value="491">[703] SANTIAGO HNOS S.A.</option>
+
+  <option value="268">[478] SECHU S.A.</option>
+
+  <option value="342">[553] SENTIRE WINES S.A.</option>
+
+  <option value="452">[664] SERVICIOS FRUTICOLAS S.A.</option>
+
+  <option value="173">[382] SHAM S.R.L.</option>
+
+  <option value="384">[595] SIMONASSI LYON S.A.</option>
+
+  <option value="232">[441] SMOVIR LUIS A., SMOVIR E.</option>
+
+  <option value="135">[344] SMURFIT S.A.</option>
+
+  <option value="580">[792] SOLO CONTIGO S.A.</option>
+
+  <option value="435">[647] SOLVENCIA S.A.</option>
+
+  <option value="186">[395] SOTTANO S.A.</option>
+
+  <option value="316">[527] SPERI ARGENTINA SRL</option>
+
+  <option value="322">[533] STALLOCA EDGARDO LUIS</option>
+
+  <option value="197">[406] STAMPA GRAFICA L Anibaldi</option>
+
+  <option value="370">[581] STAPHYLE S.A.</option>
+
+  <option value="218">[427] STILO SERV. GRÁFICO S.R.L</option>
+
+  <option value="449">[661] SUAIN MAURICIO ELIAS</option>
+
+  <option value="504">[716] SUC DE SEBAST MAMMANA SRL</option>
+
+  <option value="260">[470] SUC. DE MACCARI E.LUIS</option>
+
+  <option value="455">[667] SURCOS DEL VALLE S.A.</option>
+
+  <option value="19">[5] SUTER S.A.</option>
+
+  <option value="513">[725] TADICOR S.A.</option>
+
+  <option value="144">[353] TANINO ARGENTINA S.A.</option>
+
+  <option value="256">[466] TARVIN S.R.L</option>
+
+  <option value="300">[510] TEKNO ARGENTINA S.A</option>
+
+  <option value="248">[458] TENONDE S.A.</option>
+
+  <option value="118">[327] TIERRA DEL HUARPE S.A.</option>
+
+  <option value="220">[429] TIERRAS DE PONTE S.A.</option>
+
+  <option value="325">[536] TINTO ARGENTINO SRL</option>
+
+  <option value="123">[332] TITTARELLI VIT. Y OL.S.A.</option>
+
+  <option value="605">[817] TIZIO &amp; TIZIO &amp; ENOLO SAS</option>
+
+  <option value="338">[549] TRAMONTO S.A.</option>
+
+  <option value="640">[853] TRANSENERGY S.A.S.</option>
+
+  <option value="609">[821] TRES BANDERAS S.A.S.</option>
+
+  <option value="54">[229] TRIVENTO Bgas y Vdos S.A</option>
+
+  <option value="298">[508] UNION BAT S.A.</option>
+
+  <option value="478">[690] UVAS DEL VALLE S.A.</option>
+
+  <option value="26">[24] VALENTIN BIANCHI S.A.</option>
+
+  <option value="214">[423] VALENTIN CHIAPPA SRL</option>
+
+  <option value="243">[453] VALLE DE LA PUERTA S.A.</option>
+
+  <option value="170">[379] VALLE DE NUBIA S.R.L.</option>
+
+  <option value="93">[301] VALLE ESCONDIDO S.A.</option>
+
+  <option value="32">[46] VARGAS ARIZU S. A.</option>
+
+  <option value="443">[655] VASIJA SECRETA S.A.</option>
+
+  <option value="293">[503] VDOS DEL VALLE DE UCO SA</option>
+
+  <option value="371">[582] VEGETTI LUIS MAURICIO G.</option>
+
+  <option value="463">[675] VIANI, ORLANDO ADOLFO</option>
+
+  <option value="23">[12] VIDAÑA S.R.L.</option>
+
+  <option value="266">[476] VIDES S.A.</option>
+
+  <option value="120">[329] VILAN CO S.A.</option>
+
+  <option value="178">[387] VILLA DEL ROSARIO BEB. SA</option>
+
+  <option value="194">[403] VILLAFAÑE Y GUZMAN SRL</option>
+
+  <option value="215">[424] VILME S.A.</option>
+
+  <option value="286">[496] VINARIUM S.A.</option>
+
+  <option value="265">[475] VINICOLA SANTA SARA</option>
+
+  <option value="454">[666] VINIFICADORA ACONCAGUA SA</option>
+
+  <option value="165">[374] VINITERRA S.A.</option>
+
+  <option value="557">[769] VINOGALES S.A.S.</option>
+
+  <option value="253">[463] VINOS &amp; HACIENDA S.A.</option>
+
+  <option value="377">[588] VINSA S.R.L.</option>
+
+  <option value="602">[814] VIRGO SA</option>
+
+  <option value="642">[855] VIROJA SRL</option>
+
+  <option value="358">[569] VISTAFLORES ESTATE S.A.</option>
+
+  <option value="172">[381] VISTANDES S.A.</option>
+
+  <option value="493">[705] VITALIA S.A.</option>
+
+  <option value="181">[390] VITISDEI S.A.</option>
+
+  <option value="107">[316] VIÑA COBOS S.A.</option>
+
+  <option value="246">[456] VIÑA DOÑA PAULA S.A.</option>
+
+  <option value="423">[635] VIÑA EL CERNO S.A.</option>
+
+  <option value="416">[627] VIÑA FAMILIA COLOMBI S.A.</option>
+
+  <option value="65">[253] VIÑA FUNDAC. DE MZA. S.A.</option>
+
+  <option value="80">[284] VIÑA LUNLUNTA S.A.</option>
+
+  <option value="330">[541] VIÑA MAIPU S.R.L.</option>
+
+  <option value="91">[298] VIÑA SANTA MARIA S.A.</option>
+
+  <option value="626">[838] VIÑARIANA SA</option>
+
+  <option value="171">[380] VIÑAS DE ALTO SALVADOR SA</option>
+
+  <option value="56">[234] VIÑAS DE BARRANCAS S.R.L.</option>
+
+  <option value="44">[190] VIÑAS DE SEGISA S.R.L.</option>
+
+  <option value="294">[504] VIÑAS DE VILA  S.R.L</option>
+
+  <option value="121">[330] VIÑAS DEL ADAGIO S.A.</option>
+
+  <option value="124">[333] VIÑAS DEL CAMPO S.A.</option>
+
+  <option value="465">[677] VIÑAS DEL SOL S.A.</option>
+
+  <option value="586">[798] VIÑAS DEL VIENTO SA</option>
+
+  <option value="372">[583] VIÑAS DON MARTIN S.A.</option>
+
+  <option value="514">[726] VIÑAS FAMILIA ARISTI SA</option>
+
+  <option value="448">[660] VIÑEDOS COLONIA ELENA SRL</option>
+
+  <option value="434">[646] VIÑEDOS LA CHIMBA S.A.</option>
+
+  <option value="112">[321] VIÑEDOS LOS MAITENES S.A.</option>
+
+  <option value="160">[369] VIÑEDOS PIE DE PALO S.A.</option>
+
+  <option value="96">[304] VIÑOLO ANA MARIA</option>
+
+  <option value="210">[419] WINE GAS S.A.</option>
+
+  <option value="439">[651] YUHAN S.A.</option>
+
+  <option value="614">[826] ZIMMEL MARIA CECILIA</option>
+
+  <option value="518">[730] ZUCAMOR CUYO S.A.</option>
+
+  <option value="523">[735] ZUCAMOR SA</option>
+
+  <option value="556">[768] ZULIA SAS</option>
+
+</select>
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">N° Bobina</label>
+                                <input type="text" name="bobina" class="form-control" maxlength="100" id="id_bobina">
+                                
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Fecha</label>
+                                <input type="text" class="form-control" value="02/03/2026" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCION MAQUINISTA Y OPERARIO -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-person-badge me-2 text-primary"></i>Maquinista
+                                </label>
+                                <div class="input-group">
+                                    <select name="maquinista" class="form-select" required id="id_maquinista">
+  <option value="" selected>-- Seleccione un maquinista --</option>
+
+  <option value="2">Calvete , German</option>
+
+  <option value="8">Esquite, Frank</option>
+
+  <option value="3">Frazzetto, Lucas</option>
+
+  <option value="1">Gonzalez, Ismael</option>
+
+  <option value="9">Ledda, Mauro</option>
+
+  <option value="4">Luppo, Gaston</option>
+
+  <option value="5">Montolla, Mauricio</option>
+
+  <option value="6">Torres, Elvio</option>
+
+  <option value="7">Vega, Pablo</option>
+
+</select>
+                                    
+                                    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#modalAgregarMaquinista" title="Nuevo Maquinista">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" type="button"
+                                        onclick="abrirEditarMaquinista()" title="Editar seleccionado">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" type="button"
+                                        onclick="confirmarEliminarMaquinista()" title="Eliminar seleccionado">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <label class="form-label fw-bold">
+                                    <i class="bi bi-people-fill me-2 text-success"></i>Operario Inspeccion
+                                </label>
+                                <div class="input-group">
+                                    <select name="operario" class="form-select" required id="id_operario">
+  <option value="" selected>-- Seleccione un operario --</option>
+
+  <option value="4">Correa, Ezequiel</option>
+
+  <option value="6">Esquite, Frank</option>
+
+  <option value="5">Frontalini, Juan</option>
+
+  <option value="3">Ledesma, Nelida</option>
+
+</select>
+                                    
+                                    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal"
+                                        data-bs-target="#modalAgregarOperario" title="Nuevo Operario">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                    <button class="btn btn-outline-warning" type="button"
+                                        onclick="abrirEditarOperario()" title="Editar seleccionado">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" type="button"
+                                        onclick="confirmarEliminarOperario()" title="Eliminar seleccionado">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCION DEFECTOS -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold text-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Registro de Defectos
+                        </h5>
+                        
+                        <button type="button" class="btn btn-outline-success btn-sm fw-bold" data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarDefecto">
+                            <i class="bi bi-plus-lg me-1"></i> Nueva Categoría
+                        </button>
+                        
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label fw-bold mb-3">Seleccione los tipos de defecto detectados:</label>
+
+                        <div class="row g-3 mb-4" id="defectos-container">
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-6">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="6"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_6"
+                                                data-tipo-id="6" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_6">
+                                                Bajo Relieve
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('6', 'Bajo Relieve')"
+                                                title="Agregar opcion a Bajo Relieve">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('6')"
+                                                title="Editar nombre de Bajo Relieve">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('6')"
+                                                title="Eliminar Bajo Relieve">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-6">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-6"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-1">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="1"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_1"
+                                                data-tipo-id="1" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_1">
+                                                Impresión
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('1', 'Impresión')"
+                                                title="Agregar opcion a Impresión">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('1')"
+                                                title="Editar nombre de Impresión">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('1')"
+                                                title="Eliminar Impresión">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-1">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-1"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-3">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="3"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_3"
+                                                data-tipo-id="3" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_3">
+                                                Relieve
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('3', 'Relieve')"
+                                                title="Agregar opcion a Relieve">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('3')"
+                                                title="Editar nombre de Relieve">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('3')"
+                                                title="Eliminar Relieve">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-3">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-3"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-4">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="4"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_4"
+                                                data-tipo-id="4" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_4">
+                                                Serigrafía
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('4', 'Serigrafía')"
+                                                title="Agregar opcion a Serigrafía">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('4')"
+                                                title="Editar nombre de Serigrafía">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('4')"
+                                                title="Eliminar Serigrafía">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-4">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-4"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-2">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="2"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_2"
+                                                data-tipo-id="2" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_2">
+                                                Stamping
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('2', 'Stamping')"
+                                                title="Agregar opcion a Stamping">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('2')"
+                                                title="Editar nombre de Stamping">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('2')"
+                                                title="Eliminar Stamping">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-2">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-2"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6 col-md-4" id="defecto-col-7">
+                                <div class="p-3 bg-white rounded border border-secondary-subtle h-100">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="form-check mb-0">
+                                            <input type="checkbox" name="defectos" value="7"
+                                                class="form-check-input defecto-checkbox"
+                                                id="id_defectos_7"
+                                                data-tipo-id="7" {{
+                                                checkbox.data.selected|yesno:"checked," }}>
+                                            <label class="form-check-label fw-bold text-dark"
+                                                for="id_defectos_7">
+                                                Troquel Fuera de Linea
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-success py-0 px-2"
+                                                onclick="event.preventDefault(); abrirAgregarOpcion('7', 'Troquel Fuera de Linea')"
+                                                title="Agregar opcion a Troquel Fuera de Linea">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-warning py-0 px-2"
+                                                onclick="event.preventDefault(); abrirEditarDefecto('7')"
+                                                title="Editar nombre de Troquel Fuera de Linea">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger py-0 px-2"
+                                                onclick="event.preventDefault(); confirmarEliminarDefecto('7')"
+                                                title="Eliminar Troquel Fuera de Linea">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="opciones-dropdown mt-2"
+                                        id="opciones-container-7">
+                                        <div class="border-bottom pb-1 mb-2">
+                                            <small class="text-muted fw-bold">Opciones:</small>
+                                        </div>
+                                        <div class="opciones-list list-group list-group-flush small"
+                                            id="opcion-list-7"
+                                            style="max-height: 200px; overflow-y: auto;">
+                                            <div class="text-muted fst-italic p-1">Cargando...</div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Cantidad Descartada</label>
+                                <div class="input-group">
+                                    <input type="number" name="cantidad_descartada" value="0" class="form-control" min="0" required id="id_cantidad_descartada">
+                                    <span class="input-group-text bg-white">unidades</span>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold w-100 text-center">Observaciones</label>
+                                <textarea name="detalle_defecto" cols="40" rows="2" class="form-control" placeholder="Detalle el problema..." id="id_detalle_defecto">
+</textarea>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- EVIDENCIA -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-camera me-2 text-secondary"></i>Evidencia del Error
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" name="imagenes-TOTAL_FORMS" value="0" id="id_imagenes-TOTAL_FORMS"><input type="hidden" name="imagenes-INITIAL_FORMS" value="0" id="id_imagenes-INITIAL_FORMS"><input type="hidden" name="imagenes-MIN_NUM_FORMS" value="0" id="id_imagenes-MIN_NUM_FORMS"><input type="hidden" name="imagenes-MAX_NUM_FORMS" value="1000" id="id_imagenes-MAX_NUM_FORMS">
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-info-circle me-1"></i>Puedes subir múltiples fotografías o capturas a la vez
+                            seleccionándolas juntas.
+                        </p>
+                        <div class="row g-3">
+                            
+
+                            <!-- ÚNICA CAJA NUEA MULTIPLE -->
+                            <div class="col-12 mt-3">
+                                <div class="border rounded p-3 bg-light shadow-sm">
+                                    <label class="form-label fw-bold" for="id_evidencias"><i
+                                            class="bi bi-cloud-arrow-up text-primary me-2"></i>Nueva Evidencia</label>
+                                    <input type="file" name="evidencias" accept="image/*" class="form-control"
+                                        id="id_evidencias" multiple>
+                                    
+
+                                    <!-- PREVISUALIZACION DINÁMICA -->
+                                    <div id="evidencias-preview-container" class="row mt-3 g-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CIERRE DE CONTROL -->
+                <div class="card shadow-sm mb-4 border-start border-primary border-4" id="seccion-cierre">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-primary">
+                            <i class="bi bi-file-earmark-check me-2"></i>Cierre de Control e Inspección
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4 pt-2">
+                            <!-- Columna Izquierda: Cantidad -->
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold d-block text-muted small text-uppercase mb-3">¿Se llegó
+                                    a la cantidad total pedida?</label>
+                                <div class="btn-group w-100 shadow-sm" role="group">
+                                    <input type="radio" class="btn-check" name="llego_btn" id="llego_si"
+                                        autocomplete="off" checked>
+                                    <label class="btn btn-outline-success border-2 py-3 fw-bold" for="llego_si">
+                                        <i class="bi bi-check-circle-fill me-2"></i> SÍ
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="llego_btn" id="llego_no"
+                                        autocomplete="off">
+                                    <label class="btn btn-outline-danger border-2 py-3 fw-bold" for="llego_no">
+                                        <i class="bi bi-x-circle-fill me-2"></i> NO
+                                    </label>
+                                </div>
+                                <div class="d-none">
+                                    <input type="checkbox" name="llego_cantidad" class="d-none" id="id_llego_cantidad" checked>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha: No Conformidad -->
+                            <div class="col-md-7 border-start">
+                                <div class="ps-md-4">
+                                    <label class="form-label fw-bold d-block text-muted small text-uppercase mb-3">
+                                        <i class="bi bi-exclamation-square me-1"></i> Reporte de No Conformidad
+                                    </label>
+
+                                    <div class="btn-group w-100 shadow-sm" role="group">
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_ninguna" value="" autocomplete="off" checked>
+                                        <label class="btn btn-outline-secondary border-2 fw-bold"
+                                            for="nc_ninguna">Ninguna</label>
+
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_interna" value="INTERNA" autocomplete="off">
+                                        <label class="btn btn-outline-warning border-2 fw-bold text-dark"
+                                            for="nc_interna">Interna</label>
+
+                                        <input type="radio" class="btn-check btn-nc-toggle" name="nc_btn"
+                                            id="nc_externa" value="EXTERNA" autocomplete="off">
+                                        <label class="btn btn-outline-danger border-2 fw-bold"
+                                            for="nc_externa">Externa</label>
+                                    </div>
+                                    <div class="d-none">
+                                        <select name="no_conformidad" class="form-select" id="id_no_conformidad">
+  <option value="" selected>---------</option>
+
+  <option value="INTERNA">Interna</option>
+
+  <option value="EXTERNA">Externa</option>
+
+</select>
+                                    </div>
+
+                                    <!-- Panel Extra para Externa -->
+                                    <div id="panel_nc_externa"
+                                        class="mt-3 p-3 bg-light border border-danger-subtle rounded d-none">
+                                        <div class="row g-3 align-items-end">
+                                            <div class="col-sm-6">
+                                                <label
+                                                    class="form-label fw-bold text-danger small text-uppercase">Clase</label>
+                                                <select name="tipo_no_conformidad" class="form-select" id="id_tipo_no_conformidad">
+  <option value="" selected>---------</option>
+
+  <option value="RECLAMO">Reclamo</option>
+
+  <option value="RECHAZO">Rechazo</option>
+
+</select>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label class="form-label fw-bold text-danger small text-uppercase">N°
+                                                    Asociada</label>
+                                                <input type="text" name="nro_no_conformidad" class="form-control" id="id_nro_no_conformidad" placeholder="Nro. NC asociada" maxlength="50">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila Inferior: Observaciones y Autorización -->
+                        <div class="row g-4 mt-4 pt-3 border-top align-items-end">
+                            <div class="col-md-6 border-end">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Notas Adicionales /
+                                    Observaciones Generales</label>
+                                <textarea name="observaciones" cols="40" rows="2" class="form-control" placeholder="Notas adicionales..." id="id_observaciones">
+</textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="ps-md-3">
+                                    <label class="form-label fw-bold text-dark small text-uppercase mb-2">
+                                        <i class="bi bi-person-check-fill me-1"></i> Autorización de Entrega
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="bi bi-shield-lock text-muted"></i>
+                                        </span>
+                                        <select name="autorizo_envio" class="form-select" id="id_autorizo_envio">
+  <option value="" selected>-- Seleccione Autorizador --</option>
+
+  <option value="Garbi Enzo">Garbi Enzo</option>
+
+  <option value="Luppo Gaston">Luppo Gaston</option>
+
+  <option value="Gonzalez Ana">Gonzalez Ana</option>
+
+  <option value="Ridissi Gabriel">Ridissi Gabriel</option>
+
+</select>
+                                    </div>
+                                    
+                                    <small class="text-muted d-block mt-2 fst-italic">
+                                        Seleccione quién autoriza el envío final, sin importar si la partida está
+                                        completa o no.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="/" class="btn btn-secondary me-md-2 px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold">
+                        <i class="bi bi-check-circle me-2"></i>Registrar Control
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- DATA JSON PARA OPCIONES -->
+<script type="application/json" id="opciones-data">
+    {}
+</script>
+
+<!-- MODALES (Resto del template igual) -->
+
+
+
+
+
+<!-- Modal Agregar Maquinista -->
+<div class="modal fade" id="modalAgregarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo Maquinista</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="nuevoMaquinistaNombre" placeholder="Nombre completo">
+                <div id="maquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarMaquinista">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Maquinista -->
+<div class="modal fade" id="modalEditarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Maquinista</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarMaquinistaId">
+                <input type="text" class="form-control mb-2" id="editarMaquinistaNombre" placeholder="Nombre completo">
+                <div id="editarMaquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarMaquinista">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Maquinista -->
+<div class="modal fade" id="modalEliminarMaquinista" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Maquinista</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar a <strong id="eliminarMaquinistaNombre"></strong>?</p>
+                <input type="hidden" id="eliminarMaquinistaId">
+                <div id="eliminarMaquinistaError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarMaquinista">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Operario -->
+<div class="modal fade" id="modalEditarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Operario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarOperarioId">
+                <input type="text" class="form-control mb-2" id="editarOperarioNombre" placeholder="Nombre completo">
+                <div id="editarOperarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarOperario">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalAgregarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="bi bi-plus-circle me-2"></i>Nuevo Operario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-2" id="nuevoOperarioNombre" placeholder="Nombre completo">
+                <div id="operarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarOperario">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Operario -->
+<div class="modal fade" id="modalEliminarOperario" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Operario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar a <strong id="eliminarOperarioNombre"></strong>?</p>
+                <input type="hidden" id="eliminarOperarioId">
+                <div id="eliminarOperarioError" class="text-danger small d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarOperario">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Tipo Defecto -->
+<div class="modal fade" id="modalAgregarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Nuevo Tipo de Defecto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="nuevoDefectoNombre" placeholder="Nombre del defecto">
+                <div id="defectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarDefecto"
+                    onclick="guardarNuevoTipoDefecto()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Tipo Defecto -->
+<div class="modal fade" id="modalEditarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Tipo de Defecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select mb-3" id="editarDefectoSelect">
+                    <option value="">-- Seleccione --</option>
+                    
+                    <option value="6" data-nombre="Bajo Relieve">Bajo Relieve
+                    </option>
+                    
+                    <option value="1" data-nombre="Impresión">Impresión
+                    </option>
+                    
+                    <option value="3" data-nombre="Relieve">Relieve
+                    </option>
+                    
+                    <option value="4" data-nombre="Serigrafía">Serigrafía
+                    </option>
+                    
+                    <option value="2" data-nombre="Stamping">Stamping
+                    </option>
+                    
+                    <option value="7" data-nombre="Troquel Fuera de Linea">Troquel Fuera de Linea
+                    </option>
+                    
+                </select>
+                <input type="text" class="form-control" id="editarDefectoNombre" placeholder="Nuevo nombre">
+                <div id="editarDefectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarDefecto">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Tipo Defecto -->
+<div class="modal fade" id="modalEliminarDefecto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Tipo de Defecto</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select mb-3" id="eliminarDefectoSelect">
+                    <option value="">-- Seleccione --</option>
+                    
+                    <option value="6">Bajo Relieve</option>
+                    
+                    <option value="1">Impresión</option>
+                    
+                    <option value="3">Relieve</option>
+                    
+                    <option value="4">Serigrafía</option>
+                    
+                    <option value="2">Stamping</option>
+                    
+                    <option value="7">Troquel Fuera de Linea</option>
+                    
+                </select>
+                <div id="eliminarDefectoError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarDefecto">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Opcion -->
+<div class="modal fade" id="modalAgregarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Nueva Opción para <span id="agregarOpcionTipoNombre" class="fw-bold"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="agregarOpcionTipoId">
+                <input type="text" class="form-control" id="nuevaOpcionNombre" placeholder="Nombre de la opción">
+                <div id="opcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" id="btnGuardarOpcion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Opcion -->
+<div class="modal fade" id="modalEditarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">Editar Opción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editarOpcionId">
+                <input type="text" class="form-control" id="editarOpcionNombre" placeholder="Nuevo nombre">
+                <div id="editarOpcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-warning" id="btnActualizarOpcion">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Opcion -->
+<div class="modal fade" id="modalEliminarOpcion" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Eliminar Opción</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Eliminar la opción <strong id="eliminarOpcionNombre"></strong>?</p>
+                <input type="hidden" id="eliminarOpcionId">
+                <div id="eliminarOpcionError" class="text-danger small mt-2 d-none"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmarEliminarOpcion">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const IS_STAFF = "true".trim() === "true";
+</script>
+
+<script>
+    function getCookie(name) {
+        let v = null;
+        if (document.cookie) {
+            document.cookie.split(';').forEach(c => {
+                c = c.trim();
+                if (c.startsWith(name + '=')) v = decodeURIComponent(c.substring(name.length + 1));
+            });
+        }
+        return v;
+    }
+    const csrfToken = getCookie('csrftoken');
+    let opcionesDisponibles = {};
+
+    function showErr(id, msg) {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = msg; el.classList.remove('d-none'); }
+    }
+    function hideErr(id) {
+        const el = document.getElementById(id);
+        if (el) { el.classList.add('d-none'); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializar TomSelect para el campo cliente
+        const clienteSelect = document.querySelector('#id_cliente');
+        if (clienteSelect) {
+            new TomSelect(clienteSelect, {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: '-- Seleccione un cliente --'
+            });
+        }
+
+        // Fix para agregar clase form-control si falta (para evitar reinicio de server)
+        const dd = document.getElementById('id_detalle_defecto');
+        if (dd) dd.classList.add('form-control');
+
+        // Lógica de Cierre: Se llegó a la cantidad?
+        const btnSi = document.getElementById('llego_si');
+        const btnNo = document.getElementById('llego_no');
+        const realCheck = document.getElementById('id_llego_cantidad');
+
+        function actualizarLlegoCantidad() {
+            realCheck.checked = !btnNo.checked;
+        }
+
+        if (btnSi && btnNo && realCheck) {
+            btnSi.addEventListener('change', actualizarLlegoCantidad);
+            btnNo.addEventListener('change', actualizarLlegoCantidad);
+            if (realCheck.checked) {
+                btnSi.checked = true;
+            } else {
+                btnNo.checked = true;
+            }
+        }
+
+        // Lógica de Cierre: No Conformidad
+        const realNC = document.getElementById('id_no_conformidad');
+        const panelExterna = document.getElementById('panel_nc_externa');
+        const inputTipoNC = document.getElementById('id_tipo_no_conformidad');
+        const inputNroNC = document.getElementById('id_nro_no_conformidad');
+
+        document.querySelectorAll('.btn-nc-toggle').forEach(btn => {
+            btn.addEventListener('change', function () {
+                if (realNC) realNC.value = this.value;
+
+                if (this.value === 'EXTERNA') {
+                    panelExterna.classList.remove('d-none');
+                } else {
+                    panelExterna.classList.add('d-none');
+                    if (inputTipoNC) inputTipoNC.value = '';
+                    if (inputNroNC) inputNroNC.value = '';
+                }
+            });
+        });
+
+        // Sincronizar UI NC con el valor inicial oculto
+        if (realNC && realNC.value) {
+            const btnActivado = document.querySelector(`.btn-nc-toggle[value="${realNC.value}"]`);
+            if (btnActivado) btnActivado.checked = true;
+            if (realNC.value === 'EXTERNA' && panelExterna) panelExterna.classList.remove('d-none');
+        }
+
+        // Cargar opciones iniciales desde JSON
+        const opcionesData = document.getElementById('opciones-data');
+        if (opcionesData) {
+            try {
+                opcionesDisponibles = JSON.parse(opcionesData.textContent);
+            } catch (e) { console.error('Error parsing opciones:', e); }
+        }
+
+        // Manejar checkboxes de defectos principales
+        // Manejar checkboxes de defectos principales
+        document.querySelectorAll('.defecto-checkbox').forEach(cb => {
+            // Cargar opciones siempre al inicio
+            cargarOpciones(cb.dataset.tipoId);
+            const container = document.getElementById('opciones-container-' + cb.dataset.tipoId);
+
+            // Inicializar visibilidad
+            if (cb.checked && container) {
+                container.style.display = 'block';
+            }
+
+            cb.addEventListener('change', function () {
+                const c = document.getElementById('opciones-container-' + this.dataset.tipoId);
+                if (this.checked) {
+                    if (c) c.style.display = 'block';
+                } else {
+                    if (c) c.style.display = 'none';
+                    // Desmarcar opciones al desmarcar el padre visualmente
+                    const lista = document.getElementById('opcion-list-' + this.dataset.tipoId);
+                    if (lista) lista.querySelectorAll('input[type="checkbox"]').forEach(chk => chk.checked = false);
+                }
+            });
+        });
+    });
+
+    /**
+     * Carga las opciones como checkboxes dentro del contenedor especificado.
+     * @param {string} tipoId - ID del tipo de defecto.
+     * @param {Array} preselectedIds - Array de IDs de opciones a marcar.
+     */
+    function cargarOpciones(tipoId, preselectedIds = []) {
+        const container = document.getElementById('opcion-list-' + tipoId);
+        if (!container) return;
+
+        container.innerHTML = '';
+        const opciones = opcionesDisponibles[tipoId] || [];
+
+        if (opciones.length === 0) {
+            container.innerHTML = '<div class="text-muted fst-italic p-1 small">Sin opciones configuradas</div>';
+            return;
+        }
+
+        opciones.forEach(op => {
+            const div = document.createElement('div');
+            div.className = 'form-check mb-1 d-flex align-items-center justify-content-between option-item';
+
+            const leftDiv = document.createElement('div');
+            leftDiv.className = 'd-flex align-items-center flex-grow-1';
+
+            const chk = document.createElement('input');
+            chk.type = 'checkbox';
+            chk.className = 'form-check-input opcion-checkbox me-2';
+            chk.name = 'opciones_defecto'; // Nombre esperado por el backend
+            chk.value = op.id;
+            chk.id = 'opt-' + op.id;
+
+            if (preselectedIds.includes(op.id) || preselectedIds.includes(op.id.toString())) {
+                chk.checked = true;
+            }
+
+            const lbl = document.createElement('label');
+            lbl.className = 'form-check-label text-break small mb-0';
+            lbl.htmlFor = 'opt-' + op.id;
+            lbl.textContent = op.nombre;
+            lbl.style.cursor = 'pointer';
+
+            leftDiv.appendChild(chk);
+            leftDiv.appendChild(lbl);
+            div.appendChild(leftDiv);
+
+            if (IS_STAFF) {
+                const btnGroup = document.createElement('div');
+                btnGroup.className = 'btn-group btn-group-sm ms-2';
+
+                const btnEdit = document.createElement('button');
+                btnEdit.type = 'button';
+                btnEdit.className = 'btn btn-outline-warning py-0 px-2 me-1';
+                btnEdit.innerHTML = '<i class="bi bi-pencil"></i>';
+                btnEdit.onclick = (e) => { e.preventDefault(); abrirEditarOpcion(op.id, op.nombre, tipoId); };
+
+                const btnDel = document.createElement('button');
+                btnDel.type = 'button';
+                btnDel.className = 'btn btn-outline-danger py-0 px-2';
+                btnDel.innerHTML = '<i class="bi bi-trash"></i>';
+                btnDel.onclick = (e) => { e.preventDefault(); confirmarEliminarOpcion(op.id, op.nombre, tipoId); };
+
+                btnGroup.appendChild(btnEdit);
+                btnGroup.appendChild(btnDel);
+                div.appendChild(btnGroup);
+            }
+
+            container.appendChild(div);
+        });
+    }
+
+    // --- LOGICA MAQUINISTA ---
+    function buscarMaquinista() {
+        const legajo = document.getElementById('searchLegajo').value;
+        if (!legajo) return;
+
+        fetch(`/calidad/api/buscar-maquinista/?legajo=${legajo}`)
+            .then(r => r.json())
+            .then(data => {
+                const div = document.getElementById('maquinistaResults');
+                div.innerHTML = '';
+                if (data.encontrado && data.maquinista) {
+                    const m = data.maquinista;
+                    const btn = document.createElement('button');
+                    btn.className = 'list-group-item list-group-item-action';
+                    btn.textContent = `${m.nombre} ${m.apellido} (${m.legajo})`;
+                    btn.onclick = () => selectMaquinista(m.id, `${m.nombre} ${m.apellido}`);
+                    div.appendChild(btn);
+                } else {
+                    div.innerHTML = '<p class="text-danger mt-2">No encontrado</p>';
+                }
+            })
+            .catch(e => {
+                document.getElementById('maquinistaResults').innerHTML = '<p class="text-danger mt-2">Error al buscar</p>';
+            });
+    }
+
+    function selectMaquinista(id, nombre) {
+        const sel = document.getElementById('id_maquinista');
+        let exists = false;
+        for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value == id) {
+                sel.selectedIndex = i;
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = nombre;
+            opt.selected = true;
+            sel.appendChild(opt);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('modalBuscarMaquinista')).hide();
+    }
+
+
+
+    // --- LOGICA MAQUINISTA (CRUD) ---
+    document.getElementById('btnGuardarMaquinista')?.addEventListener('click', function () {
+        const nombre = document.getElementById('nuevoMaquinistaNombre').value.trim();
+        hideErr('maquinistaError');
+        if (!nombre) { showErr('maquinistaError', 'Requerido'); return; }
+
+        fetch("/calidad/api/agregar-maquinista/", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('maquinistaError', data.error);
+            else {
+                const sel = document.getElementById('id_maquinista');
+                const opt = document.createElement('option');
+                opt.value = data.id;
+                opt.textContent = data.nombre;
+                opt.selected = true;
+                sel.appendChild(opt);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarMaquinista')).hide();
+            }
+        });
+    });
+
+    function abrirEditarMaquinista() {
+        const sel = document.getElementById('id_maquinista');
+        if (!sel.value) return;
+        document.getElementById('editarMaquinistaId').value = sel.value;
+        document.getElementById('editarMaquinistaNombre').value = sel.options[sel.selectedIndex].text;
+        hideErr('editarMaquinistaError');
+        new bootstrap.Modal(document.getElementById('modalEditarMaquinista')).show();
+    }
+
+    document.getElementById('btnActualizarMaquinista')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarMaquinistaId').value;
+        const nombre = document.getElementById('editarMaquinistaNombre').value.trim();
+        hideErr('editarMaquinistaError');
+        if (!nombre) { showErr('editarMaquinistaError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-maquinista/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarMaquinistaError', data.error);
+            else {
+                const sel = document.getElementById('id_maquinista');
+                const opt = sel.querySelector(`option[value="${pk}"]`);
+                if (opt) opt.textContent = data.nombre;
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarMaquinista')).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarMaquinista() {
+        const sel = document.getElementById('id_maquinista');
+        if (!sel.value) return;
+        document.getElementById('eliminarMaquinistaId').value = sel.value;
+        document.getElementById('eliminarMaquinistaNombre').textContent = sel.options[sel.selectedIndex].text;
+        hideErr('eliminarMaquinistaError');
+        new bootstrap.Modal(document.getElementById('modalEliminarMaquinista')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarMaquinista')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarMaquinistaId').value;
+        fetch('/calidad/api/eliminar-maquinista/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(d => {
+                if (!d.error) {
+                    const sel = document.getElementById('id_maquinista');
+                    sel.remove(sel.selectedIndex);
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarMaquinista')).hide();
+                } else { showErr('eliminarMaquinistaError', d.error); }
+            });
+    });
+
+    // --- LOGICA OPERARIOS ---
+    document.getElementById('btnGuardarOperario')?.addEventListener('click', function () {
+        const nombre = document.getElementById('nuevoOperarioNombre').value.trim();
+        hideErr('operarioError');
+        if (!nombre) { showErr('operarioError', 'Requerido'); return; }
+
+        fetch("/calidad/api/agregar-operario/", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('operarioError', data.error);
+            else {
+                const s = document.getElementById('id_operario');
+                const opt = document.createElement('option');
+                opt.value = data.id;
+                opt.textContent = data.nombre;
+                opt.selected = true;
+                s.appendChild(opt);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarOperario')).hide();
+            }
+        });
+    });
+
+    function abrirEditarOperario() {
+        const sel = document.getElementById('id_operario');
+        if (!sel.value) return;
+        document.getElementById('editarOperarioId').value = sel.value;
+        document.getElementById('editarOperarioNombre').value = sel.options[sel.selectedIndex].text;
+        hideErr('editarOperarioError');
+        new bootstrap.Modal(document.getElementById('modalEditarOperario')).show();
+    }
+
+    document.getElementById('btnActualizarOperario')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarOperarioId').value;
+        const nombre = document.getElementById('editarOperarioNombre').value.trim();
+        hideErr('editarOperarioError');
+        if (!nombre) { showErr('editarOperarioError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-operario/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarOperarioError', data.error);
+            else {
+                const sel = document.getElementById('id_operario');
+                const opt = sel.querySelector(`option[value="${pk}"]`);
+                if (opt) opt.textContent = data.nombre;
+                bootstrap.Modal.getInstance(document.getElementById('modalEditarOperario')).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarOperario() {
+        const s = document.getElementById('id_operario');
+        if (!s.value) return;
+        const t = s.options[s.selectedIndex].text;
+        document.getElementById('eliminarOperarioId').value = s.value;
+        document.getElementById('eliminarOperarioNombre').textContent = t;
+        new bootstrap.Modal(document.getElementById('modalEliminarOperario')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarOperario')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarOperarioId').value;
+        fetch('/calidad/api/eliminar-operario/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(d => {
+                if (!d.error) {
+                    const s = document.getElementById('id_operario');
+                    s.remove(s.selectedIndex);
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarOperario')).hide();
+                } else {
+                    showErr('eliminarOperarioError', d.error);
+                }
+            });
+    });
+
+    // --- LOGICA TIPOS DEFECTO (CRUD) ---
+    function guardarNuevoTipoDefecto() {
+        const nombre = document.getElementById('nuevoDefectoNombre').value.trim();
+        hideErr('defectoError');
+        if (!nombre) { showErr('defectoError', 'Requerido'); return; }
+
+        fetch("/calidad/api/agregar-tipo-defecto/", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        })
+            .then(r => { if (!r.ok) throw new Error(r.statusText); return r.json(); })
+            .then(data => {
+                if (data.error) showErr('defectoError', data.error);
+                else location.reload();
+            })
+            .catch(e => showErr('defectoError', "Error: " + e.message));
+    }
+
+    function abrirEditarDefecto(id = '') {
+        const sel = document.getElementById('editarDefectoSelect');
+        sel.value = id;
+        document.getElementById('editarDefectoNombre').value = '';
+
+        if (id) {
+            const opt = sel.querySelector(`option[value="${id}"]`);
+            if (opt) document.getElementById('editarDefectoNombre').value = opt.dataset.nombre || opt.text;
+        }
+
+        hideErr('editarDefectoError');
+        new bootstrap.Modal(document.getElementById('modalEditarDefecto')).show();
+    }
+
+    document.getElementById('editarDefectoSelect')?.addEventListener('change', function () {
+        const opt = this.options[this.selectedIndex];
+        if (opt.value) document.getElementById('editarDefectoNombre').value = opt.dataset.nombre || opt.text;
+    });
+
+    document.getElementById('btnActualizarDefecto')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarDefectoSelect').value;
+        const nombre = document.getElementById('editarDefectoNombre').value.trim();
+        hideErr('editarDefectoError');
+
+        if (!pk) { showErr('editarDefectoError', 'Seleccione un defecto'); return; }
+        if (!nombre) { showErr('editarDefectoError', 'Nombre requerido'); return; }
+
+        fetch('/calidad/api/editar-tipo-defecto/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarDefectoError', data.error);
+            else location.reload();
+        });
+    });
+
+    function confirmarEliminarDefecto(id = '') {
+        document.getElementById('eliminarDefectoSelect').value = id;
+        hideErr('eliminarDefectoError');
+        new bootstrap.Modal(document.getElementById('modalEliminarDefecto')).show();
+    }
+
+    document.getElementById('btnConfirmarEliminarDefecto')?.addEventListener('click', function () {
+        const pk = document.getElementById('eliminarDefectoSelect').value;
+        hideErr('eliminarDefectoError');
+
+        if (!pk) { showErr('eliminarDefectoError', 'Seleccione un defecto'); return; }
+
+        fetch('/calidad/api/eliminar-tipo-defecto/' + pk + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(data => {
+                if (data.error) showErr('eliminarDefectoError', data.error);
+                else location.reload();
+            });
+    });
+
+
+    // --- LOGICA OPCIONES (CRUD) ---
+    function abrirAgregarOpcion(tipoId, tipoNombre) {
+        document.getElementById('agregarOpcionTipoId').value = tipoId;
+        document.getElementById('agregarOpcionTipoNombre').textContent = tipoNombre;
+        document.getElementById('nuevaOpcionNombre').value = '';
+        hideErr('opcionError');
+        new bootstrap.Modal(document.getElementById('modalAgregarOpcion')).show();
+    }
+
+    document.getElementById('btnGuardarOpcion')?.addEventListener('click', function () {
+        const tipoId = document.getElementById('agregarOpcionTipoId').value;
+        const nombre = document.getElementById('nuevaOpcionNombre').value.trim();
+        hideErr('opcionError');
+        if (!nombre) { showErr('opcionError', 'Requerido'); return; }
+
+        fetch("/calidad/api/agregar-opcion-defecto/", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'tipo_defecto_id=' + tipoId + '&nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('opcionError', data.error);
+            else {
+                if (!opcionesDisponibles[tipoId]) opcionesDisponibles[tipoId] = [];
+                opcionesDisponibles[tipoId].push({ id: data.id, nombre: data.nombre });
+
+                const containerId = 'opcion-list-' + tipoId;
+                const container = document.getElementById(containerId);
+                let selected = [data.id];
+
+                if (container) {
+                    container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                }
+
+                cargarOpciones(tipoId, selected);
+                bootstrap.Modal.getInstance(document.getElementById('modalAgregarOpcion')).hide();
+            }
+        });
+    });
+
+    function abrirEditarOpcion(id, actualNombre, tipoId) {
+        document.getElementById('editarOpcionId').value = id;
+        document.getElementById('editarOpcionNombre').value = actualNombre;
+        document.getElementById('modalEditarOpcion').dataset.tipoId = tipoId;
+        hideErr('editarOpcionError');
+        new bootstrap.Modal(document.getElementById('modalEditarOpcion')).show();
+    }
+
+    document.getElementById('btnActualizarOpcion')?.addEventListener('click', function () {
+        const pk = document.getElementById('editarOpcionId').value;
+        const nombre = document.getElementById('editarOpcionNombre').value.trim();
+        hideErr('editarOpcionError');
+        if (!nombre) { showErr('editarOpcionError', 'Requerido'); return; }
+
+        fetch('/calidad/api/editar-opcion-defecto/' + pk + '/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': csrfToken },
+            body: 'nombre=' + encodeURIComponent(nombre)
+        }).then(r => r.json()).then(data => {
+            if (data.error) showErr('editarOpcionError', data.error);
+            else {
+                const modal = document.getElementById('modalEditarOpcion');
+                const tipoId = modal.dataset.tipoId;
+
+                if (tipoId && opcionesDisponibles[tipoId]) {
+                    const idx = opcionesDisponibles[tipoId].findIndex(o => o.id == pk);
+                    if (idx !== -1) opcionesDisponibles[tipoId][idx].nombre = data.nombre;
+
+                    const container = document.getElementById('opcion-list-' + tipoId);
+                    let selected = [];
+                    if (container) {
+                        container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                    }
+                    cargarOpciones(tipoId, selected);
+                }
+                bootstrap.Modal.getInstance(modal).hide();
+            }
+        });
+    });
+
+    function confirmarEliminarOpcion(id, nombre, tipoId) {
+        document.getElementById('eliminarOpcionId').value = id;
+        document.getElementById('eliminarOpcionNombre').textContent = nombre;
+        document.getElementById('modalEliminarOpcion').dataset.tipoId = tipoId;
+        hideErr('eliminarOpcionError');
+
+        fetch('/calidad/api/eliminar-opcion-defecto/' + id + '/', { method: 'POST', headers: { 'X-CSRFToken': csrfToken } })
+            .then(r => r.json()).then(data => {
+                if (data.error) showErr('eliminarOpcionError', data.error);
+                else {
+                    const modal = document.getElementById('modalEliminarOpcion');
+                    const tipoId = modal.dataset.tipoId;
+
+                    if (tipoId && opcionesDisponibles[tipoId]) {
+                        opcionesDisponibles[tipoId] = opcionesDisponibles[tipoId].filter(o => o.id != id);
+
+                        const container = document.getElementById('opcion-list-' + tipoId);
+                        let selected = [];
+                        if (container) {
+                            container.querySelectorAll('.opcion-checkbox:checked').forEach(c => selected.push(parseInt(c.value)));
+                        }
+                        selected = selected.filter(val => val != id);
+
+                        cargarOpciones(tipoId, selected);
+                    }
+                    bootstrap.Modal.getInstance(modal).hide();
+                }
+            });
+    }
+
+    // --- PREVISUALIZACIÓN DE IMÁGENES EVITANDO RECARGA ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const evidenciasInput = document.querySelector('input[name="evidencias"]');
+        const previewContainer = document.getElementById('evidencias-preview-container');
+
+        if (evidenciasInput && previewContainer) {
+
+            function renderPreviews() {
+                previewContainer.innerHTML = '';
+                const files = Array.from(evidenciasInput.files);
+
+                files.forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            const colDiv = document.createElement('div');
+                            colDiv.className = 'col-6 col-sm-4 col-md-3 text-center position-relative mt-4';
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'img-thumbnail shadow-sm';
+                            img.style.maxHeight = '130px';
+                            img.style.width = '100%';
+                            img.style.objectFit = 'cover';
+                            img.style.borderRadius = '8px';
+                            img.style.border = '2px solid var(--accent-orange)';
+
+                            const label = document.createElement('div');
+                            label.className = 'small text-muted text-truncate mt-1 fw-bold px-2';
+                            label.title = file.name;
+                            label.textContent = file.name;
+
+                            // Botón para eliminar esta foto específica antes de enviar
+                            const removeBtn = document.createElement('button');
+                            removeBtn.type = 'button';
+                            removeBtn.className = 'btn btn-danger btn-sm position-absolute rounded-circle shadow pb-1';
+                            removeBtn.style.top = '-10px';
+                            removeBtn.style.right = '5px';
+                            removeBtn.style.width = '26px';
+                            removeBtn.style.height = '26px';
+                            removeBtn.style.padding = '0';
+                            removeBtn.style.lineHeight = '1';
+                            removeBtn.innerHTML = '&times;';
+                            removeBtn.title = 'Descartar archivo';
+                            removeBtn.style.fontWeight = 'bold';
+                            removeBtn.style.fontSize = '18px';
+
+                            removeBtn.onclick = function () {
+                                // Crear un nuevo objeto de transferencia de archivos válido
+                                const dt = new DataTransfer();
+                                const currentFiles = Array.from(evidenciasInput.files);
+
+                                // Volver a añadir todos MENOS el que clickeamos para eliminar
+                                currentFiles.forEach((f, i) => {
+                                    if (i !== index) dt.items.add(f);
+                                });
+
+                                // Pisar la data del input original con la lista limpia
+                                evidenciasInput.files = dt.files;
+
+                                // Volver a redibujar todo en base a la lista nueva
+                                renderPreviews();
+                            };
+
+                            colDiv.appendChild(img);
+                            colDiv.appendChild(removeBtn);
+                            colDiv.appendChild(label);
+                            previewContainer.appendChild(colDiv);
+                        }
+
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Cada vez que seleccionan archivos nuevos, que dibuje todo nuevo
+            evidenciasInput.addEventListener('change', renderPreviews);
+        }
+    });
+
+</script>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <div class="footer-logo">GRÁFICA MELFA</div>
+            <p class="text-muted mb-4 max-width-600 mx-auto">
+                Líderes en soluciones gráficas de alta calidad, combinando tradición artesanal con tecnología de
+                vanguardia.
+            </p>
+            <div class="mb-4">
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="text-muted small">
+                &copy; 2026 Gráfica Melfa. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- TomSelect JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+    
+</body>
+
+</html>

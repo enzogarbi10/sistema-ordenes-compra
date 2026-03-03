@@ -30,11 +30,26 @@ class SuperUserRequiredMixin(UserPassesTestMixin):
         return self.request.user.is_superuser
 
 
+from django.db.models import Q
+
 class ClienteListView(LoginRequiredMixin, OrdenesGroupRequiredMixin, ListView):
     model = Cliente
     template_name = 'ordenes_trabajo/lista_clientes.html'
     context_object_name = 'clientes'
     ordering = ['nombre']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        q = self.request.GET.get('q')
+        if q:
+            queryset = queryset.filter(
+                Q(nombre__icontains=q) |
+                Q(codigo__icontains=q) |
+                Q(cuit__icontains=q) |
+                Q(localidad__icontains=q) |
+                Q(telefono__icontains=q)
+            )
+        return queryset
 
 class ClienteCreateView(LoginRequiredMixin, SuperUserRequiredMixin, CreateView):
     model = Cliente

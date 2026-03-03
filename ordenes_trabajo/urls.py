@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .api import SincronizarClientesAPI
 
 urlpatterns = [
     # Ordenes
@@ -22,4 +23,7 @@ urlpatterns = [
     path('usuarios/editar/<int:pk>/', views.UsuarioUpdateView.as_view(), name='editar_usuario'),
     path('usuarios/borrar/<int:pk>/', views.UsuarioDeleteView.as_view(), name='borrar_usuario'),
     path('usuarios/<int:pk>/password/', views.UsuarioPasswordChangeView.as_view(), name='cambiar_password_usuario'),
+    
+    # API
+    path('api/sincronizar_clientes/', SincronizarClientesAPI.as_view(), name='api_sincronizar_clientes'),
 ]

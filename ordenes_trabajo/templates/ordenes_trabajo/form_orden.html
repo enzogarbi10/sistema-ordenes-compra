@@ -274,6 +274,19 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Inicializar TomSelect para el campo cliente
+        const clienteSelect = document.querySelector('#id_cliente');
+        if (clienteSelect) {
+            new TomSelect(clienteSelect, {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: 'Buscar y seleccionar un cliente...'
+            });
+        }
+
         const addBtn = document.querySelector('#add-item');
         if (addBtn) {
             addBtn.addEventListener('click', function () {

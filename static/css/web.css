@@ -5,9 +5,13 @@
     --accent-orange: #ff6600;
     --accent-orange-hover: #ff8533;
     --text-light: #f8f9fa;
-    --text-muted: #888888;
+    --text-muted: #c4c4c4;
     --card-bg: #111111;
     --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
 }
 
 body {

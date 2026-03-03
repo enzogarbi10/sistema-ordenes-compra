@@ -1,4 +1,4 @@
-﻿{% extends 'web/base.html' %}
+﻿{% extends 'postprensa/base_postprensa.html' %}
 {% load static %}
 
 {% block content %}
@@ -742,6 +742,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+
         // Fix para agregar clase form-control si falta (para evitar reinicio de server)
         const dd = document.getElementById('id_detalle_defecto');
         if (dd) dd.classList.add('form-control');
@@ -1362,5 +1363,24 @@
         }
     });
 
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Inicializar TomSelect para el campo cliente
+        const clienteSelect = document.querySelector('#id_cliente');
+        if (clienteSelect) {
+            new TomSelect(clienteSelect, {
+                create: false,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                placeholder: '-- Seleccione un cliente --'
+            });
+        }
+    });
 </script>
 {% endblock %}

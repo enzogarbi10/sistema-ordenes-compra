@@ -12,14 +12,14 @@
     .sub-navbar {
         position: sticky;
         top: 70px;
-        background: #1a1a1a;
-        /* Dark tech aesthetic */
+        background: rgba(255, 102, 0, 0.12);
+        border-top: 1px solid rgba(255, 102, 0, 0.25);
+        border-bottom: 1px solid rgba(255, 102, 0, 0.25);
         z-index: 1000;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 20px rgba(255, 102, 0, 0.08);
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         transition: top 0.3s ease;
     }
 
@@ -279,10 +279,10 @@
         const mainNav = document.querySelector('.navbar');
         const subNav = document.getElementById('subNavbar');
         if (window.scrollY > 50) {
-            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.98)';
+            mainNav.classList.add('scrolled');
             subNav.style.top = mainNav.offsetHeight + 'px';
         } else {
-            mainNav.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+            mainNav.classList.remove('scrolled');
             subNav.style.top = '70px';
         }
     });

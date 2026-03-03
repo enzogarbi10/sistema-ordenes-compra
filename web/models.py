@@ -5,8 +5,10 @@ class CategoriaMuestra(models.Model):
     titulo = models.CharField("Título Principal", max_length=100)
     subtitulo = models.CharField("Subtítulo", max_length=100)
     descripcion = models.TextField("Descripción")
-    imagen = models.ImageField("Imagen Muestra", upload_to='portfolio/muestras/')
-    etiquetas = models.CharField("Etiquetas", max_length=255, help_text="Separadas por coma. Ej: Hot Stamping Oro, Relieve Alto")
+    imagen = models.ImageField("Imagen Muestra", upload_to='portfolio/muestras/', blank=True, null=True, help_text="Dejar en blanco si se sube un video.")
+    video = models.FileField("Video Muestra (opcional)", upload_to='portfolio/muestras/videos/', blank=True, null=True, help_text="Formatos recomendados: .mp4, .webm. Si subes un video, éste se mostrará en lugar de la imagen.")
+    etiquetas = models.CharField("Etiquetas", max_length=255, blank=True, help_text="Separadas por coma. Ej: Hot Stamping Oro, Relieve Alto")
+    clientes = models.CharField("Clientes", max_length=500, blank=True, help_text="Nombres de clientes separados por coma. Ej: Bodega Zuccardi, Peñaflor, Nieto Senetiner")
     fondo_css = models.CharField("Fondo CSS (opcional)", max_length=255, blank=True, help_text="Ej: radial-gradient(circle at 70% 50%, #2a1111, #0a0a0a)")
     orden = models.IntegerField("Orden de aparición", default=0)
 
@@ -20,6 +22,9 @@ class CategoriaMuestra(models.Model):
 
     def get_etiquetas_list(self):
         return [tag.strip() for tag in self.etiquetas.split(',') if tag.strip()]
+
+    def get_clientes_list(self):
+        return [c.strip() for c in self.clientes.split(',') if c.strip()]
 
 class CategoriaTecnologia(models.Model):
     nombre_clave = models.CharField("ID Tecnologia (ej: impresion)", max_length=50, unique=True)

@@ -142,19 +142,20 @@
             <div class="col-lg-6" data-aos="fade-right">
                 <div class="info-block">
                     <span class="subtitle">Nuestra Misión</span>
-                    <h3 class="serif mb-4 display-6">Superar Expectativas</h3>
-                    <p class="text-muted lead">Dedicamos nuestro mayor esfuerzo en lograr la excelencia en la producción
-                        de productos y en la agilidad de la atención, superando permanentemente las expectativas de
-                        nuestros clientes.</p>
+                    <h3 class="serif mb-4 display-6">Mejora Continua</h3>
+                    <p class="text-muted lead">Nos comprometemos con el concepto de mejora continua, integrando a todo
+                        el personal de la empresa y a nuestros proveedores, para brindar servicios y productos gráficos
+                        seguros, que cumplan con los requisitos de calidad, autenticidad y legalidad, que sumen valor al
+                        producto de nuestros clientes y que superen sus expectativas.</p>
                 </div>
             </div>
             <div class="col-lg-6" data-aos="fade-left">
                 <div class="info-block">
                     <span class="subtitle">Nuestra Visión</span>
                     <h3 class="serif mb-4 display-6">Servicio Innovador</h3>
-                    <p class="text-muted lead">Ser reconocidos y preferidos por nuestro servicio gráfico innovador,
-                        integrándonos en la cadena de valor de los clientes para brindar soluciones sólidas y
-                        competitivas.</p>
+                    <p class="text-muted lead">Soñamos ser reconocidos y preferidos por nuestro servicio gráfico
+                        innovador y por la calidad de nuestros productos, integrándonos a la cadena de valor de nuestros
+                        clientes.</p>
                 </div>
             </div>
         </div>
@@ -209,29 +210,6 @@
     </div>
 </section>
 
-<!-- Enlace a Sistemas (Portal Interno) -->
-<section class="access-section py-5">
-    <div class="container py-5 text-center">
-        <div class="row justify-content-center">
-            <div class="col-lg-8" data-aos="zoom-in">
-                <span class="subtitle mb-3">Portal de Gestión</span>
-                <h2 class="mb-4">Trazabilidad en tiempo real</h2>
-                <p class="text-light mb-5 opacity-75 lead">
-                    Nuestros clientes y equipo interno pueden monitorear el estado de las órdenes y los reportes de
-                    calidad flexográfica desde aquí.
-                </p>
-                <div class="d-flex flex-column flex-md-row gap-4 justify-content-center">
-                    <a href="{% url 'lista_ordenes' %}" class="btn btn-orange px-5 py-3">
-                        <i class="bi bi-box-seam me-2"></i> Seguimiento de Órdenes
-                    </a>
-                    <a href="{% url 'lista_controles_postprensa' %}" class="btn btn-outline-orange px-5 py-3">
-                        <i class="bi bi-check-circle me-2"></i> Reportes de Calidad
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Contacto Actualizado -->
 <section id="contacto" class="py-5 bg-black">
@@ -245,59 +223,79 @@
                 <div class="mt-5">
                     <div class="mb-5 d-flex align-items-start">
                         <i class="bi bi-geo-alt-fill me-4 fs-2 text-orange"></i>
-                        <div>
+                        <div class="w-100">
                             <h5 class="text-white mb-1">Visítenos</h5>
-                            <p class="text-muted">Ituzaingó 2387, Mendoza<br>Argentina</p>
+                            <p class="text-muted mb-3">Ituzaingó 2387, Mendoza<br>Argentina</p>
+                            <!-- Google Maps Iframe -->
+                            <div class="map-container rounded overflow-hidden shadow-sm d-flex"
+                                style="max-width: 100%;">
+                                <iframe
+                                    src="https://maps.google.com/maps?q=Ituzaing%C3%B3%202387,%20Mendoza&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                    width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
                         </div>
                     </div>
                     <div class="mb-5 d-flex align-items-start">
-                        <i class="bi bi-telephone-fill me-4 fs-2 text-orange"></i>
+                        <i class="bi bi-whatsapp me-4 fs-2 text-orange"></i>
                         <div>
-                            <h5 class="text-white mb-1">Llámenos</h5>
-                            <p class="text-muted">+54 (261) 430-6316</p>
-                        </div>
-                        </li>
-                        <div class="d-flex align-items-start">
-                            <i class="bi bi-clock-fill me-4 fs-2 text-orange"></i>
-                            <div>
-                                <h5 class="text-white mb-1">Atención</h5>
-                                <p class="text-muted">Lunes a Viernes: 08:00 - 18:00 hs</p>
-                            </div>
-                            </li>
+                            <h5 class="text-white mb-1">WhatsApp</h5>
+                            <a href="https://wa.me/5492615455247" target="_blank"
+                                class="text-muted text-decoration-none">+54 9 261 545-5247</a>
                         </div>
                     </div>
-                    <div class="col-lg-6 offset-lg-1" data-aos="fade-left">
-                        <div class="bg-dark p-5" style="background: #0a0a0a !important; border: 1px solid #1a1a1a;">
-                            <h4 class="mb-4 serif">Enviar Mensaje</h4>
-                            <form>
-                                <div class="row g-3">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label small text-muted text-uppercase">Nombre</label>
-                                        <input type="text"
-                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
-                                            style="border-color: #333 !important;">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label small text-muted text-uppercase">Email</label>
-                                        <input type="email"
-                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
-                                            style="border-color: #333 !important;">
-                                    </div>
-                                    <div class="col-12 mb-4">
-                                        <label class="form-label small text-muted text-uppercase">Consulta</label>
-                                        <textarea
-                                            class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
-                                            rows="3" style="border-color: #333 !important;"></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-orange w-100 py-3">Enviar a SAC</button>
-                                    </div>
-                                </div>
-                            </form>
+                    <div class="mb-5 d-flex align-items-start">
+                        <i class="bi bi-instagram me-4 fs-2 text-orange"></i>
+                        <div>
+                            <h5 class="text-white mb-1">Instagram</h5>
+                            <a href="https://www.instagram.com/artesgraficasmelfa/" target="_blank"
+                                class="text-muted text-decoration-none">@artesgraficasmelfa</a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-clock-fill me-4 fs-2 text-orange"></i>
+                        <div>
+                            <h5 class="text-white mb-1">Atención</h5>
+                            <p class="text-muted">Lunes a Viernes: 08:00 - 18:00 hs</p>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-6 offset-lg-1" data-aos="fade-left">
+                <div class="bg-dark p-5 mt-4 mt-lg-0"
+                    style="background: #0a0a0a !important; border: 1px solid #1a1a1a;">
+                    <h4 class="mb-4 serif">Enviar Mensaje</h4>
+                    <form action="https://formsubmit.co/enzogarbi@agmelfa.com.ar" method="POST">
+                        <input type="hidden" name="_subject" value="Nueva consulta desde la web Melfa">
+                        <input type="hidden" name="_captcha" value="false">
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted text-uppercase">Nombre</label>
+                                <input type="text" name="name" required
+                                    class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                    style="border-color: #333 !important;">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small text-muted text-uppercase">Email</label>
+                                <input type="email" name="email" required
+                                    class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                    style="border-color: #333 !important;">
+                            </div>
+                            <div class="col-12 mb-4">
+                                <label class="form-label small text-muted text-uppercase">Consulta</label>
+                                <textarea name="message" required
+                                    class="form-control bg-transparent border-0 border-bottom rounded-0 text-white"
+                                    rows="3" style="border-color: #333 !important;"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-orange w-100 py-3">Enviar a SAC</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 {% endblock %}
@@ -311,16 +309,7 @@
         once: true
     });
 
-    window.addEventListener('scroll', function () {
-        const nav = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            nav.style.backgroundColor = 'rgba(0, 0, 0, 0.98)';
-            nav.style.padding = '0.5rem 0';
-        } else {
-            nav.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-            nav.style.padding = '1rem 0';
-        }
-    });
+
 
     // Mobile Video Optimization: ensures video plays smoothly
     document.addEventListener('DOMContentLoaded', function () {

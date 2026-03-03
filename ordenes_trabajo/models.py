@@ -4,9 +4,18 @@ from django.contrib.auth.models import User
 
 class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    nombre = models.CharField(max_length=100)
+    codigo = models.CharField(max_length=50, blank=True, null=True, verbose_name="Código")
+    nombre = models.CharField(max_length=150, verbose_name="Razón Social / Nombre")
+    direccion = models.CharField(max_length=200, blank=True, null=True, verbose_name="Dirección")
+    localidad = models.CharField(max_length=100, blank=True, null=True, verbose_name="Localidad")
+    cuit = models.CharField(max_length=50, blank=True, null=True, verbose_name="CUIT/DNI")
+    telefono = models.CharField(max_length=50, blank=True, null=True, verbose_name="Teléfono")
+    contacto = models.CharField(max_length=100, blank=True, null=True, verbose_name="Contacto")
+    estado = models.CharField(max_length=50, blank=True, null=True, verbose_name="Estado")
     
     def __str__(self):
+        if self.codigo:
+            return f"[{self.codigo}] {self.nombre}"
         return self.nombre
 
 class OrdenCompra(models.Model):

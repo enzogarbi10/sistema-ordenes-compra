@@ -12,9 +12,16 @@ class RegistroUsuarioForm(UserCreationForm):
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['nombre']
+        fields = ['codigo', 'nombre', 'direccion', 'localidad', 'cuit', 'telefono', 'contacto', 'estado']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del Cliente'}),
+            'codigo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Código'}),
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Razón Social / Nombre'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Dirección'}),
+            'localidad': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Localidad'}),
+            'cuit': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'CUIT/DNI'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Teléfono'}),
+            'contacto': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contacto'}),
+            'estado': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Estado'}),
         }
 
 class OrdenCompraForm(forms.ModelForm):
