@@ -265,9 +265,19 @@
                 <div class="bg-dark p-5 mt-4 mt-lg-0"
                     style="background: #0a0a0a !important; border: 1px solid #1a1a1a;">
                     <h4 class="mb-4 serif">Enviar Mensaje</h4>
-                    <form action="https://formsubmit.co/enzogarbi@agmelfa.com.ar" method="POST">
-                        <input type="hidden" name="_subject" value="Nueva consulta desde la web Melfa">
-                        <input type="hidden" name="_captcha" value="false">
+
+                    {% if contacto_ok == 'ok' %}
+                    <div class="alert" style="background: rgba(0,200,100,0.1); border: 1px solid #00c864; color: #00c864; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
+                        ✅ <strong>¡Mensaje enviado!</strong> Nos pondremos en contacto a la brevedad.
+                    </div>
+                    {% elif contacto_ok == 'error' %}
+                    <div class="alert" style="background: rgba(220,50,50,0.1); border: 1px solid #dc3232; color: #ff6b6b; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem;">
+                        ❌ <strong>Error al enviar.</strong> Por favor intentá de nuevo o contactanos por WhatsApp.
+                    </div>
+                    {% endif %}
+
+                    <form action="{% url 'contacto_web' %}" method="POST">
+                        {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label small text-muted text-uppercase">Nombre</label>
