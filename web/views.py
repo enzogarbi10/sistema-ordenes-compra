@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import CategoriaMuestra, CategoriaTecnologia, SectorCliente
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 def home(request):
@@ -25,7 +29,8 @@ def contacto(request):
                     fail_silently=False,
                 )
                 return redirect('/?contacto=ok#contacto')
-            except Exception:
+            except Exception as e:
+                logger.error(f"Error enviando email de contacto: {type(e).__name__}: {e}")
                 return redirect('/?contacto=error#contacto')
 
     return redirect('/#contacto')
