@@ -133,15 +133,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email Configuration
+# Email Configuration - SendGrid
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'agmelfa.com.ar'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = 'enzogarbi@agmelfa.com.ar'
-EMAIL_HOST_PASSWORD = 'ENBI1003'
-DEFAULT_FROM_EMAIL = 'enzogarbi@agmelfa.com.ar'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+DEFAULT_FROM_EMAIL = 'graficamelfa@gmail.com'
 
 # Auth Settings
 LOGIN_URL = 'login'
