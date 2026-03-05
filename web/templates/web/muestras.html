@@ -140,57 +140,71 @@
     }
 
     .m-desc {
-        color: rgba(255, 255, 255, 0.65);
+        color: rgba(255, 255, 255, 0.75);
         font-size: 0.95rem;
-        /* Descripción un poco más chica */
-        line-height: 1.7;
-        margin-bottom: 1.5rem;
+        font-weight: 300;
+        line-height: 1.8;
+        margin-bottom: 2rem;
+        padding-left: 1rem;
+        border-left: 2px solid rgba(255, 102, 0, 0.4);
     }
 
-    /* Clients tags - dark theme */
+    /* Clients & Tech tags - modern pill design */
     .clientes-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
     }
 
     .m-cliente-tag {
-        border: 1px solid rgba(255, 102, 0, 0.3);
-        color: rgba(255, 255, 255, 0.75);
-        padding: 6px 14px;
+        display: inline-flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.85);
+        padding: 5px 14px;
         font-size: 0.72rem;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        font-weight: 600;
-        background: rgba(255, 102, 0, 0.06);
-        border-radius: 3px;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        border-radius: 50px;
+        /* pill shape */
+        backdrop-filter: blur(4px);
+        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .m-cliente-tag:hover {
-        background: rgba(255, 102, 0, 0.15);
-        border-color: rgba(255, 102, 0, 0.6);
+        background: rgba(255, 102, 0, 0.1);
+        border-color: rgba(255, 102, 0, 0.5);
         color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .m-cliente-tag i {
+        color: var(--accent-orange);
+        margin-right: 6px;
+        font-size: 0.85rem;
     }
 
     /* Label icon before tag group */
     .clientes-label {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.35);
-        margin-bottom: 0.5rem;
+        letter-spacing: 3px;
+        color: var(--accent-orange);
+        margin-bottom: 0.8rem;
         display: flex;
         align-items: center;
-        gap: 6px;
+        font-weight: 700;
     }
 
     .clientes-label::before {
         content: '';
         display: inline-block;
-        width: 20px;
+        width: 15px;
         height: 1px;
-        background: rgba(255, 102, 0, 0.4);
+        background: var(--accent-orange);
+        margin-right: 8px;
     }
 
     .texture-overlay {
@@ -286,22 +300,24 @@
                 <p class="m-desc">{{ cat.descripcion|linebreaksbr }}</p>
 
                 {% if cat.get_etiquetas_list %}
-                <p class="clientes-label mt-2">Etiquetas / Procesos</p>
-                <div class="clientes-tags mb-4">
-                    {% for tag in cat.get_etiquetas_list %}
-                    <div class="m-cliente-tag"
-                        style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.02);">
-                        {{ tag }}</div>
-                    {% endfor %}
+                <div class="mb-4">
+                    <p class="clientes-label mt-2">Tecnología & Detalles</p>
+                    <div class="clientes-tags">
+                        {% for tag in cat.get_etiquetas_list %}
+                        <div class="m-cliente-tag"><i class="bi bi-stars"></i>{{ tag }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
 
                 {% if cat.get_clientes_list %}
-                <p class="clientes-label">Clientes</p>
-                <div class="clientes-tags">
-                    {% for cliente in cat.get_clientes_list %}
-                    <div class="m-cliente-tag">{{ cliente }}</div>
-                    {% endfor %}
+                <div>
+                    <p class="clientes-label">Clientes</p>
+                    <div class="clientes-tags">
+                        {% for cliente in cat.get_clientes_list %}
+                        <div class="m-cliente-tag"><i class="bi bi-person-check-fill"></i>{{ cliente }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             </div>
@@ -317,22 +333,24 @@
                 <p class="m-desc">{{ cat.descripcion|linebreaksbr }}</p>
 
                 {% if cat.get_etiquetas_list %}
-                <p class="clientes-label mt-2">Etiquetas / Procesos</p>
-                <div class="clientes-tags mb-4">
-                    {% for tag in cat.get_etiquetas_list %}
-                    <div class="m-cliente-tag"
-                        style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.02);">
-                        {{ tag }}</div>
-                    {% endfor %}
+                <div class="mb-4">
+                    <p class="clientes-label mt-2">Tecnología & Detalles</p>
+                    <div class="clientes-tags">
+                        {% for tag in cat.get_etiquetas_list %}
+                        <div class="m-cliente-tag"><i class="bi bi-stars"></i>{{ tag }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
 
                 {% if cat.get_clientes_list %}
-                <p class="clientes-label">Clientes</p>
-                <div class="clientes-tags">
-                    {% for cliente in cat.get_clientes_list %}
-                    <div class="m-cliente-tag">{{ cliente }}</div>
-                    {% endfor %}
+                <div>
+                    <p class="clientes-label">Clientes</p>
+                    <div class="clientes-tags">
+                        {% for cliente in cat.get_clientes_list %}
+                        <div class="m-cliente-tag"><i class="bi bi-person-check-fill"></i>{{ cliente }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             </div>
