@@ -35,7 +35,7 @@ FROM ffclient
 # CONFIGURACIÓN DE TU WEB APP
 # ==========================================
 # Cambiá esto por la URL de tu sitio web en PythonAnywhere luego
-WEB_API_URL = os.getenv('WEB_API_URL', 'http://127.0.0.1:8000/sistema/api/sincronizar_clientes/')
+WEB_API_URL = os.getenv('WEB_API_URL', 'https://agmelfa.pythonanywhere.com/sistema/api/sincronizar_clientes/')
 
 # Esta clave tiene que ser la misma que esté configurada en el settings.py de tu web (SYNC_SECRET_KEY)
 SYNC_SECRET_KEY = os.getenv('SYNC_SECRET_KEY', 'default-insecure-sync-key-123')
@@ -49,7 +49,14 @@ def obtener_clientes_sql():
         # conn_str = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SQL_SERVER};DATABASE={SQL_DATABASE};Trusted_Connection=yes;'
         
         # PARA ESTA PRUEBA ESTAMOS APUNTANDO A LA BASE RESTAURADA "MELFA_PRUEBA" via pipe LocalDB:
-        conn_str = r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=np:\\.\pipe\LOCALDB#421A15E6\tsql\query;DATABASE=MELFA_PRUEBA;Trusted_Connection=yes;"
+        conn_str = (
+            r"DRIVER={ODBC Driver 17 for SQL Server};"
+            r"SERVER=(localdb)\MSSQLLocalDB;"
+            r"AttachDbFilename=E:\BasesSQL\TEMP\MELFA_PRUEBA.mdf;"
+            r"Database=MELFA_PRUEBA;"
+            r"Trusted_Connection=yes;"
+            r"TrustServerCertificate=yes;"
+        )
         
         print(f"Conectando a SQL Server: {SQL_SERVER}...")
         

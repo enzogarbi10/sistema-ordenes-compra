@@ -448,6 +448,11 @@
 <script type="application/json" id="opciones-data">
     {{ opciones_json|safe }}
 </script>
+{% if opciones_seleccionadas_json %}
+<script type="application/json" id="opciones-seleccionadas-data">
+    {{ opciones_seleccionadas_json|safe }}
+</script>
+{% endif %}
 
 <!-- MODALES (Resto del template igual) -->
 
@@ -801,11 +806,14 @@
             } catch (e) { console.error('Error parsing opciones:', e); }
         }
 
-        // Manejar checkboxes de defectos principales
+        // IDs de opciones ya guardadas (modo edición)
+        const opcionesSelData = document.getElementById('opciones-seleccionadas-data');
+        const opcionesPreseleccionadas = opcionesSelData ? JSON.parse(opcionesSelData.textContent || '[]') : [];
+
         // Manejar checkboxes de defectos principales
         document.querySelectorAll('.defecto-checkbox').forEach(cb => {
-            // Cargar opciones siempre al inicio
-            cargarOpciones(cb.dataset.tipoId);
+            // Cargar opciones siempre al inicio, pasando las preseleccionadas
+            cargarOpciones(cb.dataset.tipoId, opcionesPreseleccionadas);
             const container = document.getElementById('opciones-container-' + cb.dataset.tipoId);
 
             // Inicializar visibilidad
