@@ -70,12 +70,7 @@
         display: flex;
         flex-wrap: wrap;
         width: 100%;
-        height: 55vh;
-        /* Altura Fija */
-        min-height: 450px;
-        /* Para prevenir que no se vea nada si la pantalla es muy pequeña */
-        overflow: hidden;
-        /* Oculta cualquier excedente que empuje el layout */
+        min-height: 55vh;
         border-bottom: 1px solid rgba(255, 102, 0, 0.08);
     }
 
@@ -100,19 +95,20 @@
     }
 
     .m-col-img {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative;
+        /* Asegura que la imagen lo cubra exacto mediante position absolute */
         padding: 0;
         overflow: hidden;
     }
 
     .m-img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        position: relative;
         z-index: 2;
     }
 
@@ -221,7 +217,6 @@
     @media (max-width: 991px) {
         .muestra-row {
             height: auto;
-            /* Para movil dejamos que crezca según contenido */
             min-height: auto;
         }
 
@@ -230,8 +225,9 @@
         }
 
         .m-col-img {
+            height: 40vh;
+            /* Altura estricta para celular donde se apilan */
             min-height: 40vh;
-            /* Altura de imagen en móvil más chica */
             order: -1;
         }
 
