@@ -283,7 +283,19 @@
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
                 <h3 class="m-title">{{ cat.titulo|safe }}</h3>
-                <p class="m-desc">{{ cat.descripcion }}</p>
+                <p class="m-desc">{{ cat.descripcion|linebreaksbr }}</p>
+
+                {% if cat.get_etiquetas_list %}
+                <p class="clientes-label mt-2">Etiquetas / Procesos</p>
+                <div class="clientes-tags mb-4">
+                    {% for tag in cat.get_etiquetas_list %}
+                    <div class="m-cliente-tag"
+                        style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.02);">
+                        {{ tag }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 {% if cat.get_clientes_list %}
                 <p class="clientes-label">Clientes</p>
                 <div class="clientes-tags">
@@ -302,7 +314,19 @@
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
                 <h3 class="m-title">{{ cat.titulo|safe }}</h3>
-                <p class="m-desc">{{ cat.descripcion }}</p>
+                <p class="m-desc">{{ cat.descripcion|linebreaksbr }}</p>
+
+                {% if cat.get_etiquetas_list %}
+                <p class="clientes-label mt-2">Etiquetas / Procesos</p>
+                <div class="clientes-tags mb-4">
+                    {% for tag in cat.get_etiquetas_list %}
+                    <div class="m-cliente-tag"
+                        style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.02);">
+                        {{ tag }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 {% if cat.get_clientes_list %}
                 <p class="clientes-label">Clientes</p>
                 <div class="clientes-tags">
