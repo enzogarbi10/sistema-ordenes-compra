@@ -19,6 +19,7 @@
                 <thead class="table-light">
                     <tr>
                         <th>N° OT</th>
+                        <th>Cliente</th>
                         <th>Fecha</th>
                         <th>Operario</th>
                         <th>Maquinista</th>
@@ -31,6 +32,9 @@
                     {% for control in controles %}
                     <tr>
                         <td><strong>OT #{{ control.orden }}</strong></td>
+                        <td class="text-truncate" style="max-width:150px;"
+                            title="{{ control.cliente.nombre|default:'-' }}">{{ control.cliente.nombre|default:"-" }}
+                        </td>
                         <td>{{ control.fecha|date:"d/m/Y H:i" }}</td>
                         <td>{{ control.operario }}</td>
                         <td>{{ control.maquinista }}</td>
@@ -108,7 +112,7 @@
 
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted">No hay controles registrados aún.</td>
+                        <td colspan="8" class="text-center py-4 text-muted">No hay controles registrados aún.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
