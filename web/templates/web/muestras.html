@@ -272,8 +272,7 @@
 
         {% if forloop.counter0|divisibleby:2 %}
         <!-- IMAGE LEFT -->
-        <div class="m-col m-col-img"
-            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
+        <div class="m-col m-col-img" style="background: #0d0d0d;">
             <div class="texture-overlay"></div>
             {% if cat.video %}
             <video class="m-img" autoplay loop muted playsinline data-aos="zoom-in" data-aos-duration="1200">
@@ -286,7 +285,8 @@
         </div>
 
         <!-- TEXT RIGHT -->
-        <div class="m-col m-col-text">
+        <div class="m-col m-col-text"
+            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
             <div data-aos="fade-up" data-aos-duration="1000">
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
@@ -308,7 +308,8 @@
 
         {% else %}
         <!-- TEXT LEFT -->
-        <div class="m-col m-col-text">
+        <div class="m-col m-col-text"
+            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
             <div data-aos="fade-up" data-aos-duration="1000">
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
@@ -329,8 +330,7 @@
         </div>
 
         <!-- IMAGE RIGHT -->
-        <div class="m-col m-col-img"
-            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
+        <div class="m-col m-col-img" style="background: #0d0d0d;">
             <div class="texture-overlay"></div>
             {% if cat.video %}
             <video class="m-img" autoplay loop muted playsinline data-aos="zoom-in" data-aos-duration="1200">
