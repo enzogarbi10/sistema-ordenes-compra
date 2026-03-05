@@ -126,8 +126,9 @@ def editar_control(request, pk):
             opciones_dict[op.tipo_defecto_id] = []
         opciones_dict[op.tipo_defecto_id].append({'id': op.id, 'nombre': op.nombre})
 
-    # IDs de opciones_defecto guardadas para pre-marcarlas en el JS
+    # IDs de opciones_defecto y defectos guardados para pre-marcarlos en el JS
     opciones_sel = list(control.opciones_defecto.values_list('id', flat=True))
+    defectos_sel = list(control.defectos.values_list('id', flat=True))
 
     return render(request, 'postprensa/form_control.html', {
         'form': form,
@@ -137,6 +138,7 @@ def editar_control(request, pk):
         'control': control,
         'opciones_json': json.dumps(opciones_dict),
         'opciones_seleccionadas_json': json.dumps(opciones_sel),
+        'defectos_seleccionados_json': json.dumps(defectos_sel),
     })
 
 @login_required

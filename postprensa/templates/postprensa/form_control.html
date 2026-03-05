@@ -453,6 +453,11 @@
     {{ opciones_seleccionadas_json|safe }}
 </script>
 {% endif %}
+{% if defectos_seleccionados_json %}
+<script type="application/json" id="defectos-seleccionados-data">
+    {{ defectos_seleccionados_json|safe }}
+</script>
+{% endif %}
 
 <!-- MODALES (Resto del template igual) -->
 
@@ -809,6 +814,14 @@
         // IDs de opciones ya guardadas (modo edición)
         const opcionesSelData = document.getElementById('opciones-seleccionadas-data');
         const opcionesPreseleccionadas = opcionesSelData ? JSON.parse(opcionesSelData.textContent || '[]') : [];
+
+        // IDs de defectos ya guardados (modo edición) — marcarlos explícitamente
+        const defectosSelData = document.getElementById('defectos-seleccionados-data');
+        const defectosPreseleccionados = defectosSelData ? JSON.parse(defectosSelData.textContent || '[]') : [];
+        defectosPreseleccionados.forEach(id => {
+            const chk = document.getElementById('id_defectos_' + id);
+            if (chk) chk.checked = true;
+        });
 
         // Manejar checkboxes de defectos principales
         document.querySelectorAll('.defecto-checkbox').forEach(cb => {
