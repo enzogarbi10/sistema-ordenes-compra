@@ -386,7 +386,14 @@ def buscar_orden_compra(request):
 
     # 1. Buscamos en SQL Server (MELFA_PRUEBA) - ODT
     try:
-        conn_str = r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=MELFA_PRUEBA;Trusted_Connection=yes;"
+        from django.conf import settings
+        import os
+        
+        # Obtenemos la conexión real o usamos LocalDB por defecto en pruebas
+        conn_str = getattr(settings, 'SQL_SERVER_CONN_STR', None)
+        if not conn_str:
+            conn_str = os.environ.get('SQL_SERVER_CONN_STR', r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=MELFA_PRUEBA;Trusted_Connection=yes;")
+            
         conn = pyodbc.connect(conn_str, timeout=3)
         c = conn.cursor()
         c.execute("""
