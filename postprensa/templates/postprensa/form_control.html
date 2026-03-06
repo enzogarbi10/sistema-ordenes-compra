@@ -791,8 +791,18 @@
                             inputOrden.style.opacity = '1';
                             if (data.ok && data.cliente_id) {
                                 if (selectCliente.tomselect) {
+                                    // Verificar si la opción ya existe, si no, crearla dinámicamente
+                                    if (!selectCliente.tomselect.options[data.cliente_id]) {
+                                        selectCliente.tomselect.addOption({ value: data.cliente_id, text: data.cliente_nombre });
+                                    }
                                     selectCliente.tomselect.setValue(data.cliente_id);
                                 } else {
+                                    // Select normal
+                                    let optionExists = Array.from(selectCliente.options).some(opt => opt.value == data.cliente_id);
+                                    if (!optionExists) {
+                                        let newOption = new Option(data.cliente_nombre, data.cliente_id, true, true);
+                                        selectCliente.add(newOption);
+                                    }
                                     selectCliente.value = data.cliente_id;
                                 }
 
