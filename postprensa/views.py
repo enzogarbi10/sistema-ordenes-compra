@@ -364,6 +364,105 @@ def eliminar_opcion_defecto(request, pk):
 
 # --- Estadísticas ---
 
+@require_POST
+@login_required
+def buscar_orden_compra(request):
+    """AJAX endpoint to search an Orden/OT and return its client info."""
+    import json
+    import pyodbc
+    from ordenes_trabajo.models import OrdenCompra, Cliente
+    
+    data = json.loads(request.body.decode('utf-8'))
+    numero_orden = data.get('orden')
+    
+    if not numero_orden:
+        return JsonResponse({'ok': False, 'error': 'Número de orden requerido'}, status=400)
+        
+    # Limpiamos el número de orden por si ingresan texto en lugar de números accidentalmente
+    try:
+        num_orden_int = int(str(numero_orden).strip())
+    except ValueError:
+        return JsonResponse({'ok': False, 'error': 'Formato inválido'}, status=400)
+
+    # 1. Buscamos en SQL Server (MELFA_PRUEBA) - ODT
+    try:
+        conn_str = r"DRIVER={ODBC Driver 17 for SQL Server};SERVER=(localdb)\MSSQLLocalDB;DATABASE=MELFA_PRUEBA;Trusted_Connection=yes;"
+        conn = pyodbc.connect(conn_str, timeout=3)
+        c = conn.cursor()
+        c.execute("""
+            SELECT o.numero AS item_num, o.cgo_cli, c.nom_cli, o.den_ele, o.den_var, o.cantidad
+            FROM wwordele o
+            INNER JOIN ffclient c ON o.cgo_cli = c.cgo_cli
+            WHERE o.nro_odt = ?
+            ORDER BY o.numero
+        """, (num_orden_int,))
+        rows = c.fetchall()
+        
+        c.close()
+        conn.close()
+
+        if rows:
+            # Tomamos cliente del primer registro (son todos de la misma orden)
+            codigo_sql = str(rows[0].cgo_cli).strip()
+            nombre_sql = str(rows[0].nom_cli).strip()
+            
+            # Buscamos si ya existe el cliente localmente para conectarlo al form de Django
+            cliente_django = Cliente.objects.filter(codigo=codigo_sql).first()
+            if not cliente_django:
+                cliente_django = Cliente.objects.filter(nombre__icontains=nombre_sql[:15]).first()
+                
+            # Si no existe, lo creamos temporalmente/permanentemente para que se autocomplete
+            if not cliente_django:
+                cliente_django = Cliente.objects.create(
+                    codigo=codigo_sql,
+                    nombre=nombre_sql
+                )
+            
+            # Preparamos la lista de items
+            items_encontrados = []
+            for r in rows:
+                items_encontrados.append({
+                    'id': r.item_num,
+                    'elemento': str(r.den_ele).strip() if r.den_ele else '',
+                    'variedad': str(r.den_var).strip() if r.den_var else '',
+                    'cantidad': int(r.cantidad) if r.cantidad else 0
+                })
+                
+            return JsonResponse({
+                'ok': True,
+                'cliente_id': cliente_django.id,
+                'cliente_nombre': cliente_django.nombre,
+                'origen': 'SQL_SERVER',
+                'items': items_encontrados
+            })
+    except Exception as e:
+        # Falla SQL, continuamos para buscar en DJango local abajo
+        error_sql = str(e)
+
+    # 2. Si no encontró en SQL, probamos en Django Local (por las dudas)
+    try:
+        orden = OrdenCompra.objects.prefetch_related('items').select_related('cliente').get(numero=num_orden_int)
+        items_encontrados = []
+        for it in orden.items.all():
+            items_encontrados.append({
+                'id': it.id,
+                'elemento': str(it.elemento),
+                'variedad': str(it.variedad),
+                'cantidad': it.cantidad
+            })
+            
+        return JsonResponse({
+            'ok': True,
+            'cliente_id': orden.cliente.id if orden.cliente else None,
+            'cliente_nombre': orden.cliente.nombre if orden.cliente else '',
+            'origen': 'DJANGO_LOCAL',
+            'items': items_encontrados
+        })
+    except OrdenCompra.DoesNotExist:
+        return JsonResponse({'ok': False, 'error': 'Orden no encontrada ni en SQL ni local'}, status=404)
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)}, status=500)
+
 class EstadisticasPostprensaView(LoginRequiredMixin, CalidadGroupRequiredMixin, TemplateView):
     template_name = 'postprensa/estadisticas.html'
 

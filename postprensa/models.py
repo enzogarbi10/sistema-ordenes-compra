@@ -84,6 +84,8 @@ class ControlCalidad(models.Model):
         null=True,
         blank=True,
     )
+    item_id = models.IntegerField("ID Ítem", null=True, blank=True)
+    variedad = models.CharField("Variedad", max_length=200, blank=True)
     bobina = models.CharField("N° Bobina", max_length=100, blank=True)
     cantidad_descartada = models.PositiveIntegerField("Cantidad Descartada", default=0)
     

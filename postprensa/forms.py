@@ -27,7 +27,7 @@ class ControlCalidadForm(forms.ModelForm):
     class Meta:
         model = ControlCalidad
         fields = [
-            'orden', 'operario', 'maquinista', 'cliente', 'bobina', 'cantidad_descartada',
+            'orden', 'operario', 'maquinista', 'cliente', 'item_id', 'variedad', 'bobina', 'cantidad_descartada',
             'defectos', 'opciones_defecto',
             'detalle_defecto', 'llego_cantidad', 'autorizo_envio', 'observaciones',
             'no_conformidad', 'tipo_no_conformidad', 'nro_no_conformidad'
@@ -39,6 +39,8 @@ class ControlCalidadForm(forms.ModelForm):
             'operario': forms.Select(attrs={'class': 'form-select'}),
             'maquinista': forms.Select(attrs={'class': 'form-select'}),
             'cliente': forms.Select(attrs={'class': 'form-select'}),
+            'item_id': forms.Select(attrs={'class': 'form-select', 'id': 'id_item_id'}),
+            'variedad': forms.TextInput(attrs={'class': 'form-control bg-light', 'readonly': 'readonly', 'id': 'id_variedad'}),
             'bobina': forms.TextInput(attrs={'class': 'form-control'}),
             'cantidad_descartada': forms.NumberInput(attrs={'class': 'form-control'}),
             'llego_cantidad': forms.CheckboxInput(attrs={'class': 'd-none', 'id': 'id_llego_cantidad'}),
@@ -59,6 +61,12 @@ class ControlCalidadForm(forms.ModelForm):
         self.fields['operario'].empty_label = "-- Seleccione un operario --"
         self.fields['maquinista'].empty_label = "-- Seleccione un maquinista --"
         self.fields['cliente'].empty_label = "-- Seleccione un cliente --"
+        
+        # Permitir que el ChoiceField de items pase validación al venir del frontend vacío o dinámico
+        self.fields['item_id'].required = False
+        if not hasattr(self.fields['item_id'], 'choices') or not self.fields['item_id'].choices:
+            self.fields['item_id'].choices = [('', '-- Auto --')]
+
 
 class ImagenControlForm(forms.ModelForm):
     class Meta:

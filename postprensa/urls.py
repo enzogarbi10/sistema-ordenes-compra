@@ -30,4 +30,6 @@ urlpatterns = [
     path('api/agregar-cliente/', views.agregar_cliente, name='agregar_cliente'),
     path('api/editar-cliente/<int:pk>/', views.editar_cliente, name='editar_cliente'),
     path('api/eliminar-cliente/<int:pk>/', views.eliminar_cliente, name='eliminar_cliente'),
+    # AJAX - Órdenes
+    path('api/buscar-orden/', views.buscar_orden_compra, name='buscar_orden_compra'),
 ]
