@@ -76,19 +76,34 @@
                     </div>
                     <div class="card-body bg-light">
                         <div class="row g-3">
-                            <div class="col-md-3">
-                                <label class="form-label fw-bold text-muted small text-uppercase">N° Orden de
-                                    Trabajo</label>
+                            <div class="col-md-2">
+                                <label class="form-label fw-bold text-muted small text-uppercase">OT</label>
                                 {{ form.orden }}
                                 {% if form.orden.errors %}
                                 <div class="text-danger small mt-1">{{ form.orden.errors }}</div>
                                 {% endif %}
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <label class="form-label fw-bold text-muted small text-uppercase">Cliente</label>
                                 {{ form.cliente }}
                                 {% if form.cliente.errors %}
                                 <div class="text-danger small mt-1">{{ form.cliente.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Ítem / Motivo</label>
+                                {{ form.item_id }}
+                                {% if form.item_id.errors %}
+                                <div class="text-danger small mt-1">{{ form.item_id.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Variedad</label>
+                                {{ form.variedad }}
+                                {% if form.variedad.errors %}
+                                <div class="text-danger small mt-1">{{ form.variedad.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="col-md-3">
@@ -753,6 +768,84 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+
+        // --- FETCH AJAX PARA ORDEN DE TRABAJO ---
+        const inputOrden = document.getElementById('id_orden');
+        const selectCliente = document.getElementById('id_cliente');
+
+        if (inputOrden && selectCliente) {
+            inputOrden.addEventListener('blur', function () {
+                const numOrden = this.value.trim();
+                if (numOrden) {
+                    inputOrden.style.opacity = '0.5';
+                    fetch(`/calidad/api/buscar-orden/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({ 'orden': numOrden })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            inputOrden.style.opacity = '1';
+                            if (data.ok && data.cliente_id) {
+                                if (selectCliente.tomselect) {
+                                    selectCliente.tomselect.setValue(data.cliente_id);
+                                } else {
+                                    selectCliente.value = data.cliente_id;
+                                }
+
+                                // POPULAR SELECT DE ITEMS
+                                const selectItem = document.getElementById('id_item_id');
+                                const inputVariedad = document.getElementById('id_variedad');
+                                if (selectItem && data.items && data.items.length > 0) {
+                                    selectItem.innerHTML = '<option value="">-- Seleccione Ítem --</option>';
+
+                                    // Reset variedad
+                                    if (inputVariedad) inputVariedad.value = '';
+
+                                    // Guardar items globalmente para usarlos despues
+                                    window.otItemsEncontrados = data.items;
+
+                                    data.items.forEach(item => {
+                                        let option = document.createElement('option');
+                                        option.value = item.id;
+                                        option.textContent = `ID ${item.id} - ${item.variedad} (${item.cantidad} un.)`;
+                                        selectItem.appendChild(option);
+                                    });
+                                }
+                            } else {
+                                console.log('Orden no encontrada en base local o error:', data.error);
+                            }
+                        })
+                        .catch(err => {
+                            inputOrden.style.opacity = '1';
+                            console.error('Error buscando orden:', err);
+                        });
+                }
+            });
+        }
+
+        // EVENTO CHANGE EN EL SELECT DE ITEMS PARA ACTUALIZAR VARIEDAD
+        const selectItem = document.getElementById('id_item_id');
+        const inputVariedad = document.getElementById('id_variedad');
+        if (selectItem && inputVariedad) {
+            selectItem.addEventListener('change', function () {
+                const itemId = this.value;
+                if (itemId && window.otItemsEncontrados) {
+                    const itemData = window.otItemsEncontrados.find(i => String(i.id) === String(itemId));
+                    if (itemData) {
+                        inputVariedad.value = itemData.variedad;
+                    } else {
+                        inputVariedad.value = '';
+                    }
+                } else {
+                    inputVariedad.value = '';
+                }
+            });
+        }
+        // ------------------------------------------
 
         // Fix para agregar clase form-control si falta (para evitar reinicio de server)
         const dd = document.getElementById('id_detalle_defecto');
