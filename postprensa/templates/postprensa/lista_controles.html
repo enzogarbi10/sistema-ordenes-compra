@@ -1,12 +1,13 @@
 {% extends 'postprensa/base_postprensa.html' %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h2><i class="bi bi-clipboard-check"></i> Controles de Calidad Postprensa</h2>
+<div class="row mb-4 align-items-center">
+    <div class="col-12 col-md-8 text-center text-md-start mb-3 mb-md-0">
+        <h2 class="mb-0 fs-3"><i class="bi bi-clipboard-check"></i> Controles Postprensa</h2>
     </div>
-    <div class="col-md-4 text-end">
-        <a href="{% url 'crear_control_postprensa' %}" class="btn btn-success">
+    <div class="col-12 col-md-4 text-center text-md-end">
+        <a href="{% url 'crear_control_postprensa' %}" class="btn btn-success w-100 d-md-inline-block"
+            style="max-width: 250px;">
             <i class="bi bi-plus-lg"></i> Nuevo Control
         </a>
     </div>

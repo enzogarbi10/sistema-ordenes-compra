@@ -46,7 +46,10 @@
     .samples-hero {
         padding-top: 180px;
         padding-bottom: 80px;
-        background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+        background-color: #0d0d0d;
+        background-image:
+            linear-gradient(180deg, rgba(15, 15, 15, 0.95) 0%, #000 100%),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
         text-align: center;
     }
 
@@ -85,6 +88,9 @@
     /* Dark text column */
     .m-col-text {
         background-color: #0d0d0d;
+        background-image:
+            linear-gradient(135deg, rgba(20, 20, 20, 0.85) 0%, rgba(0, 0, 0, 1) 100%),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
         padding: 6% 8%;
         /* Se redujo el padding interior */
     }
@@ -92,6 +98,9 @@
     /* Alternating subtle tone */
     .muestra-row:nth-child(even) .m-col-text {
         background-color: #111111;
+        background-image:
+            linear-gradient(135deg, rgba(30, 30, 30, 0.85) 0%, rgba(5, 5, 5, 1) 100%),
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
     }
 
     .m-col-img {
@@ -285,8 +294,7 @@
         </div>
 
         <!-- TEXT RIGHT -->
-        <div class="m-col m-col-text"
-            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
+        <div class="m-col m-col-text" {% if cat.fondo_css %}style="background: {{ cat.fondo_css|safe }};" {% endif %}>
             <div data-aos="fade-up" data-aos-duration="1000">
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
@@ -308,8 +316,7 @@
 
         {% else %}
         <!-- TEXT LEFT -->
-        <div class="m-col m-col-text"
-            style="{% if cat.fondo_css %}background: {{ cat.fondo_css|safe }};{% else %}background: #0d0d0d;{% endif %}">
+        <div class="m-col m-col-text" {% if cat.fondo_css %}style="background: {{ cat.fondo_css|safe }};" {% endif %}>
             <div data-aos="fade-up" data-aos-duration="1000">
                 <span class="m-subtitle">{{ cat.subtitulo }}</span>
                 <span class="orange-divider"></span>
