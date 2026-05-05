@@ -20,3 +20,10 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Backups y archivos temporales
+*.zip
+*.json
+temp_extract/
+debug_out.html
+out.html
