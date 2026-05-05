@@ -146,8 +146,9 @@ STORAGES = {
     },
 }
 
+import sys
 import cloudinary
-if os.environ.get('PYTHONANYWHERE_DOMAIN'):
+if sys.platform == 'linux':
     cloudinary.config(api_proxy="http://proxy.server:3128")
 
 # Default primary key field type
