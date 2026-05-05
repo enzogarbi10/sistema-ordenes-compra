@@ -114,6 +114,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Compatibilidad con django-cloudinary-storage (no compatible con Django 5.x aún)
+# Le indica que los archivos estáticos NO van a Cloudinary, solo los media.
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 # ─── Media Files → Cloudinary ──────────────────────────────────────────────────
 
 MEDIA_URL = '/media/'
