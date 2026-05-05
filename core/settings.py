@@ -146,6 +146,10 @@ STORAGES = {
     },
 }
 
+import cloudinary
+if os.environ.get('PYTHONANYWHERE_DOMAIN'):
+    cloudinary.config(api_proxy="http://proxy.server:3128")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
