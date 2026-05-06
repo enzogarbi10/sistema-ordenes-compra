@@ -22,7 +22,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # URL del admin configurable por variable de entorno ADMIN_URL
+    # En producción, cambiá 'admin/' por algo difícil de adivinar (ej: 'gestion-interna-melfa/')
+    path(settings.ADMIN_URL, admin.site.urls),
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
     path('accounts/password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('accounts/', include('django.contrib.auth.urls')),

@@ -20,13 +20,57 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-7#55)(9g9604m5yz!3%tp
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
     'http://127.0.0.1',
     'http://localhost',
+] + [
+    origin for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if origin
 ]
+
+# ─── Security Headers (solo en producción, cuando DEBUG=False) ─────────────────
+
+if not DEBUG:
+    # Forzar HTTPS: redirige HTTP → HTTPS
+    SECURE_SSL_REDIRECT = True
+
+    # HSTS: el navegador recordará usar HTTPS por 1 año
+    SECURE_HSTS_SECONDS = 31536000          # 1 año
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True   # También aplica a subdominios
+    SECURE_HSTS_PRELOAD = True              # Permite entrar en la lista preload de browsers
+
+    # Cookies solo por HTTPS
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    # Proxy headers (Waitress + IIS)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+else:
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+# ─── HTTP Security Headers ─────────────────────────────────────────────────────
+# Protección XSS del navegador (legacy browsers)
+SECURE_BROWSER_XSS_FILTER = True
+
+# Evita que el navegador adivine el tipo de contenido (MIME sniffing)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Política de referrer: no envía la URL completa al salir del sitio
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# Clickjacking: impide que el sitio sea embebido en iframes externos
+X_FRAME_OPTIONS = 'DENY'
+
+# Cookies de sesión: no accesibles por JavaScript
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # Debe ser False para que el JS pueda leer el token CSRF
+
+# URL del panel de administración (cambiada para dificultar ataques automáticos)
+ADMIN_URL = os.environ.get('ADMIN_URL', 'admin/')
 
 # ─── Applications ──────────────────────────────────────────────────────────────
 
@@ -96,7 +140,10 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 10},  # Mínimo 10 caracteres
+    },
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
@@ -155,6 +202,56 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # ─── Session ───────────────────────────────────────────────────────────────────
 
-SESSION_COOKIE_AGE = 900           # 15 minutos
-SESSION_SAVE_EVERY_REQUEST = True  # Reiniciar con cada actividad
+SESSION_COOKIE_AGE = 900           # 15 minutos de inactividad
+SESSION_SAVE_EVERY_REQUEST = True  # Reiniciar timer con cada request
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_NAME = 'sid'        # Nombre genérico (no revela el framework)
+
+# ─── Logging de seguridad ──────────────────────────────────────────────────────
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'security_file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'security.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB por archivo
+            'backupCount': 10,
+            'formatter': 'verbose',
+        },
+        'django_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.security': {
+            'handlers': ['security_file', 'console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['django_file', 'console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
+# Crear carpeta de logs si no existe
+os.makedirs(os.path.join(BASE_DIR, 'logs'), exist_ok=True)
