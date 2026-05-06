@@ -50,27 +50,29 @@ Write-Host "[4/7] Configurando variables de entorno (.env)..." -ForegroundColor 
 
 $envFile = "$ProjectDir\.env"
 
+$skipEnv = $false
 if (Test-Path $envFile) {
     $overwrite = Read-Host "      Ya existe un .env. Sobreescribir? (s/N)"
     if ($overwrite -ne "s" -and $overwrite -ne "S") {
         Write-Host "      Manteniendo .env existente." -ForegroundColor DarkGray
-        goto SkipEnv
+        $skipEnv = $true
     }
 }
 
-Write-Host ""
-Write-Host "      Completa los siguientes datos:" -ForegroundColor Cyan
-Write-Host ""
+if (-not $skipEnv) {
+    Write-Host ""
+    Write-Host "      Completa los siguientes datos:" -ForegroundColor Cyan
+    Write-Host ""
 
-# Generar SECRET_KEY automaticamente
-$secretKey = & "$ProjectDir\venv\Scripts\python.exe" -c "import secrets; print(secrets.token_urlsafe(50))"
+    # Generar SECRET_KEY automaticamente
+    $secretKey = & "$ProjectDir\venv\Scripts\python.exe" -c "import secrets; print(secrets.token_urlsafe(50))"
 
-$ipServer = Read-Host "      IP o dominio del servidor (ej: 192.168.1.100)"
-$adminUrl = Read-Host "      URL del panel admin - ingresa algo dificil de adivinar (ej: gestion-interna-melfa/)"
-$cloudinaryUrl = "cloudinary://374757464132777:xsrt9ptRGJLYMTZb_XimFlOPIRs@dbsvdv4tg"
-$sendgridKey = Read-Host "      API Key de SendGrid (Enter para omitir)"
+    $ipServer = Read-Host "      IP o dominio del servidor (ej: 192.168.1.100)"
+    $adminUrl = Read-Host "      URL del panel admin - ingresa algo dificil de adivinar (ej: gestion-interna-melfa/)"
+    $cloudinaryUrl = "cloudinary://374757464132777:xsrt9ptRGJLYMTZb_XimFlOPIRs@dbsvdv4tg"
+    $sendgridKey = Read-Host "      API Key de SendGrid (Enter para omitir)"
 
-$envContent = @"
+    $envContent = @"
 # Generado por setup_servidor.ps1 el $(Get-Date -Format 'yyyy-MM-dd HH:mm')
 SECRET_KEY=$secretKey
 DEBUG=False
@@ -82,10 +84,9 @@ SENDGRID_API_KEY=$sendgridKey
 ADMIN_URL=$adminUrl
 "@
 
-Set-Content -Path $envFile -Value $envContent -Encoding UTF8
-Write-Host "      OK: Archivo .env creado." -ForegroundColor Green
-
-:SkipEnv
+    Set-Content -Path $envFile -Value $envContent -Encoding UTF8
+    Write-Host "      OK: Archivo .env creado." -ForegroundColor Green
+}
 
 # --- 5. Crear carpeta de logs ---
 Write-Host ""
