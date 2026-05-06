@@ -165,14 +165,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Le indica que los archivos estáticos NO van a Cloudinary, solo los media.
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# ─── Media Files → Cloudinary ──────────────────────────────────────────────────
+# ─── Media Files → Almacenamiento Local ────────────────────────────────────────
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 STORAGES = {
     'default': {
-        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
