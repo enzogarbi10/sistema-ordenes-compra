@@ -11,6 +11,10 @@ urlpatterns = [
     path('orden/<int:pk>/pdf/', views.generar_pdf, name='generar_pdf'),
     path('estadisticas/', views.EstadisticasView.as_view(), name='estadisticas'),
     
+    # Auto-guardado de borrador
+    path('api/guardar-borrador/', views.guardar_borrador, name='guardar_borrador'),
+    path('api/limpiar-borrador/', views.limpiar_borrador, name='limpiar_borrador'),
+    
     # Clientes
     path('clientes/', views.ClienteListView.as_view(), name='lista_clientes'),
     path('clientes/nuevo/', views.ClienteCreateView.as_view(), name='crear_cliente'),

@@ -4,7 +4,8 @@ from django.urls import reverse_lazy
 from .models import OrdenCompra, ItemOrden, Cliente
 from .forms import OrdenCompraForm, ItemOrdenFormSet, ClienteForm
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -149,6 +150,10 @@ def crear_orden(request):
                 for obj in formset.deleted_objects:
                     obj.delete()
                 
+                # Limpiar borrador de sesión al guardar exitosamente
+                if 'borrador_orden' in request.session:
+                    del request.session['borrador_orden']
+
                 # Generar PDF y enviar email
                 try:
                     pdf_content = _generate_pdf_bytes(orden)
@@ -172,12 +177,39 @@ def crear_orden(request):
     else:
         form = OrdenCompraForm(user=request.user)
         formset = ItemOrdenFormSet()
+
+        # Restaurar borrador de sesión si existe
+        borrador = request.session.get('borrador_orden')
     
     return render(request, 'ordenes_trabajo/form_orden.html', {
         'form': form,
         'formset': formset,
-        'titulo': 'Nueva Orden de Compra'
+        'titulo': 'Nueva Orden de Compra',
+        'borrador': borrador if request.method == 'GET' else None,
     })
+
+
+@login_required
+@require_POST
+def guardar_borrador(request):
+    """Guarda el estado actual del formulario en la sesión del usuario (auto-guardado)."""
+    import json
+    try:
+        data = json.loads(request.body)
+        request.session['borrador_orden'] = data
+        request.session.modified = True
+        return JsonResponse({'status': 'ok', 'mensaje': 'Borrador guardado'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'mensaje': str(e)}, status=400)
+
+
+@login_required
+def limpiar_borrador(request):
+    """Elimina el borrador de la sesión al guardar exitosamente la orden."""
+    if 'borrador_orden' in request.session:
+        del request.session['borrador_orden']
+    return JsonResponse({'status': 'ok'})
+
 
 def _generate_pdf_bytes(orden):
     buffer = io.BytesIO()

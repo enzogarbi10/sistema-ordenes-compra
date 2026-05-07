@@ -4,11 +4,40 @@
 <div class="row justify-content-center">
     <div class="col-md-12">
         <div class="card shadow">
-            <div class="card-header bg-white">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h3 class="mb-0">{{ titulo }}</h3>
+                <div id="autosave-status" class="d-none">
+                    <span id="autosave-saving" class="badge bg-warning text-dark d-none">
+                        <i class="bi bi-cloud-upload"></i> Guardando borrador...
+                    </span>
+                    <span id="autosave-ok" class="badge bg-success d-none">
+                        <i class="bi bi-cloud-check"></i> Borrador guardado
+                    </span>
+                    <span id="autosave-error" class="badge bg-danger d-none">
+                        <i class="bi bi-cloud-slash"></i> Error al guardar
+                    </span>
+                </div>
             </div>
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
+
+                {% if borrador %}
+                <div class="alert alert-info alert-dismissible d-flex align-items-center gap-2" id="banner-borrador">
+                    <i class="bi bi-floppy2-fill fs-5"></i>
+                    <div>
+                        <strong>Tenés un borrador guardado.</strong>
+                        ¿Querés recuperar los datos que estabas cargando?
+                        <button type="button" class="btn btn-sm btn-primary ms-2" id="btn-restaurar-borrador">Sí, restaurar</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary ms-1" id="btn-descartar-borrador">Descartar</button>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+                <script>
+                    // Borrador disponible para restaurar
+                    window.BORRADOR_DISPONIBLE = {{ borrador|safe }};
+                </script>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="form-orden">
                     {% csrf_token %}
 
                     <div class="mb-4">
@@ -160,7 +189,7 @@
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="{% url 'lista_ordenes' %}" class="btn btn-light me-2">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Guardar Orden</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Guardar Orden</button>
                     </div>
                 </form>
             </div>
@@ -272,20 +301,151 @@
 
 {% block extra_js %}
 <script>
+    // ─── URLs para auto-guardado ────────────────────────────────────────────────
+    const URL_GUARDAR_BORRADOR = "{% url 'guardar_borrador' %}";
+    const URL_LIMPIAR_BORRADOR = "{% url 'limpiar_borrador' %}";
+    const CSRF_TOKEN = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // ─── Auto-guardado ──────────────────────────────────────────────────────────
+    function capturarFormulario() {
+        const data = { cliente: null, items: [] };
+
+        // Cliente
+        const clienteEl = document.querySelector('#id_cliente');
+        if (clienteEl) data.cliente = clienteEl.value;
+
+        // Items
+        const itemRows = document.querySelectorAll('#items-container .item-row');
+        itemRows.forEach(function(row) {
+            const item = {};
+            row.querySelectorAll('input, select, textarea').forEach(function(el) {
+                if (!el.name) return;
+                // Extraer nombre de campo sin prefijo del formset (items-0-marca → marca)
+                const match = el.name.match(/items-\d+-(.*)/); 
+                const campo = match ? match[1] : el.name;
+                if (el.type === 'checkbox') {
+                    item[campo] = el.checked;
+                } else if (el.type !== 'file') {
+                    item[campo] = el.value;
+                }
+            });
+            // Solo guardar si tiene al menos marca o elemento cargado
+            if (Object.keys(item).length > 1) {
+                data.items.push(item);
+            }
+        });
+
+        return data;
+    }
+
+    function mostrarEstado(estado) {
+        const statusDiv = document.getElementById('autosave-status');
+        const saving = document.getElementById('autosave-saving');
+        const ok = document.getElementById('autosave-ok');
+        const err = document.getElementById('autosave-error');
+        statusDiv.classList.remove('d-none');
+        saving.classList.add('d-none');
+        ok.classList.add('d-none');
+        err.classList.add('d-none');
+        if (estado === 'saving') saving.classList.remove('d-none');
+        else if (estado === 'ok') {
+            ok.classList.remove('d-none');
+            // Ocultar el badge de OK después de 3 segundos
+            setTimeout(() => ok.classList.add('d-none'), 3000);
+        }
+        else if (estado === 'error') err.classList.remove('d-none');
+    }
+
+    function guardarBorrador() {
+        const data = capturarFormulario();
+        // No guardar si no hay nada
+        if (!data.cliente && data.items.length === 0) return;
+
+        mostrarEstado('saving');
+        fetch(URL_GUARDAR_BORRADOR, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(resp => {
+            if (resp.status === 'ok') mostrarEstado('ok');
+            else mostrarEstado('error');
+        })
+        .catch(() => mostrarEstado('error'));
+    }
+
+    // ─── Restaurar borrador ─────────────────────────────────────────────────────
+    function restaurarBorrador(borrador) {
+        if (!borrador) return;
+
+        // Restaurar cliente (TomSelect lo maneja)
+        if (borrador.cliente) {
+            const clienteEl = document.querySelector('#id_cliente');
+            if (clienteEl && clienteEl.tomselect) {
+                clienteEl.tomselect.setValue(borrador.cliente);
+            } else if (clienteEl) {
+                clienteEl.value = borrador.cliente;
+            }
+        }
+
+        // Restaurar items
+        if (borrador.items && borrador.items.length > 0) {
+            // Limpiar items existentes vacíos primero
+            const container = document.querySelector('#items-container');
+            container.innerHTML = '';
+            document.querySelector('#id_items-TOTAL_FORMS').value = 0;
+
+            borrador.items.forEach(function(itemData) {
+                // Agregar nuevo item
+                const formIdx = parseInt(document.querySelector('#id_items-TOTAL_FORMS').value);
+                const emptyForm = document.querySelector('#empty-form').innerHTML.replace(/__prefix__/g, formIdx);
+                container.insertAdjacentHTML('beforeend', emptyForm);
+                document.querySelector('#id_items-TOTAL_FORMS').value = formIdx + 1;
+
+                // Rellenar campos del item recién agregado
+                const newRow = container.querySelectorAll('.item-row')[formIdx];
+                newRow.querySelectorAll('input, select, textarea').forEach(function(el) {
+                    const match = el.name.match(/items-\d+-(.*)/); 
+                    const campo = match ? match[1] : el.name;
+                    if (campo in itemData) {
+                        if (el.type === 'checkbox') {
+                            el.checked = itemData[campo];
+                        } else if (el.type !== 'file') {
+                            el.value = itemData[campo];
+                        }
+                    }
+                });
+            });
+        }
+
+        // Limpiar borrador del servidor
+        fetch(URL_LIMPIAR_BORRADOR, {
+            method: 'GET',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+
+        // Ocultar banner
+        const banner = document.getElementById('banner-borrador');
+        if (banner) banner.remove();
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        // Inicializar TomSelect para el campo cliente
+        // ─── TomSelect para cliente ─────────────────────────────────────────────
         const clienteSelect = document.querySelector('#id_cliente');
+        let tomSelectCliente = null;
         if (clienteSelect) {
-            new TomSelect(clienteSelect, {
+            tomSelectCliente = new TomSelect(clienteSelect, {
                 create: false,
-                sortField: {
-                    field: "text",
-                    direction: "asc"
-                },
+                sortField: { field: "text", direction: "asc" },
                 placeholder: 'Buscar y seleccionar un cliente...'
             });
         }
 
+        // ─── Agregar item ───────────────────────────────────────────────────────
         const addBtn = document.querySelector('#add-item');
         if (addBtn) {
             addBtn.addEventListener('click', function () {
@@ -293,6 +453,42 @@
                 const emptyForm = document.querySelector('#empty-form').innerHTML.replace(/__prefix__/g, formIdx);
                 document.querySelector('#items-container').insertAdjacentHTML('beforeend', emptyForm);
                 document.querySelector('#id_items-TOTAL_FORMS').value = parseInt(formIdx) + 1;
+                // Guardar borrador automáticamente al agregar un item
+                setTimeout(guardarBorrador, 500);
+            });
+        }
+
+        // ─── Auto-guardado periódico (cada 60 segundos) ─────────────────────────
+        setInterval(guardarBorrador, 60000);
+
+        // ─── Auto-guardado al cambiar campos importantes ────────────────────────
+        document.querySelector('#id_cliente')?.addEventListener('change', guardarBorrador);
+        document.querySelector('#items-container')?.addEventListener('change', function(e) {
+            if (e.target.matches('select, input:not([type=file]), textarea')) {
+                // Debounce: esperar 2s sin cambios antes de guardar
+                clearTimeout(window._autosaveTimer);
+                window._autosaveTimer = setTimeout(guardarBorrador, 2000);
+            }
+        });
+
+        // ─── Botones de borrador ────────────────────────────────────────────────
+        const btnRestaurar = document.getElementById('btn-restaurar-borrador');
+        if (btnRestaurar) {
+            btnRestaurar.addEventListener('click', function() {
+                if (window.BORRADOR_DISPONIBLE) {
+                    restaurarBorrador(window.BORRADOR_DISPONIBLE);
+                }
+            });
+        }
+        const btnDescartar = document.getElementById('btn-descartar-borrador');
+        if (btnDescartar) {
+            btnDescartar.addEventListener('click', function() {
+                fetch(URL_LIMPIAR_BORRADOR, {
+                    method: 'GET',
+                    headers: { 'X-CSRFToken': CSRF_TOKEN }
+                });
+                const banner = document.getElementById('banner-borrador');
+                if (banner) banner.remove();
             });
         }
     });

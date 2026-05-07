@@ -202,9 +202,9 @@ LOGOUT_REDIRECT_URL = 'login'
 
 # ─── Session ───────────────────────────────────────────────────────────────────
 
-SESSION_COOKIE_AGE = 900           # 15 minutos de inactividad
+SESSION_COOKIE_AGE = 28800         # 8 horas (suficiente para una jornada laboral completa)
 SESSION_SAVE_EVERY_REQUEST = True  # Reiniciar timer con cada request
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Mantener sesión aunque se cierre el navegador
 SESSION_COOKIE_NAME = 'sid'        # Nombre genérico (no revela el framework)
 
 # ─── Logging de seguridad ──────────────────────────────────────────────────────
